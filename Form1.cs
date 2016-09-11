@@ -145,6 +145,7 @@ namespace CrappyListenMoe
 				Stats stats = DownloadStats();
 				lblTitle.Text = stats.song_name;
 				string middle = string.IsNullOrWhiteSpace(stats.artist_name) ? "Requested by " : "; Requested by ";
+				middle = string.IsNullOrEmpty(stats.requested_by) ? "" : middle;
 				lblArtist.Text = stats.artist_name.Trim() + middle + stats.requested_by;
 			});
 			thread.Start();
