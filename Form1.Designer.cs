@@ -28,12 +28,10 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
 			this.lblTitle = new System.Windows.Forms.Label();
-			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.lblArtist = new System.Windows.Forms.Label();
-			this.picClose = new BetterPictureBox();
-			this.picPlayPause = new BetterPictureBox();
+			this.picClose = new CrappyListenMoe.BetterPictureBox();
+			this.picPlayPause = new CrappyListenMoe.BetterPictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.SuspendLayout();
@@ -47,12 +45,6 @@
 			this.lblTitle.Size = new System.Drawing.Size(27, 13);
 			this.lblTitle.TabIndex = 1;
 			this.lblTitle.Text = "Title";
-			// 
-			// timer1
-			// 
-			this.timer1.Enabled = true;
-			this.timer1.Interval = 5000;
-			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
 			// lblArtist
 			// 
@@ -114,7 +106,6 @@
 		private BetterPictureBox picPlayPause;
 		private System.Windows.Forms.Label lblTitle;
 		private BetterPictureBox picClose;
-		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.Label lblArtist;
 	}
 }

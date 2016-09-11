@@ -14,6 +14,8 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.IO;
 
+using Timer = System.Timers.Timer;
+
 using NAudio;
 using NAudio.Wave;
 using System.Threading;
@@ -22,15 +24,17 @@ namespace CrappyListenMoe
 {
 	public partial class Form1 : Form
 	{
+		//Font loading stuff
 		[System.Runtime.InteropServices.DllImport("gdi32.dll")]
 		private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
-
 		private PrivateFontCollection fonts = new PrivateFontCollection();
+
+		WebStreamPlayer player;
 
 		Font titleFont;
 		Font artistFont;
 
-		Player player;
+		Timer getStatsTimer;
 
 		//Drag form to move
 		public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -50,11 +54,12 @@ namespace CrappyListenMoe
 			}
 		}
 
+		//Screen edge snapping
 		private const int SnapDist = 10;
 		private bool DoSnap(int pos, int edge)
 		{
-			int delta = pos - edge;
-			return delta > 0 && delta <= SnapDist;
+			int delta = Math.Abs(pos - edge);
+			return delta <= SnapDist;
 		}
 		protected override void OnResizeEnd(EventArgs e)
 		{
@@ -70,7 +75,11 @@ namespace CrappyListenMoe
 		{
 			InitializeComponent();
 			CheckForIllegalCrossThreadCalls = false;
-			GetStats();
+
+			new Thread(() => GetStats()).Start();
+			getStatsTimer = new Timer(5000);
+			getStatsTimer.Elapsed += GetStatsTimer_Elapsed;
+			getStatsTimer.Start();
 
 			this.Icon = Properties.Resources.icon;
 
@@ -80,7 +89,7 @@ namespace CrappyListenMoe
 			lblArtist.Font = artistFont;
 
 
-			player = new Player();
+			player = new WebStreamPlayer("http://listen.moe:9999/stream");
 			player.Open();
 			player.Play();
 		}
@@ -121,6 +130,20 @@ namespace CrappyListenMoe
 			Environment.Exit(0);
 		}
 
+		private void GetStatsTimer_Elapsed(object sender, EventArgs e)
+		{
+			GetStats();
+		}
+
+		void GetStats()
+		{
+			Stats stats = DownloadStats();
+			lblTitle.Text = stats.song_name;
+			string middle = string.IsNullOrWhiteSpace(stats.artist_name) ? "Requested by " : "; Requested by ";
+			middle = string.IsNullOrEmpty(stats.requested_by) ? "" : middle;
+			lblArtist.Text = stats.artist_name.Trim() + middle + stats.requested_by;
+		}
+
 		private Stats DownloadStats()
 		{
 			var url = "https://listen.moe/stats.json";
@@ -131,140 +154,6 @@ namespace CrappyListenMoe
 			{
 				return (Stats)s.ReadObject(stream);
 			}
-		}
-
-		private void timer1_Tick(object sender, EventArgs e)
-		{
-			GetStats();
-		}
-
-		void GetStats()
-		{
-			Thread thread = new Thread(() =>
-			{
-				Stats stats = DownloadStats();
-				lblTitle.Text = stats.song_name;
-				string middle = string.IsNullOrWhiteSpace(stats.artist_name) ? "Requested by " : "; Requested by ";
-				middle = string.IsNullOrEmpty(stats.requested_by) ? "" : middle;
-				lblArtist.Text = stats.artist_name.Trim() + middle + stats.requested_by;
-			});
-			thread.Start();
-		}
-	}
-
-	public class Stats
-	{
-		public string requested_by { get; set; }
-		public string listeners { get; set; }
-		public string song_name { get; set; }
-		public string artist_name { get; set; }
-	}
-
-	class Player
-	{
-		BufferedWaveProvider provider;
-		IMp3FrameDecompressor decompressor;
-		IWavePlayer waveOut;
-		Thread provideThread;
-
-		bool playing = false;
-		bool opened = false;
-
-		public Player()
-		{
-			
-		}
-
-		public void Dispose()
-		{
-			Stop();
-		}
-
-		public void Open()
-		{
-			playing = true;
-
-			provideThread = new Thread(() =>
-			{
-				HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://listen.moe:9999/stream");
-				HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-				var buffer = new byte[16 * 1024 * 4];
-				using (var stream = resp.GetResponseStream())
-				{
-					var readFullyStream = new ReadFullyStream(stream);
-					while (playing)
-					{
-						if (BufferGettingFull())
-							Thread.Sleep(500);
-
-						Mp3Frame frame = Mp3Frame.LoadFromStream(readFullyStream);
-
-						if (decompressor == null)
-						{
-							var waveFormat = new Mp3WaveFormat(frame.SampleRate, frame.ChannelMode == ChannelMode.Mono ? 1 : 2, frame.FrameLength, frame.BitRate);
-							decompressor = new AcmMp3FrameDecompressor(waveFormat);
-							provider = new BufferedWaveProvider(decompressor.OutputFormat);
-							provider.BufferDuration = TimeSpan.FromSeconds(20);
-							opened = true;
-						}
-
-						int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
-						provider.AddSamples(buffer, 0, decompressed);
-					}
-
-					decompressor.Dispose();
-				}
-			});
-			provideThread.Start();
-		}
-
-		public void Play()
-		{
-			while (!opened)
-				Thread.Sleep(5);
-
-			waveOut = new WaveOut();
-			waveOut.Init(provider);
-			waveOut.Play();
-		}
-
-		public void Stop()
-		{
-			if (playing)
-			{
-				opened = false;
-				playing = false;
-
-				if (waveOut != null)
-				{
-					waveOut.Stop();
-					waveOut.Dispose();
-					waveOut = null;
-				}
-
-				if (provideThread != null)
-				{
-					provideThread.Abort();
-					provideThread = null;
-				}
-
-				if (decompressor != null)
-				{
-					decompressor.Dispose();
-					decompressor = null;
-				}
-			}
-		}
-
-		public bool IsPlaying()
-		{
-			return playing;
-		}
-
-		bool BufferGettingFull()
-		{
-			return provider != null && provider.BufferLength - provider.BufferedBytes < provider.WaveFormat.AverageBytesPerSecond / 4;
 		}
 	}
 }
