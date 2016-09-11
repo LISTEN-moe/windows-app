@@ -32,8 +32,8 @@
 			this.lblTitle = new System.Windows.Forms.Label();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.lblArtist = new System.Windows.Forms.Label();
-			this.picClose = new System.Windows.Forms.PictureBox();
-			this.picPlayPause = new System.Windows.Forms.PictureBox();
+			this.picClose = new BetterPictureBox();
+			this.picPlayPause = new BetterPictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.SuspendLayout();
@@ -111,9 +111,9 @@
 
 		#endregion
 
-		private System.Windows.Forms.PictureBox picPlayPause;
+		private BetterPictureBox picPlayPause;
 		private System.Windows.Forms.Label lblTitle;
-		private System.Windows.Forms.PictureBox picClose;
+		private BetterPictureBox picClose;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.Label lblArtist;
 	}
