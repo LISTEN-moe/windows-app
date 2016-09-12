@@ -66,7 +66,6 @@ namespace CrappyListenMoe
 
         protected override void OnTextChanged(EventArgs e)
         {
-            base.OnTextChanged(e);
             if (!this.IsDisposed) //We get issues with the graphics object when we're disposing, since it calls this TextChange method
             {
                 stringWidth = this.CreateGraphics().MeasureString(Text, Font).Width;
@@ -75,6 +74,7 @@ namespace CrappyListenMoe
                 else
                     scrolling = false;
             }
+            base.OnTextChanged(e);
         }
 
         protected override void OnPaint(PaintEventArgs e)
