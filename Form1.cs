@@ -53,6 +53,10 @@ namespace CrappyListenMoe
 				ReleaseCapture();
 				SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
 			}
+            else if (e.Button == MouseButtons.Right)
+            {
+                contextMenu1.Show(this, e.Location);
+            }
 		}
 
 		//Screen edge snapping
@@ -105,6 +109,10 @@ namespace CrappyListenMoe
             float vol = Settings.GetFloatSetting("Volume");
             player.SetVolume(vol);
             SetVolumeLabel(vol);
+
+            bool topmost = Settings.GetBoolSetting("TopMost");
+            this.TopMost = topmost;
+            menuItemTopmost.Checked = topmost;
 		}
 
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
@@ -193,6 +201,14 @@ namespace CrappyListenMoe
             this.Hide();
             player.Stop();
             player.Dispose();
+        }
+
+        private void menuItemTopmost_Click(object sender, EventArgs e)
+        {
+            menuItemTopmost.Checked = !menuItemTopmost.Checked;
+            this.TopMost = menuItemTopmost.Checked;
+            Settings.SetBoolSetting("TopMost", menuItemTopmost.Checked);
+            Settings.WriteSettings();
         }
     }
 }

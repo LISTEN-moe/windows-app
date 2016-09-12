@@ -29,6 +29,8 @@
 		private void InitializeComponent()
 		{
             this.lblVol = new System.Windows.Forms.Label();
+            this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+            this.menuItemTopmost = new System.Windows.Forms.MenuItem();
             this.picClose = new CrappyListenMoe.BetterPictureBox();
             this.picPlayPause = new CrappyListenMoe.BetterPictureBox();
             this.lblArtist = new CrappyListenMoe.MarqueeLabel();
@@ -47,6 +49,17 @@
             this.lblVol.Size = new System.Drawing.Size(33, 13);
             this.lblVol.TabIndex = 4;
             this.lblVol.Text = "100%";
+            // 
+            // contextMenu1
+            // 
+            this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItemTopmost});
+            // 
+            // menuItemTopmost
+            // 
+            this.menuItemTopmost.Index = 0;
+            this.menuItemTopmost.Text = "Always on top";
+            this.menuItemTopmost.Click += new System.EventHandler(this.menuItemTopmost_Click);
             // 
             // picClose
             // 
@@ -125,6 +138,8 @@
 		private BetterPictureBox picClose;
 		private MarqueeLabel lblArtist;
         private System.Windows.Forms.Label lblVol;
+        private System.Windows.Forms.ContextMenu contextMenu1;
+        private System.Windows.Forms.MenuItem menuItemTopmost;
     }
 }
 

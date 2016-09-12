@@ -9,10 +9,25 @@ namespace CrappyListenMoe
 {
     class Settings
     {
+        static Dictionary<string, int> intDefaults = new Dictionary<string, int>()
+        {
+            { "LocationX", 100 },
+            { "LocationY", 100 }
+        };
+        static Dictionary<string, float> floatDefaults = new Dictionary<string, float>()
+        {
+            { "Volume", 1.0f }
+        };
+        static Dictionary<string, bool> boolDefaults = new Dictionary<string, bool>()
+        {
+            { "TopMost", false }
+        };
+
         private const string settingsFileLocation = "listenMoeSettings.ini";
 
         static Dictionary<string, int> intValues = new Dictionary<string, int>();
         static Dictionary<string, float> floatValues = new Dictionary<string, float>();
+        static Dictionary<string, bool> boolValues = new Dictionary<string, bool>();
 
         static object mutex = new object();
 
@@ -46,14 +61,22 @@ namespace CrappyListenMoe
                         continue;
                     floatValues.Add(parts[0].Substring(1), val);
                 }
+                else if (parts[0][0] == 'b')
+                {
+                    bool val;
+                    if (!bool.TryParse(parts[1], out val))
+                        continue;
+                    boolValues.Add(parts[0].Substring(1), val);
+                }
             }
         }
 
+        //TODO: proper defaults checking, for partial settings files
         private static void LoadDefaultSettings()
         {
-            intValues.Add("LocationX", 100);
-            intValues.Add("LocationY", 100);
-            floatValues.Add("Volume", 1.0f);
+            intValues = new Dictionary<string, int>(intDefaults);
+            floatValues = new Dictionary<string, float>(floatDefaults);
+            boolValues = new Dictionary<string, bool>(boolDefaults);
         }
 
         public static void WriteSettings()
@@ -66,6 +89,10 @@ namespace CrappyListenMoe
             foreach (var kp in floatValues)
             {
                 sb.AppendLine("f" + kp.Key + "=" + kp.Value.ToString());
+            }
+            foreach (var kp in boolValues)
+            {
+                sb.AppendLine("b" + kp.Key + "=" + kp.Value.ToString());
             }
 
             lock (mutex)
@@ -80,12 +107,32 @@ namespace CrappyListenMoe
 
         public static int GetIntSetting(string key)
         {
+            if (!intValues.ContainsKey(key))
+            {
+                intValues[key] = intDefaults[key];
+                WriteSettings();
+            }
             return intValues[key];
         }
 
         public static float GetFloatSetting(string key)
         {
+            if (!floatValues.ContainsKey(key))
+            {
+                floatValues[key] = floatDefaults[key];
+                WriteSettings();
+            }
             return floatValues[key];
+        }
+
+        public static bool GetBoolSetting(string key)
+        {
+            if (!boolValues.ContainsKey(key))
+            {
+                boolValues[key] = boolDefaults[key];
+                WriteSettings();
+            }
+            return boolValues[key];
         }
 
         public static void SetIntSetting(string key, int value)
@@ -96,6 +143,11 @@ namespace CrappyListenMoe
         public static void SetFloatSetting(string key, float value)
         {
             floatValues[key] = value;
+        }
+
+        public static void SetBoolSetting(string key, bool value)
+        {
+            boolValues[key] = value;
         }
     }
 }
