@@ -28,34 +28,14 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.lblArtist = new System.Windows.Forms.Label();
             this.lblVol = new System.Windows.Forms.Label();
             this.picClose = new CrappyListenMoe.BetterPictureBox();
             this.picPlayPause = new CrappyListenMoe.BetterPictureBox();
+            this.lblArtist = new CrappyListenMoe.MarqueeLabel();
+            this.lblTitle = new CrappyListenMoe.MarqueeLabel();
             ((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
             this.SuspendLayout();
-            // 
-            // lblTitle
-            // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.ForeColor = System.Drawing.Color.White;
-            this.lblTitle.Location = new System.Drawing.Point(33, 4);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(27, 13);
-            this.lblTitle.TabIndex = 1;
-            this.lblTitle.Text = "Title";
-            // 
-            // lblArtist
-            // 
-            this.lblArtist.AutoSize = true;
-            this.lblArtist.ForeColor = System.Drawing.Color.White;
-            this.lblArtist.Location = new System.Drawing.Point(34, 26);
-            this.lblArtist.Name = "lblArtist";
-            this.lblArtist.Size = new System.Drawing.Size(30, 13);
-            this.lblArtist.TabIndex = 3;
-            this.lblArtist.Text = "Artist";
             // 
             // lblVol
             // 
@@ -92,6 +72,28 @@
             this.picPlayPause.TabStop = false;
             this.picPlayPause.Click += new System.EventHandler(this.picPlayPause_Click);
             // 
+            // lblArtist
+            // 
+            this.lblArtist.ForeColor = System.Drawing.Color.White;
+            this.lblArtist.Location = new System.Drawing.Point(37, 26);
+            this.lblArtist.Name = "lblArtist";
+            this.lblArtist.ScrollSpeed = 50F;
+            this.lblArtist.Size = new System.Drawing.Size(320, 13);
+            this.lblArtist.TabIndex = 3;
+            this.lblArtist.Text = "Artist";
+            this.lblArtist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
+            // 
+            // lblTitle
+            // 
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(37, 5);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.ScrollSpeed = 50F;
+            this.lblTitle.Size = new System.Drawing.Size(350, 30);
+            this.lblTitle.TabIndex = 1;
+            this.lblTitle.Text = "Title";
+            this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -99,10 +101,10 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(26)))), ((int)(((byte)(85)))));
             this.ClientSize = new System.Drawing.Size(400, 48);
             this.Controls.Add(this.lblVol);
-            this.Controls.Add(this.lblArtist);
             this.Controls.Add(this.picClose);
-            this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.picPlayPause);
+            this.Controls.Add(this.lblArtist);
+            this.Controls.Add(this.lblTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -119,9 +121,9 @@
 		#endregion
 
 		private BetterPictureBox picPlayPause;
-		private System.Windows.Forms.Label lblTitle;
+		private MarqueeLabel lblTitle;
 		private BetterPictureBox picClose;
-		private System.Windows.Forms.Label lblArtist;
+		private MarqueeLabel lblArtist;
         private System.Windows.Forms.Label lblVol;
     }
 }

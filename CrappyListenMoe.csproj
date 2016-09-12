@@ -63,6 +63,9 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MarqueeLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ReadFullyStream.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
