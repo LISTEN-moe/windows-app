@@ -33,6 +33,7 @@ namespace CrappyListenMoe
 
 		Font titleFont;
 		Font artistFont;
+        Font volumeFont;
 
 		Timer getStatsTimer;
 
@@ -76,6 +77,8 @@ namespace CrappyListenMoe
 			InitializeComponent();
 			CheckForIllegalCrossThreadCalls = false;
 
+            this.MouseWheel += Form1_MouseWheel;
+
 			new Thread(() => GetStats()).Start();
 			getStatsTimer = new Timer(5000);
 			getStatsTimer.Elapsed += GetStatsTimer_Elapsed;
@@ -87,14 +90,27 @@ namespace CrappyListenMoe
 
 			lblTitle.Font = titleFont;
 			lblArtist.Font = artistFont;
-
+            lblVol.Font = volumeFont;
 
 			player = new WebStreamPlayer("http://listen.moe:9999/stream");
 			player.Open();
 			player.Play();
 		}
 
-		private void LoadOpenSans()
+        private void Form1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta != 0)
+            {
+                float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * 0.05f;
+                float newVol = player.AddVolume(volumeChange);
+                newVol *= 100;
+                if (Math.Abs(newVol - 100) < 0.001)
+                    newVol = 100;
+                lblVol.Text = ((int)newVol).ToString() + "%";
+            }
+        }
+
+        private void LoadOpenSans()
 		{
 			byte[] fontData = Properties.Resources.OpenSans_Regular;
 			IntPtr fontPtr = Marshal.AllocCoTaskMem(fontData.Length);
@@ -104,8 +120,9 @@ namespace CrappyListenMoe
 			AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.OpenSans_Regular.Length, IntPtr.Zero, ref dummy);
 			Marshal.FreeCoTaskMem(fontPtr);
 
-			titleFont = new Font(fonts.Families[0], 11.0F);
-			artistFont = new Font(fonts.Families[0], 8.0F);
+			titleFont = new Font(fonts.Families[0], 11.0f);
+			artistFont = new Font(fonts.Families[0], 8.0f);
+            volumeFont = new Font(fonts.Families[0], 8.0f);
 		}
 
 		private void picPlayPause_Click(object sender, EventArgs e)
@@ -155,5 +172,9 @@ namespace CrappyListenMoe
 				return (Stats)s.ReadObject(stream);
 			}
 		}
-	}
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+        }
+    }
 }

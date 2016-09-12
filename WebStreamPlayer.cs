@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 
 namespace CrappyListenMoe
 {
+	//Somewhat taken from the NAudio sample code
 	class WebStreamPlayer
 	{
 		BufferedWaveProvider provider;
 		IMp3FrameDecompressor decompressor;
 		IWavePlayer waveOut;
 		Thread provideThread;
+        VolumeWaveProvider16 volumeProvider;
 
 		bool playing = false;
 		bool opened = false;
@@ -75,9 +77,28 @@ namespace CrappyListenMoe
 				Thread.Sleep(5);
 
 			waveOut = new WaveOut();
-			waveOut.Init(provider);
+            volumeProvider = new VolumeWaveProvider16(provider);
+			waveOut.Init(volumeProvider);
 			waveOut.Play();
 		}
+
+        public float SetVolume(float vol)
+        {
+            if (volumeProvider != null)
+            {
+                //Cap between 0 and 1
+                vol = Math.Max(0, vol);
+                vol = Math.Min(1, vol);
+                volumeProvider.Volume = vol;
+                return vol;
+            }
+            return 1.0f;
+        }
+
+        public float AddVolume(float vol)
+        {
+            return SetVolume(volumeProvider.Volume + vol);
+        }
 
 		public void Stop()
 		{
