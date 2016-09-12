@@ -71,13 +71,15 @@ namespace CrappyListenMoe
 			provideThread.Start();
 		}
 
-		public void Play()
+        public void Play() { Play(Settings.GetFloatSetting("Volume")); }
+		public void Play(float initialVolume)
 		{
 			while (!opened)
 				Thread.Sleep(5);
 
 			waveOut = new WaveOut();
             volumeProvider = new VolumeWaveProvider16(provider);
+            volumeProvider.Volume = BoundVolume(initialVolume);
 			waveOut.Init(volumeProvider);
 			waveOut.Play();
 		}
@@ -86,13 +88,18 @@ namespace CrappyListenMoe
         {
             if (volumeProvider != null)
             {
-                //Cap between 0 and 1
-                vol = Math.Max(0, vol);
-                vol = Math.Min(1, vol);
-                volumeProvider.Volume = vol;
+                volumeProvider.Volume = BoundVolume(vol);
                 return vol;
             }
             return 1.0f;
+        }
+
+        private float BoundVolume(float vol)
+        {
+            //Cap between 0 and 1
+            vol = Math.Max(0, vol);
+            vol = Math.Min(1, vol);
+            return vol;
         }
 
         public float AddVolume(float vol)

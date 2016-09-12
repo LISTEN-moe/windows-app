@@ -102,12 +102,11 @@ namespace CrappyListenMoe
 			lblArtist.Font = artistFont;
             lblVol.Font = volumeFont;
 
-			player = new WebStreamPlayer("http://listen.moe:9999/stream");
+            player = new WebStreamPlayer("http://listen.moe:9999/stream");
 			player.Open();
 			player.Play();
 
             float vol = Settings.GetFloatSetting("Volume");
-            player.SetVolume(vol);
             SetVolumeLabel(vol);
 
             bool topmost = Settings.GetBoolSetting("TopMost");
