@@ -70,12 +70,18 @@ namespace CrappyListenMoe
 			if (DoSnap(this.Top, scn.WorkingArea.Top)) this.Top = scn.WorkingArea.Top;
 			if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
 			if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
+
+            Settings.SetIntSetting("LocationX", this.Location.X);
+            Settings.SetIntSetting("LocationY", this.Location.Y);
+            Settings.WriteSettings();
 		}
 
 		public Form1()
 		{
 			InitializeComponent();
 			CheckForIllegalCrossThreadCalls = false;
+            Settings.LoadSettings();
+            this.Location = new Point(Settings.GetIntSetting("LocationX"), Settings.GetIntSetting("LocationY"));
 
             this.MouseWheel += Form1_MouseWheel;
 
@@ -95,6 +101,10 @@ namespace CrappyListenMoe
 			player = new WebStreamPlayer("http://listen.moe:9999/stream");
 			player.Open();
 			player.Play();
+
+            float vol = Settings.GetFloatSetting("Volume");
+            player.SetVolume(vol);
+            SetVolumeLabel(vol);
 		}
 
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
@@ -103,11 +113,18 @@ namespace CrappyListenMoe
             {
                 float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * 0.05f;
                 float newVol = player.AddVolume(volumeChange);
-                newVol *= 100;
-                if (Math.Abs(newVol - 100) < 0.001)
-                    newVol = 100;
-                lblVol.Text = ((int)newVol).ToString() + "%";
+                Settings.SetFloatSetting("Volume", newVol);
+                Settings.WriteSettings();
+                SetVolumeLabel(newVol);
             }
+        }
+
+        private void SetVolumeLabel(float vol)
+        {
+            float newVol = vol * 100;
+            if (Math.Abs(newVol - 100) < 0.001)
+                newVol = 100;
+            lblVol.Text = ((int)newVol).ToString() + "%";
         }
 
         private void LoadOpenSans()
@@ -142,9 +159,7 @@ namespace CrappyListenMoe
 
 		private void picClose_Click(object sender, EventArgs e)
 		{
-			this.Hide();
-			player.Dispose();
-			Environment.Exit(0);
+            this.Close();
 		}
 
 		private void GetStatsTimer_Elapsed(object sender, EventArgs e)
@@ -173,8 +188,11 @@ namespace CrappyListenMoe
 			}
 		}
 
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            this.Hide();
+            player.Stop();
+            player.Dispose();
         }
     }
 }
