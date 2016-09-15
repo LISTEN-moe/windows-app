@@ -66,6 +66,7 @@
     <Compile Include="MarqueeLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="OpenSans.cs" />
     <Compile Include="ReadFullyStream.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,91 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Media;
-using System.Drawing.Text;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Net;
-using System.Runtime.Serialization.Json;
-using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 
 using Timer = System.Timers.Timer;
 
-using NAudio;
-using NAudio.Wave;
-using System.Threading;
-
 namespace CrappyListenMoe
 {
-	public partial class Form1 : Form
-	{
-		//Font loading stuff
-		[System.Runtime.InteropServices.DllImport("gdi32.dll")]
-		private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
-		private PrivateFontCollection fonts = new PrivateFontCollection();
+    public partial class Form1 : Form
+    {
+        #region Magical form stuff
+        //Form dragging
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
 
-		WebStreamPlayer player;
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImport("user32.dll")]
+        public static extern bool ReleaseCapture();
 
-		Font titleFont;
-		Font artistFont;
-        Font volumeFont;
-
-		Timer getStatsTimer;
-
-		//Drag form to move
-		public const int WM_NCLBUTTONDOWN = 0xA1;
-		public const int HT_CAPTION = 0x2;
-
-		[DllImportAttribute("user32.dll")]
-		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-		[DllImportAttribute("user32.dll")]
-		public static extern bool ReleaseCapture();
-
-		private void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Left)
-			{
-				ReleaseCapture();
-				SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-			}
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
             else if (e.Button == MouseButtons.Right)
             {
                 contextMenu1.Show(this, e.Location);
             }
+        }
+
+        //Screen edge snapping
+        private const int SnapDist = 10;
+		private bool CloseToEdge(int pos, int edge)
+		{
+			return Math.Abs(pos - edge) <= SnapDist;
 		}
 
-		//Screen edge snapping
-		private const int SnapDist = 10;
-		private bool DoSnap(int pos, int edge)
-		{
-			int delta = Math.Abs(pos - edge);
-			return delta <= SnapDist;
-		}
 		protected override void OnResizeEnd(EventArgs e)
 		{
 			base.OnResizeEnd(e);
-			Screen scn = Screen.FromPoint(this.Location);
-			if (DoSnap(this.Left, scn.WorkingArea.Left)) this.Left = scn.WorkingArea.Left;
-			if (DoSnap(this.Top, scn.WorkingArea.Top)) this.Top = scn.WorkingArea.Top;
-			if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
-			if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
+			Screen s = Screen.FromPoint(this.Location);
+			if (CloseToEdge(this.Left, s.WorkingArea.Left)) this.Left = s.WorkingArea.Left;
+			if (CloseToEdge(this.Top, s.WorkingArea.Top)) this.Top = s.WorkingArea.Top;
+			if (CloseToEdge(s.WorkingArea.Right, this.Right)) this.Left = s.WorkingArea.Right - this.Width;
+			if (CloseToEdge(s.WorkingArea.Bottom, this.Bottom)) this.Top = s.WorkingArea.Bottom - this.Height;
 
             Settings.SetIntSetting("LocationX", this.Location.X);
             Settings.SetIntSetting("LocationY", this.Location.Y);
             Settings.WriteSettings();
-		}
+        }
+        #endregion
 
-		public Form1()
+        WebStreamPlayer player;
+
+        Font titleFont;
+        Font artistFont;
+        Font volumeFont;
+
+        Timer getStatsTimer;
+
+        public Form1()
 		{
 			InitializeComponent();
 			CheckForIllegalCrossThreadCalls = false;
             Settings.LoadSettings();
-            this.Location = new Point(Settings.GetIntSetting("LocationX"), Settings.GetIntSetting("LocationY"));
+            ApplyLoadedSettings();
 
             this.MouseWheel += Form1_MouseWheel;
 
@@ -105,6 +88,11 @@ namespace CrappyListenMoe
             player = new WebStreamPlayer("http://listen.moe:9999/stream");
 			player.Open();
 			player.Play();
+        }
+
+        private void ApplyLoadedSettings()
+        {
+            this.Location = new Point(Settings.GetIntSetting("LocationX"), Settings.GetIntSetting("LocationY"));
 
             float vol = Settings.GetFloatSetting("Volume");
             SetVolumeLabel(vol);
@@ -112,7 +100,14 @@ namespace CrappyListenMoe
             bool topmost = Settings.GetBoolSetting("TopMost");
             this.TopMost = topmost;
             menuItemTopmost.Checked = topmost;
-		}
+        }
+
+        private void LoadOpenSans()
+        {
+            titleFont = OpenSans.CreateFont(11.0f);
+            artistFont = OpenSans.CreateFont(8.0f);
+            volumeFont = OpenSans.CreateFont(8.0f);
+        }
 
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -133,21 +128,6 @@ namespace CrappyListenMoe
                 newVol = 100;
             lblVol.Text = ((int)newVol).ToString() + "%";
         }
-
-        private void LoadOpenSans()
-		{
-			byte[] fontData = Properties.Resources.OpenSans_Regular;
-			IntPtr fontPtr = Marshal.AllocCoTaskMem(fontData.Length);
-			Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
-			uint dummy = 0;
-			fonts.AddMemoryFont(fontPtr, Properties.Resources.OpenSans_Regular.Length);
-			AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.OpenSans_Regular.Length, IntPtr.Zero, ref dummy);
-			Marshal.FreeCoTaskMem(fontPtr);
-
-			titleFont = new Font(fonts.Families[0], 11.0f);
-			artistFont = new Font(fonts.Families[0], 8.0f);
-            volumeFont = new Font(fonts.Families[0], 8.0f);
-		}
 
 		private void picPlayPause_Click(object sender, EventArgs e)
 		{
@@ -176,23 +156,11 @@ namespace CrappyListenMoe
 
 		void GetStats()
 		{
-			Stats stats = DownloadStats();
+			Stats stats = Stats.DownloadStats();
 			lblTitle.Text = stats.song_name;
 			string middle = string.IsNullOrWhiteSpace(stats.artist_name) ? "Requested by " : "; Requested by ";
 			middle = string.IsNullOrEmpty(stats.requested_by) ? "" : middle;
 			lblArtist.Text = stats.artist_name.Trim() + middle + stats.requested_by;
-		}
-
-		private Stats DownloadStats()
-		{
-			var url = "https://listen.moe/stats.json";
-			var data = new WebClient().DownloadString(url);
-
-			DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(Stats));
-			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
-			{
-				return (Stats)s.ReadObject(stream);
-			}
 		}
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

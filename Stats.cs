@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,5 +15,17 @@ namespace CrappyListenMoe
 		public string listeners { get; set; }
 		public string song_name { get; set; }
 		public string artist_name { get; set; }
-	}
+
+        public static Stats DownloadStats()
+        {
+            var url = "https://listen.moe/stats.json";
+            var data = new WebClient().DownloadString(url);
+
+            DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(Stats));
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+            {
+                return (Stats)s.ReadObject(stream);
+            }
+        }
+    }
 }

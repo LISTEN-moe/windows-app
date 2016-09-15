@@ -44,7 +44,7 @@
             this.lblVol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblVol.AutoSize = true;
             this.lblVol.ForeColor = System.Drawing.Color.White;
-            this.lblVol.Location = new System.Drawing.Point(361, 28);
+            this.lblVol.Location = new System.Drawing.Point(366, 28);
             this.lblVol.Name = "lblVol";
             this.lblVol.Size = new System.Drawing.Size(33, 13);
             this.lblVol.TabIndex = 4;
@@ -91,7 +91,7 @@
             this.lblArtist.Location = new System.Drawing.Point(37, 26);
             this.lblArtist.Name = "lblArtist";
             this.lblArtist.ScrollSpeed = 50F;
-            this.lblArtist.Size = new System.Drawing.Size(320, 13);
+            this.lblArtist.Size = new System.Drawing.Size(320, 22);
             this.lblArtist.TabIndex = 3;
             this.lblArtist.Text = "Artist";
             this.lblArtist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
@@ -102,7 +102,7 @@
             this.lblTitle.Location = new System.Drawing.Point(37, 5);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.ScrollSpeed = 50F;
-            this.lblTitle.Size = new System.Drawing.Size(350, 30);
+            this.lblTitle.Size = new System.Drawing.Size(350, 43);
             this.lblTitle.TabIndex = 1;
             this.lblTitle.Text = "Title";
             this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
