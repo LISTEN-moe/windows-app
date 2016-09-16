@@ -89,7 +89,7 @@ namespace CrappyListenMoe
             if (volumeProvider != null)
             {
                 volumeProvider.Volume = BoundVolume(vol);
-                return vol;
+                return volumeProvider.Volume;
             }
             return 1.0f;
         }
