@@ -72,7 +72,10 @@ namespace CrappyListenMoe
                 if (stringWidth > Width)
                     scrolling = true;
                 else
+                {
                     scrolling = false;
+                    currentPosition = 0;
+                }
             }
             base.OnTextChanged(e);
         }

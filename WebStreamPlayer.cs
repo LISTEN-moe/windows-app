@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using NAudio;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,8 +62,15 @@ namespace CrappyListenMoe
 							opened = true;
 						}
 
-						int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
-						provider.AddSamples(buffer, 0, decompressed);
+                        try
+                        {
+                            int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
+                            provider.AddSamples(buffer, 0, decompressed);
+                        }
+                        catch (MmException e)
+                        {
+                            //Skip this frame
+                        }
 					}
 
 					decompressor.Dispose();
