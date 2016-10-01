@@ -18,7 +18,7 @@ namespace CrappyListenMoe
 
         public static Stats DownloadStats()
         {
-            var url = "https://listen.moe/stats.json";
+            var url = "https://listen.moe/api/info";
             var data = new WebClient().DownloadString(url);
 
             DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(Stats));
