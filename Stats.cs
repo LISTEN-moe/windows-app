@@ -19,6 +19,7 @@ namespace CrappyListenMoe
         public static Stats DownloadStats()
         {
             var url = "https://listen.moe/api/info";
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var data = new WebClient().DownloadString(url);
 
             DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(Stats));
