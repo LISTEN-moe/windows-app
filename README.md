@@ -3,6 +3,8 @@ A listen.moe client for Windows.
 
 **It's terrible, use at own peril**
 
+![](https://my.mixtape.moe/ceflba.png)
+
 # Instructions
 Open it. It plays music. 
 The form will snap to any screen edges, and you can mouse scroll on the window to increase/decrease the volume. You can also set it to be topmost by right clicking the window and selecting 'Always on top'. 
