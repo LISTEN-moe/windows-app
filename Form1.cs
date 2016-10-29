@@ -85,7 +85,7 @@ namespace CrappyListenMoe
 			lblArtist.Font = artistFont;
             lblVol.Font = volumeFont;
 
-            player = new WebStreamPlayer("http://listen.moe:9999/stream");
+            player = new WebStreamPlayer("https://listen.moe/stream");
 			player.Open();
 			player.Play();
         }
