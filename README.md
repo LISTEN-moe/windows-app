@@ -14,7 +14,7 @@ Sometimes, the audio stream may seem to be the wrong pitch. Just pause the strea
 # Todo
 
  - Code cleanup
- - Anime reverse lookup (waiting on Kana to give me this data)
+ - Anime reverse lookup
  - Exception and error handling on the audio streaming
  - Hide from alt-tab
  - Taskbar media player controls, global media hotkey hooks
