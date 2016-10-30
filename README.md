@@ -4,7 +4,6 @@ A listen.moe client for Windows.
 **It's terrible, use at own peril**
 
 ![](https://my.mixtape.moe/ceflba.png)
-![](https://my.mixtape.moe/couglv.webm)
 
 # Instructions
 Open it. It plays music. 
