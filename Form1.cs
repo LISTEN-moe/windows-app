@@ -158,9 +158,17 @@ namespace CrappyListenMoe
 		{
 			Stats stats = Stats.DownloadStats();
 			lblTitle.Text = stats.song_name;
-			string middle = string.IsNullOrWhiteSpace(stats.artist_name) ? "Requested by " : "; Requested by ";
+			string artistAnimeName = stats.artist_name;
+			if (!string.IsNullOrWhiteSpace(stats.anime_name))
+			{
+				if (!string.IsNullOrWhiteSpace(stats.artist_name))
+					artistAnimeName += " (" + stats.anime_name + ")";
+				else
+					artistAnimeName = stats.anime_name;
+			}
+			string middle = string.IsNullOrWhiteSpace(artistAnimeName) ? "Requested by " : "; Requested by ";
 			middle = string.IsNullOrEmpty(stats.requested_by) ? "" : middle;
-			lblArtist.Text = stats.artist_name.Trim() + middle + stats.requested_by;
+			lblArtist.Text = artistAnimeName.Trim() + middle + stats.requested_by;
 		}
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

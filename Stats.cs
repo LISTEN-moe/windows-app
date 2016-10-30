@@ -15,6 +15,7 @@ namespace CrappyListenMoe
 		public string listeners { get; set; }
 		public string song_name { get; set; }
 		public string artist_name { get; set; }
+		public string anime_name { get; set; }
 
         public static Stats DownloadStats()
         {
