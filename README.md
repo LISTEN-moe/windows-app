@@ -1,7 +1,5 @@
 # ListenMoeClient
-A listen.moe client for Windows.
-
-**It's terrible, use at own peril**
+A simple [listen.moe](listen.moe) client for Windows.
 
 ![](https://my.mixtape.moe/ceflba.png)
 
