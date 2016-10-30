@@ -4,6 +4,7 @@ A listen.moe client for Windows.
 **It's terrible, use at own peril**
 
 ![](https://my.mixtape.moe/ceflba.png)
+![](https://my.mixtape.moe/couglv.webm)
 
 # Instructions
 Open it. It plays music. 
@@ -14,7 +15,5 @@ Sometimes, the audio stream may seem to be the wrong pitch. Just pause the strea
 # Todo
 
  - Code cleanup
- - Anime reverse lookup
- - Exception and error handling on the audio streaming
  - Hide from alt-tab
  - Taskbar media player controls, global media hotkey hooks
