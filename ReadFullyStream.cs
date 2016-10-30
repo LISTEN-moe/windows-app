@@ -57,8 +57,7 @@ namespace CrappyListenMoe
 				throw new InvalidOperationException();
 			}
 		}
-
-
+		
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			int bytesRead = 0;
@@ -76,7 +75,14 @@ namespace CrappyListenMoe
 				else
 				{
 					readAheadOffset = 0;
-					readAheadLength = sourceStream.Read(readAheadBuffer, 0, readAheadBuffer.Length);
+					try
+					{
+						readAheadLength = sourceStream.Read(readAheadBuffer, 0, readAheadBuffer.Length);
+					}
+					catch (Exception e)
+					{
+						//Read will throw an exception when pausing due to the thread dying, so we just ignore it.
+					}
 					//Debug.WriteLine(String.Format("Read {0} bytes (requested {1})", readAheadLength, readAheadBuffer.Length));
 					if (readAheadLength == 0)
 					{
