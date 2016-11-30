@@ -21,13 +21,17 @@ namespace CrappyListenMoe
         {
             var url = "https://listen.moe/api/info";
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var data = new WebClient().DownloadString(url);
+			using (WebClient client = new WebClient())
+			{
+				client.Encoding = Encoding.UTF8;
+				var data = client.DownloadString(url);
 
-            DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(Stats));
-            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
-            {
-                return (Stats)s.ReadObject(stream);
-            }
+				DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(Stats));
+				using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+				{
+					return (Stats)s.ReadObject(stream);
+				}
+			}
         }
     }
 }
