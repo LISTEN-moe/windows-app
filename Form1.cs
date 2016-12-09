@@ -61,8 +61,6 @@ namespace CrappyListenMoe
         Font artistFont;
         Font volumeFont;
 
-        Timer getStatsTimer;
-
         public Form1()
 		{
 			InitializeComponent();
@@ -72,10 +70,8 @@ namespace CrappyListenMoe
 
             this.MouseWheel += Form1_MouseWheel;
 
-			new Thread(() => GetStats()).Start();
-			getStatsTimer = new Timer(5000);
-			getStatsTimer.Elapsed += GetStatsTimer_Elapsed;
-			getStatsTimer.Start();
+			StatsStream statsStream = new StatsStream();
+			statsStream.OnStatsReceived += GetStats;
 
 			this.Icon = Properties.Resources.icon;
 
@@ -149,14 +145,8 @@ namespace CrappyListenMoe
             this.Close();
 		}
 
-		private void GetStatsTimer_Elapsed(object sender, EventArgs e)
+		void GetStats(Stats stats)
 		{
-			GetStats();
-		}
-
-		void GetStats()
-		{
-			Stats stats = Stats.DownloadStats();
 			lblTitle.Text = stats.song_name;
 			string artistAnimeName = stats.artist_name;
 			if (!string.IsNullOrWhiteSpace(stats.anime_name))
