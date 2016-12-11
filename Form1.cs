@@ -119,10 +119,8 @@ namespace CrappyListenMoe
 
         private void SetVolumeLabel(float vol)
         {
-            float newVol = vol * 100;
-            if (Math.Abs(newVol - 100) < 0.001)
-                newVol = 100;
-            lblVol.Text = ((int)newVol).ToString() + "%";
+            int newVol = (int)Math.Round(vol * 100);
+            lblVol.Text = newVol.ToString() + "%";
         }
 
 		private void picPlayPause_Click(object sender, EventArgs e)
