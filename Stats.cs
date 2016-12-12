@@ -38,6 +38,8 @@ namespace CrappyListenMoe
 
 		private void ParseStats(string data)
 		{
+			if (data.Trim() == "")
+				return;
 			DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(Stats));
 			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
 			{
