@@ -27,7 +27,7 @@ namespace CrappyListenMoe
 
 		public StatsStream()
 		{
-			socket = new WebSocket("wss://listen.moe/api/socket");
+			socket = new WebSocket("wss://listen.moe/api/v2/socket");
 
 			socket.OnMessage += (sender, e) => ParseStats(e.Data);
 			socket.OnError += (sender, e) => { throw e.Exception; };
