@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
-
-using Timer = System.Timers.Timer;
 
 namespace CrappyListenMoe
 {
@@ -56,8 +53,9 @@ namespace CrappyListenMoe
         #endregion
 
         WebStreamPlayer player;
+		StatsStream statsStream;
 
-        Font titleFont;
+		Font titleFont;
         Font artistFont;
         Font volumeFont;
 
@@ -70,7 +68,7 @@ namespace CrappyListenMoe
 
             this.MouseWheel += Form1_MouseWheel;
 
-			StatsStream statsStream = new StatsStream();
+			statsStream = new StatsStream();
 			statsStream.OnStatsReceived += GetStats;
 
 			this.Icon = Properties.Resources.icon;
@@ -86,7 +84,7 @@ namespace CrappyListenMoe
 			player.Play();
         }
 
-        private void ApplyLoadedSettings()
+		private void ApplyLoadedSettings()
         {
             this.Location = new Point(Settings.GetIntSetting("LocationX"), Settings.GetIntSetting("LocationY"));
 
@@ -123,7 +121,7 @@ namespace CrappyListenMoe
             lblVol.Text = newVol.ToString() + "%";
         }
 
-		private void picPlayPause_Click(object sender, EventArgs e)
+		private void playPause_Click(object sender, EventArgs e)
 		{
 			if (player.IsPlaying())
 			{
@@ -173,5 +171,19 @@ namespace CrappyListenMoe
             Settings.SetBoolSetting("TopMost", menuItemTopmost.Checked);
             Settings.WriteSettings();
         }
-    }
+
+		private void panel1_MouseEnter(object sender, EventArgs e)
+		{
+			picPlayPause.Size = new Size(18, 18);
+			picPlayPause.Location = new Point(15, 15);
+		}
+
+		private void panel1_MouseLeave(object sender, EventArgs e)
+		{
+			if (panel1.ClientRectangle.Contains(PointToClient(Control.MousePosition)))
+				return;
+			picPlayPause.Size = new Size(16, 16);
+			picPlayPause.Location = new Point(16, 16);
+		}
+	}
 }
