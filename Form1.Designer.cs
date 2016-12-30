@@ -110,9 +110,8 @@
 			this.lblArtist.Location = new System.Drawing.Point(58, 26);
 			this.lblArtist.Name = "lblArtist";
 			this.lblArtist.ScrollSpeed = 50F;
-			this.lblArtist.Size = new System.Drawing.Size(320, 22);
+			this.lblArtist.Size = new System.Drawing.Size(310, 22);
 			this.lblArtist.TabIndex = 3;
-			this.lblArtist.Text = "Artist";
 			this.lblArtist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
 			// 
 			// lblTitle
@@ -122,9 +121,9 @@
 			this.lblTitle.Location = new System.Drawing.Point(58, 5);
 			this.lblTitle.Name = "lblTitle";
 			this.lblTitle.ScrollSpeed = 50F;
-			this.lblTitle.Size = new System.Drawing.Size(350, 43);
+			this.lblTitle.Size = new System.Drawing.Size(310, 43);
 			this.lblTitle.TabIndex = 1;
-			this.lblTitle.Text = "Title";
+			this.lblTitle.Text = "(No connection)";
 			this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
 			// 
 			// Form1
