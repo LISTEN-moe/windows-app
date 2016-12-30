@@ -84,7 +84,7 @@ namespace CrappyListenMoe
 		public void Play(float initialVolume)
 		{
 			while (!opened)
-				Thread.Sleep(5);
+				Thread.Sleep(1);
 
 			waveOut = new WaveOut();
             volumeProvider = new VolumeWaveProvider16(provider);

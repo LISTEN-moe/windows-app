@@ -83,9 +83,15 @@ namespace CrappyListenMoe
             lblVol.Font = volumeFont;
 
             player = new WebStreamPlayer("https://listen.moe/stream");
-			player.Open();
-			player.Play();
+			StartPlayback();
         }
+
+		//Assumes that the player is in the stopped state
+		private async void StartPlayback()
+		{
+			player.Open();
+			await Task.Run(() => player.Play());
+		}
 
 		private async void LoadWebSocket()
 		{
@@ -157,9 +163,8 @@ namespace CrappyListenMoe
 			}
 			else
 			{
-				player.Open();
-				player.Play();
 				picPlayPause.Image = Properties.Resources.pause;
+				StartPlayback();
 			}
 		}
 

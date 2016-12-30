@@ -123,7 +123,6 @@
 			this.lblTitle.ScrollSpeed = 50F;
 			this.lblTitle.Size = new System.Drawing.Size(310, 43);
 			this.lblTitle.TabIndex = 1;
-			this.lblTitle.Text = "(No connection)";
 			this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
 			// 
 			// Form1
