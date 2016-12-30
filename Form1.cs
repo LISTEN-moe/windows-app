@@ -66,6 +66,14 @@ namespace CrappyListenMoe
             Settings.LoadSettings();
             ApplyLoadedSettings();
 
+			if (!Settings.GetBoolSetting("IgnoreUpdates") && Updater.CheckForUpdates())
+			{
+				if (MessageBox.Show("An update is available for the Listen.moe player. Do you want to update and restart the application now?", "Listen.moe client - Update available", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				{
+					Updater.Update();
+				}
+			}
+
             this.MouseWheel += Form1_MouseWheel;
 
 			statsStream = new StatsStream();

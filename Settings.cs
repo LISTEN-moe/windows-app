@@ -20,7 +20,8 @@ namespace CrappyListenMoe
         };
         static Dictionary<string, bool> boolDefaults = new Dictionary<string, bool>()
         {
-            { "TopMost", false }
+            { "TopMost", false },
+			{ "IgnoreUpdates", false }
         };
 
         private const string settingsFileLocation = "listenMoeSettings.ini";
