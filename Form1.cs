@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CrappyListenMoe
@@ -66,21 +67,15 @@ namespace CrappyListenMoe
             Settings.LoadSettings();
             ApplyLoadedSettings();
 
-			if (!Settings.GetBoolSetting("IgnoreUpdates") && Updater.CheckForUpdates())
+			if (!Settings.GetBoolSetting("IgnoreUpdates"))
 			{
-				if (MessageBox.Show("An update is available for the Listen.moe player. Do you want to update and restart the application now?", "Listen.moe client - Update available", MessageBoxButtons.YesNo) == DialogResult.Yes)
-				{
-					Updater.Update();
-				}
+				CheckForUpdates();
 			}
 
             this.MouseWheel += Form1_MouseWheel;
-
-			statsStream = new StatsStream();
-			statsStream.OnStatsReceived += GetStats;
-
 			this.Icon = Properties.Resources.icon;
 
+			LoadWebSocket();
 			LoadOpenSans();
 
 			lblTitle.Font = titleFont;
@@ -91,6 +86,30 @@ namespace CrappyListenMoe
 			player.Open();
 			player.Play();
         }
+
+		private async void LoadWebSocket()
+		{
+			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+			await Task.Run(() =>
+			{
+				statsStream = new StatsStream(scheduler);
+				statsStream.OnStatsReceived += GetStats;
+			});
+		}
+
+		private async void CheckForUpdates()
+		{
+			await Task.Run(() =>
+			{
+				if (Updater.CheckForUpdates())
+				{
+					System.Media.SystemSounds.Beep.Play(); //DING
+					if (MessageBox.Show(this, "An update is available for the Listen.moe player. Do you want to update and restart the application now?", 
+							"Listen.moe client - Update available", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						Updater.Update();
+				}
+			});
+		}
 
 		private void ApplyLoadedSettings()
         {

@@ -22,11 +22,13 @@ namespace CrappyListenMoe
 	public class StatsStream
 	{
 		private WebSocket socket;
+		private TaskFactory factory;
 		public delegate void StatsReceived(Stats stats);
 		public event StatsReceived OnStatsReceived = (stats) => { };
 
-		public StatsStream()
+		public StatsStream(TaskScheduler scheduler)
 		{
+			factory = new TaskFactory(scheduler);
 			socket = new WebSocket("wss://listen.moe/api/v2/socket");
 
 			socket.OnMessage += (sender, e) => ParseStats(e.Data);
@@ -48,7 +50,10 @@ namespace CrappyListenMoe
 			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
 			{
 				Stats stats = (Stats)s.ReadObject(stream);
-				OnStatsReceived(stats);
+				factory.StartNew(() => 
+				{
+					OnStatsReceived(stats);
+				});
 			}
 		}
 	}

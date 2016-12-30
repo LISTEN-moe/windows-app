@@ -61,38 +61,33 @@ namespace CrappyListenMoe
 
 		public static void Update()
 		{
-			Task.Run(() =>
+			string html = new WebClient().DownloadString("https://github.com/anonymousthing/ListenMoeClient/releases");
+			html = html.Substring(html.IndexOf("release label-latest"));
+			html = html.Substring(html.IndexOf("release-body"));
+			html = html.Substring(html.IndexOf("release-downloads"));
+
+			//First download link is fine for now... probably
+			html = html.Substring(html.IndexOf("<a href=") + 9);
+			var link = "https://github.com" + html.Substring(0, html.IndexOf('"'));
+
+			var downloadPath = Path.GetTempFileName();
+			new WebClient().DownloadFile(link, downloadPath);
+
+			//Rename current executable as backup
+			try
 			{
-				string html = new WebClient().DownloadString("https://github.com/anonymousthing/ListenMoeClient/releases");
-				html = html.Substring(html.IndexOf("release label-latest"));
-				html = html.Substring(html.IndexOf("release-body"));
-				html = html.Substring(html.IndexOf("release-downloads"));
+				string exeName = Process.GetCurrentProcess().ProcessName;
+				File.Delete(exeName + ".bak");
+				File.Move(exeName + ".exe", exeName + ".bak");
+				File.Move(downloadPath, exeName + ".exe");
 
-				//First download link is fine for now... probably
-				html = html.Substring(html.IndexOf("<a href=") + 9);
-				var link = "https://github.com" + html.Substring(0, html.IndexOf('"'));
-
-				var downloadPath = Path.GetTempFileName();
-				new WebClient().DownloadFile(link, downloadPath);
-
-				//Rename current executable as backup
-				try
-				{
-					string exeName = Process.GetCurrentProcess().ProcessName;
-					File.Delete(exeName + ".bak");
-					File.Move(exeName + ".exe", exeName + ".bak");
-					File.Move(downloadPath, exeName + ".exe");
-
-					Process.Start(exeName + ".exe");
-					Environment.Exit(0);
-				}
-				catch (Exception e)
-				{
-					MessageBox.Show("Unable to replace with updated executable. Check whether the executable is marked as read-only, or whether it is in a protected folder that requires administrative rights.");
-				}
-			});
-
-			new UpdateDialog().ShowDialog();
+				Process.Start(exeName + ".exe");
+				Environment.Exit(0);
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("Unable to replace with updated executable. Check whether the executable is marked as read-only, or whether it is in a protected folder that requires administrative rights.");
+			}
 		}
 	}
 }

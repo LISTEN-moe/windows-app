@@ -80,7 +80,13 @@ namespace CrappyListenMoe
             base.OnTextChanged(e);
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+		protected override void OnFontChanged(EventArgs e)
+		{
+			base.OnFontChanged(e);
+			OnTextChanged(e);
+		}
+
+		protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.TranslateTransform(currentPosition, 0);
             RectangleF rect = new RectangleF(ClientRectangle.Location, new SizeF(stringWidth, ClientRectangle.Height));
