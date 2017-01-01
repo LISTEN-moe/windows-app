@@ -42,6 +42,12 @@ namespace CrappyListenMoe
 			socket.Connect();
 		}
 
+		public void ReconnectIfDead()
+		{
+			if (!socket.IsAlive)
+				socket.Connect();
+		}
+
 		private void ParseStats(string data)
 		{
 			if (data.Trim() == "")

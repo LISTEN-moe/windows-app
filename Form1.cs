@@ -164,6 +164,7 @@ namespace CrappyListenMoe
 			else
 			{
 				picPlayPause.Image = Properties.Resources.pause;
+				statsStream.ReconnectIfDead();
 				StartPlayback();
 			}
 		}
