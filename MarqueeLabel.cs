@@ -68,7 +68,7 @@ namespace CrappyListenMoe
         {
             if (!this.IsDisposed) //We get issues with the graphics object when we're disposing, since it calls this TextChange method
             {
-                stringWidth = this.CreateGraphics().MeasureString(Text, Font).Width;
+                stringWidth = this.CreateGraphics().MeasureString(Text, Font).Width + 2;
                 if (stringWidth > Width)
                     scrolling = true;
                 else
