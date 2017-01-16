@@ -15,15 +15,15 @@ namespace CrappyListenMoe
 	//Somewhat taken from the NAudio sample code
 	class WebStreamPlayer
 	{
+		const int SAMPLE_RATE = 48000;
+
 		BufferedWaveProvider provider;
 		IWavePlayer waveOut;
 		Thread provideThread;
         VolumeWaveProvider16 volumeProvider;
 
 		Ogg ogg = new Ogg();
-		OpusDecoder decoder = OpusDecoder.Create(48000, 2);
-		//48k samples per second, we have a 20ms opus frame size = 960 samples per frame
-		int frameSize = 960;
+		OpusDecoder decoder = OpusDecoder.Create(SAMPLE_RATE, 2);
 
 		bool playing = false;
 		bool opened = false;
@@ -53,7 +53,7 @@ namespace CrappyListenMoe
 				{
 					var readFullyStream = new ReadFullyStream(stream);
 
-					provider = new BufferedWaveProvider(new WaveFormat(48000, 2));
+					provider = new BufferedWaveProvider(new WaveFormat(SAMPLE_RATE, 2));
 					provider.BufferDuration = TimeSpan.FromSeconds(20);
 					opened = true;
 
@@ -69,7 +69,8 @@ namespace CrappyListenMoe
 							var streamBytes = packets[i];
 							try
 							{
-								short[] outputBuffer = new short[frameSize * 2];
+								int frameSize = OpusPacketInfo.GetNumSamplesPerFrame(streamBytes, 0, SAMPLE_RATE); //Get frame size from opus packet
+								short[] outputBuffer = new short[frameSize * 2]; //2 channels
 								var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, outputBuffer, 0, frameSize, false);
 								for (int s = 0; s < outputBuffer.Length; s++)
 								{
