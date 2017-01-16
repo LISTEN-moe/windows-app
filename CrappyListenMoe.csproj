@@ -36,6 +36,10 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Concentus, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Concentus.1.1.3\lib\portable-net45+win+wpa81+wp80\Concentus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
       <Private>True</Private>
@@ -70,6 +74,7 @@
     <Compile Include="MarqueeLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Ogg.cs" />
     <Compile Include="OpenSans.cs" />
     <Compile Include="ReadFullyStream.cs" />
     <Compile Include="Program.cs" />

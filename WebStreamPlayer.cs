@@ -2,11 +2,13 @@
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Concentus.Structs;
 
 namespace CrappyListenMoe
 {
@@ -14,10 +16,14 @@ namespace CrappyListenMoe
 	class WebStreamPlayer
 	{
 		BufferedWaveProvider provider;
-		IMp3FrameDecompressor decompressor;
 		IWavePlayer waveOut;
 		Thread provideThread;
         VolumeWaveProvider16 volumeProvider;
+
+		Ogg ogg = new Ogg();
+		OpusDecoder decoder = OpusDecoder.Create(48000, 2);
+		//48k samples per second, we have a 20ms opus frame size = 960 samples per frame
+		int frameSize = 960;
 
 		bool playing = false;
 		bool opened = false;
@@ -42,39 +48,42 @@ namespace CrappyListenMoe
 				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 				HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
 				HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-				var buffer = new byte[16 * 1024 * 4];
+				
 				using (var stream = resp.GetResponseStream())
 				{
 					var readFullyStream = new ReadFullyStream(stream);
+
+					provider = new BufferedWaveProvider(new WaveFormat(48000, 2));
+					provider.BufferDuration = TimeSpan.FromSeconds(20);
+					opened = true;
+
 					while (playing)
 					{
 						if (BufferGettingFull())
 							Thread.Sleep(500);
 
-						Mp3Frame frame = Mp3Frame.LoadFromStream(readFullyStream);
+						byte[][] packets = ogg.GetAudioPackets(readFullyStream);
 
-						if (decompressor == null)
+						for (int i = 0; i < packets.Length; i++)
 						{
-							var waveFormat = new Mp3WaveFormat(frame.SampleRate, frame.ChannelMode == ChannelMode.Mono ? 1 : 2, frame.FrameLength, frame.BitRate);
-							decompressor = new AcmMp3FrameDecompressor(waveFormat);
-							provider = new BufferedWaveProvider(decompressor.OutputFormat);
-							provider.BufferDuration = TimeSpan.FromSeconds(20);
-							opened = true;
+							var streamBytes = packets[i];
+							try
+							{
+								short[] outputBuffer = new short[frameSize * 2];
+								var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, outputBuffer, 0, frameSize, false);
+								for (int s = 0; s < outputBuffer.Length; s++)
+								{
+									byte[] tmp = BitConverter.GetBytes(outputBuffer[s]);
+									provider.AddSamples(tmp, 0, 2);
+								}
+							}
+							catch (Exception e)
+							{
+								//Skip this frame
+								//Note: the first 2 frames will hit this exception (I'm pretty sure they're not audio data frames)
+							}
 						}
-
-                        try
-                        {
-                            int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
-                            provider.AddSamples(buffer, 0, decompressed);
-                        }
-                        catch (MmException e)
-                        {
-                            //Skip this frame
-                        }
 					}
-
-					decompressor.Dispose();
 				}
 			});
 			provideThread.Start();
@@ -136,11 +145,7 @@ namespace CrappyListenMoe
 					provideThread = null;
 				}
 
-				if (decompressor != null)
-				{
-					decompressor.Dispose();
-					decompressor = null;
-				}
+				decoder.ResetState();
 			}
 		}
 
