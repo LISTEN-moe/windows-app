@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -60,6 +63,9 @@ namespace CrappyListenMoe
         Font artistFont;
         Font volumeFont;
 
+		float updatePercent = 0;
+		int updateState = 0; //0 = not updating, 1 = in progress, 2 = complete
+
         public Form1()
 		{
 			InitializeComponent();
@@ -105,16 +111,122 @@ namespace CrappyListenMoe
 
 		private async void CheckForUpdates()
 		{
-			await Task.Run(() =>
+			if (await CheckGithubVersion())
 			{
-				if (Updater.CheckForUpdates())
+				System.Media.SystemSounds.Beep.Play(); //DING
+				if (MessageBox.Show(this, "An update is available for the Listen.moe player. Do you want to update and restart the application now?",
+						"Listen.moe client - Update available", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					System.Media.SystemSounds.Beep.Play(); //DING
-					if (MessageBox.Show(this, "An update is available for the Listen.moe player. Do you want to update and restart the application now?", 
-							"Listen.moe client - Update available", MessageBoxButtons.YesNo) == DialogResult.Yes)
-						Updater.Update();
+					await UpdateToNewVersion();
 				}
-			});
+			}
+		}
+
+		public async Task<bool> CheckGithubVersion()
+		{
+			string html = await new WebClient().DownloadStringTaskAsync("https://github.com/anonymousthing/ListenMoeClient/releases");
+			html = html.Substring(html.IndexOf("release label-latest"));
+			html = html.Substring(html.IndexOf("release-meta"));
+			html = html.Substring(html.IndexOf("tag-references"));
+			html = html.Substring(html.IndexOf("octicon-tag")); //Under the assumption that the tag icon comes before the span
+			html = html.Substring(html.IndexOf("<span"));
+			html = html.Substring(html.IndexOf('>') + 1);
+
+			string version = html.Substring(0, html.IndexOf('<'));
+			if (version.StartsWith("v"))
+				version = version.Substring(1);
+
+			string ourVersion = Application.ProductVersion.Substring(0, Application.ProductVersion.LastIndexOf('.')); //Strip build number
+
+			//Same version
+			if (version.Trim() == ourVersion)
+				return false;
+
+			var latestParts = version.Trim().Split(new char[] { '.' });
+			var ourParts = ourVersion.Split(new char[] { '.' });
+
+			//Must be really out of date if we've changed versioning schemes...
+			if (latestParts.Length != ourParts.Length)
+				return true;
+
+			//Compare sub version numbers
+			for (int i = 0; i < latestParts.Length; i++)
+			{
+				int latestVers;
+				int ourVers;
+				if (!int.TryParse(latestParts[i], out latestVers))
+					return true;
+				if (!int.TryParse(ourParts[i], out ourVers))
+					return true;
+
+				if (latestVers == ourVers)
+					continue;
+				else
+					return latestVers > ourVers;
+			}
+
+			return false;
+		}
+		
+		public async Task UpdateToNewVersion()
+		{
+			updateState = 1;
+			string html = await new WebClient().DownloadStringTaskAsync("https://github.com/anonymousthing/ListenMoeClient/releases");
+			html = html.Substring(html.IndexOf("release label-latest"));
+			html = html.Substring(html.IndexOf("release-body"));
+			html = html.Substring(html.IndexOf("release-downloads"));
+
+			//First download link is fine for now... probably
+			html = html.Substring(html.IndexOf("<a href=") + 9);
+			var link = "https://github.com" + html.Substring(0, html.IndexOf('"'));
+
+			var downloadPath = Path.GetTempFileName();
+			WebClient wc = new WebClient();
+			wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
+			wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
+			await wc.DownloadFileTaskAsync(link, downloadPath);
+
+			//Rename current executable as backup
+			try
+			{
+				//Wait for a second before restarting so we get to see our nice green finished bar
+				await Task.Delay(1000);
+
+				string exeName = Process.GetCurrentProcess().ProcessName;
+				File.Delete(exeName + ".bak");
+				File.Move(exeName + ".exe", exeName + ".bak");
+				File.Move(downloadPath, exeName + ".exe");
+
+				Process.Start(exeName + ".exe");
+				Environment.Exit(0);
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("Unable to replace with updated executable. Check whether the executable is marked as read-only, or whether it is in a protected folder that requires administrative rights.");
+			}
+		}
+
+		private void Wc_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		{
+			updateState = 2;
+			this.Invalidate();
+		}
+
+		private void Wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+		{
+			updatePercent = e.BytesReceived / (float)e.TotalBytesToReceive;
+			this.Invalidate();
+		}
+
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			base.OnPaint(e);
+
+			if (updateState == 0)
+				return;
+
+			Brush brush = new SolidBrush(updateState == 1 ? Color.Yellow : Color.LimeGreen);
+			e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48) * updatePercent, 3);
 		}
 
 		private void ApplyLoadedSettings()
