@@ -123,7 +123,9 @@ namespace CrappyListenMoe
 
         public float AddVolume(float vol)
         {
-            return SetVolume(volumeProvider.Volume + vol);
+			if (volumeProvider != null)
+				return SetVolume(volumeProvider.Volume + vol);
+			return -1;
         }
 
 		public void Stop()

@@ -254,9 +254,12 @@ namespace CrappyListenMoe
             {
                 float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * 0.05f;
                 float newVol = player.AddVolume(volumeChange);
-                Settings.SetFloatSetting("Volume", newVol);
-                Settings.WriteSettings();
-                SetVolumeLabel(newVol);
+				if (newVol > 0)
+				{
+					Settings.SetFloatSetting("Volume", newVol);
+					Settings.WriteSettings();
+					SetVolumeLabel(newVol);
+				}
             }
         }
 
