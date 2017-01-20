@@ -56,6 +56,9 @@ namespace CrappyListenMoe
 			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
 			{
 				Stats stats = (Stats)s.ReadObject(stream);
+				stats.anime_name = stats.anime_name.Trim().Replace('\n', ' ');
+				stats.artist_name = stats.artist_name.Trim().Replace('\n', ' ');
+				stats.song_name = stats.song_name.Trim().Replace('\n', ' ');
 				factory.StartNew(() => 
 				{
 					OnStatsReceived(stats);
