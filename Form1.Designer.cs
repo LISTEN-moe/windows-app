@@ -36,6 +36,7 @@
 			this.picClose = new CrappyListenMoe.BetterPictureBox();
 			this.lblArtist = new CrappyListenMoe.MarqueeLabel();
 			this.lblTitle = new CrappyListenMoe.MarqueeLabel();
+			this.menuItemCopySongInfo = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
@@ -56,11 +57,12 @@
 			// contextMenu1
 			// 
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItemCopySongInfo,
             this.menuItemTopmost});
 			// 
 			// menuItemTopmost
 			// 
-			this.menuItemTopmost.Index = 0;
+			this.menuItemTopmost.Index = 1;
 			this.menuItemTopmost.Text = "Always on top";
 			this.menuItemTopmost.Click += new System.EventHandler(this.menuItemTopmost_Click);
 			// 
@@ -125,6 +127,12 @@
 			this.lblTitle.TabIndex = 1;
 			this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
 			// 
+			// menuItemCopySongInfo
+			// 
+			this.menuItemCopySongInfo.Index = 0;
+			this.menuItemCopySongInfo.Text = "Copy song info";
+			this.menuItemCopySongInfo.Click += new System.EventHandler(this.menuItemCopySongInfo_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -160,6 +168,7 @@
         private System.Windows.Forms.ContextMenu contextMenu1;
         private System.Windows.Forms.MenuItem menuItemTopmost;
 		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.MenuItem menuItemCopySongInfo;
 	}
 }
 

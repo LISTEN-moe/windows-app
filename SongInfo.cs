@@ -10,7 +10,7 @@ using WebSocketSharp;
 
 namespace CrappyListenMoe
 {
-	public class Stats
+	public class SongInfo
 	{
 		public string requested_by { get; set; }
 		public string listeners { get; set; }
@@ -19,19 +19,20 @@ namespace CrappyListenMoe
 		public string anime_name { get; set; }
     }
 
-	public class StatsStream
+	public class SongInfoStream
 	{
 		private WebSocket socket;
 		private TaskFactory factory;
-		public delegate void StatsReceived(Stats stats);
-		public event StatsReceived OnStatsReceived = (stats) => { };
+		public delegate void StatsReceived(SongInfo info);
+		public event StatsReceived OnSongInfoReceived = (info) => { };
+		public SongInfo currentInfo;
 
-		public StatsStream(TaskScheduler scheduler)
+		public SongInfoStream(TaskScheduler scheduler)
 		{
 			factory = new TaskFactory(scheduler);
 			socket = new WebSocket("wss://listen.moe/api/v2/socket");
 
-			socket.OnMessage += (sender, e) => ParseStats(e.Data);
+			socket.OnMessage += (sender, e) => ParseSongInfo(e.Data);
 			socket.OnError += (sender, e) => { throw e.Exception; };
 			socket.OnClose += (sender, e) =>
 			{
@@ -48,20 +49,20 @@ namespace CrappyListenMoe
 				socket.Connect();
 		}
 
-		private void ParseStats(string data)
+		private void ParseSongInfo(string data)
 		{
 			if (data.Trim() == "")
 				return;
-			DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(Stats));
+			DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(SongInfo));
 			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
 			{
-				Stats stats = (Stats)s.ReadObject(stream);
-				stats.anime_name = stats.anime_name.Trim().Replace('\n', ' ');
-				stats.artist_name = stats.artist_name.Trim().Replace('\n', ' ');
-				stats.song_name = stats.song_name.Trim().Replace('\n', ' ');
+				currentInfo = (SongInfo)s.ReadObject(stream);
+				currentInfo.anime_name = currentInfo.anime_name.Trim().Replace('\n', ' ');
+				currentInfo.artist_name = currentInfo.artist_name.Trim().Replace('\n', ' ');
+				currentInfo.song_name = currentInfo.song_name.Trim().Replace('\n', ' ');
 				factory.StartNew(() => 
 				{
-					OnStatsReceived(stats);
+					OnSongInfoReceived(currentInfo);
 				});
 			}
 		}

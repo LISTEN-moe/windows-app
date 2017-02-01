@@ -57,7 +57,7 @@ namespace CrappyListenMoe
         #endregion
 
         WebStreamPlayer player;
-		StatsStream statsStream;
+		SongInfoStream songInfoStream;
 
 		Font titleFont;
         Font artistFont;
@@ -104,8 +104,8 @@ namespace CrappyListenMoe
 			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
 			await Task.Run(() =>
 			{
-				statsStream = new StatsStream(scheduler);
-				statsStream.OnStatsReceived += GetStats;
+				songInfoStream = new SongInfoStream(scheduler);
+				songInfoStream.OnSongInfoReceived += ProcessSongInfo;
 			});
 		}
 
@@ -279,7 +279,7 @@ namespace CrappyListenMoe
 			else
 			{
 				picPlayPause.Image = Properties.Resources.pause;
-				statsStream.ReconnectIfDead();
+				songInfoStream.ReconnectIfDead();
 				StartPlayback();
 			}
 		}
@@ -289,20 +289,20 @@ namespace CrappyListenMoe
             this.Close();
 		}
 
-		void GetStats(Stats stats)
+		void ProcessSongInfo(SongInfo songInfo)
 		{
-			lblTitle.Text = stats.song_name;
-			string artistAnimeName = stats.artist_name;
-			if (!string.IsNullOrWhiteSpace(stats.anime_name))
+			lblTitle.Text = songInfo.song_name;
+			string artistAnimeName = songInfo.artist_name;
+			if (!string.IsNullOrWhiteSpace(songInfo.anime_name))
 			{
-				if (!string.IsNullOrWhiteSpace(stats.artist_name))
-					artistAnimeName += " (" + stats.anime_name + ")";
+				if (!string.IsNullOrWhiteSpace(songInfo.artist_name))
+					artistAnimeName += " (" + songInfo.anime_name + ")";
 				else
-					artistAnimeName = stats.anime_name;
+					artistAnimeName = songInfo.anime_name;
 			}
 			string middle = string.IsNullOrWhiteSpace(artistAnimeName) ? "Requested by " : "; Requested by ";
-			middle = string.IsNullOrEmpty(stats.requested_by) ? "" : middle;
-			lblArtist.Text = artistAnimeName.Trim() + middle + stats.requested_by;
+			middle = string.IsNullOrEmpty(songInfo.requested_by) ? "" : middle;
+			lblArtist.Text = artistAnimeName.Trim() + middle + songInfo.requested_by;
 		}
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -332,6 +332,12 @@ namespace CrappyListenMoe
 				return;
 			picPlayPause.Size = new Size(16, 16);
 			picPlayPause.Location = new Point(16, 16);
+		}
+
+		private void menuItemCopySongInfo_Click(object sender, EventArgs e)
+		{
+			SongInfo info = songInfoStream.currentInfo;
+			Clipboard.SetText(info.song_name + " \n" + info.artist_name + " \n" + info.anime_name);
 		}
 	}
 }
