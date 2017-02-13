@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -65,13 +65,17 @@ namespace CrappyListenMoe
 
 		float updatePercent = 0;
 		int updateState = 0; //0 = not updating, 1 = in progress, 2 = complete
+		FormLogin loginForm;
+
+		Sprite favSprite;
 
         public Form1()
 		{
 			InitializeComponent();
-			CheckForIllegalCrossThreadCalls = false;
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             Settings.LoadSettings();
-            ApplyLoadedSettings();
+
+			ApplyLoadedSettings();
 
 			if (!Settings.GetBoolSetting("IgnoreUpdates"))
 			{
@@ -83,14 +87,29 @@ namespace CrappyListenMoe
 
 			LoadWebSocket();
 			LoadOpenSans();
-
+			
 			lblTitle.Font = titleFont;
 			lblArtist.Font = artistFont;
             lblVol.Font = volumeFont;
-
-            player = new WebStreamPlayer("https://listen.moe/stream");
+			
+			favSprite = SpriteLoader.LoadFavSprite();
+			picFavourite.Image = favSprite.Frames[0];
+			
+			player = new WebStreamPlayer("https://listen.moe/stream");
 			StartPlayback();
-        }
+
+			TestToken();
+		}
+
+		private async void TestToken()
+		{
+			//lol
+			string token = Settings.GetStringSetting("Token");
+			string response = await WebHelper.Get("/api/user/favorites", token);
+			var result = Json.Parse<ListenMoeResponse>(response);
+			if (result.success)
+				picFavourite.Visible = true;
+		}
 
 		//Assumes that the player is in the stopped state
 		private async void StartPlayback()
@@ -111,98 +130,15 @@ namespace CrappyListenMoe
 
 		private async void CheckForUpdates()
 		{
-			if (await CheckGithubVersion())
+			if (await Updater.CheckGithubVersion())
 			{
 				System.Media.SystemSounds.Beep.Play(); //DING
 				if (MessageBox.Show(this, "An update is available for the Listen.moe player. Do you want to update and restart the application now?",
 						"Listen.moe client - Update available", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					await UpdateToNewVersion();
+					updateState = 1;
+					await Updater.UpdateToNewVersion(Wc_DownloadProgressChanged, Wc_DownloadFileCompleted);
 				}
-			}
-		}
-
-		public async Task<bool> CheckGithubVersion()
-		{
-			string html = await new WebClient().DownloadStringTaskAsync("https://github.com/anonymousthing/ListenMoeClient/releases");
-			html = html.Substring(html.IndexOf("release label-latest"));
-			html = html.Substring(html.IndexOf("release-meta"));
-			html = html.Substring(html.IndexOf("tag-references"));
-			html = html.Substring(html.IndexOf("octicon-tag")); //Under the assumption that the tag icon comes before the span
-			html = html.Substring(html.IndexOf("<span"));
-			html = html.Substring(html.IndexOf('>') + 1);
-
-			string version = html.Substring(0, html.IndexOf('<'));
-			if (version.StartsWith("v"))
-				version = version.Substring(1);
-
-			string ourVersion = Application.ProductVersion.Substring(0, Application.ProductVersion.LastIndexOf('.')); //Strip build number
-
-			//Same version
-			if (version.Trim() == ourVersion)
-				return false;
-
-			var latestParts = version.Trim().Split(new char[] { '.' });
-			var ourParts = ourVersion.Split(new char[] { '.' });
-
-			//Must be really out of date if we've changed versioning schemes...
-			if (latestParts.Length != ourParts.Length)
-				return true;
-
-			//Compare sub version numbers
-			for (int i = 0; i < latestParts.Length; i++)
-			{
-				int latestVers;
-				int ourVers;
-				if (!int.TryParse(latestParts[i], out latestVers))
-					return true;
-				if (!int.TryParse(ourParts[i], out ourVers))
-					return true;
-
-				if (latestVers == ourVers)
-					continue;
-				else
-					return latestVers > ourVers;
-			}
-
-			return false;
-		}
-		
-		public async Task UpdateToNewVersion()
-		{
-			updateState = 1;
-			string html = await new WebClient().DownloadStringTaskAsync("https://github.com/anonymousthing/ListenMoeClient/releases");
-			html = html.Substring(html.IndexOf("release label-latest"));
-			html = html.Substring(html.IndexOf("release-body"));
-			html = html.Substring(html.IndexOf("release-downloads"));
-
-			//First download link is fine for now... probably
-			html = html.Substring(html.IndexOf("<a href=") + 9);
-			var link = "https://github.com" + html.Substring(0, html.IndexOf('"'));
-
-			var downloadPath = Path.GetTempFileName();
-			WebClient wc = new WebClient();
-			wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
-			wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
-			await wc.DownloadFileTaskAsync(link, downloadPath);
-
-			//Rename current executable as backup
-			try
-			{
-				//Wait for a second before restarting so we get to see our nice green finished bar
-				await Task.Delay(1000);
-
-				string exeName = Process.GetCurrentProcess().ProcessName;
-				File.Delete(exeName + ".bak");
-				File.Move(exeName + ".exe", exeName + ".bak");
-				File.Move(downloadPath, exeName + ".exe");
-
-				Process.Start(exeName + ".exe");
-				Environment.Exit(0);
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show("Unable to replace with updated executable. Check whether the executable is marked as read-only, or whether it is in a protected folder that requires administrative rights.");
 			}
 		}
 
@@ -243,9 +179,9 @@ namespace CrappyListenMoe
 
         private void LoadOpenSans()
         {
-            titleFont = OpenSans.CreateFont(11.0f);
-            artistFont = OpenSans.CreateFont(8.0f);
-            volumeFont = OpenSans.CreateFont(8.0f);
+            titleFont = OpenSans.GetFont(11.0f);
+            artistFont = OpenSans.GetFont(8.0f);
+            volumeFont = OpenSans.GetFont(8.0f);
         }
 
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
@@ -303,6 +239,14 @@ namespace CrappyListenMoe
 			string middle = string.IsNullOrWhiteSpace(artistAnimeName) ? "Requested by " : "; Requested by ";
 			middle = string.IsNullOrEmpty(songInfo.requested_by) ? "" : middle;
 			lblArtist.Text = artistAnimeName.Trim() + middle + songInfo.requested_by;
+
+			if (songInfo.extended != null)
+			{
+				if (songInfo.extended.favorite)
+					picFavourite.Image = favSprite.Frames[favSprite.Frames.Length - 1];
+				else
+					picFavourite.Image = favSprite.Frames[0];
+			}
 		}
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -316,6 +260,8 @@ namespace CrappyListenMoe
         {
             menuItemTopmost.Checked = !menuItemTopmost.Checked;
             this.TopMost = menuItemTopmost.Checked;
+			if (loginForm != null)
+				loginForm.TopMost = this.TopMost;
             Settings.SetBoolSetting("TopMost", menuItemTopmost.Checked);
             Settings.WriteSettings();
         }
@@ -338,6 +284,97 @@ namespace CrappyListenMoe
 		{
 			SongInfo info = songInfoStream.currentInfo;
 			Clipboard.SetText(info.song_name + " \n" + info.artist_name + " \n" + info.anime_name);
+		}
+
+		public void SaveToken(bool success, string token, string username, string message)
+		{
+			picLogin.Image = Properties.Resources.up;
+			loginForm.Dispose();
+			loginForm = null;
+			if (success)
+			{
+				Settings.SetStringSetting("Token", token);
+				Settings.SetStringSetting("Username", username);
+				Settings.WriteSettings();
+				songInfoStream.Authenticate(token);
+				picFavourite.Visible = true;
+			}
+		}
+
+		private void picLogin_Click(object sender, EventArgs e)
+		{
+			if (loginForm == null)
+			{
+				picLogin.Image = Properties.Resources.down;
+				loginForm = new FormLogin(SaveToken);
+				loginForm.TopMost = this.TopMost;
+				loginForm.Show();
+				loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
+			}
+			else
+			{
+				loginForm.Close();
+				loginForm.Dispose();
+				loginForm = null;
+				picLogin.Image = Properties.Resources.up;
+			}
+		}
+
+		int currentFrame = 0;
+		bool isAnimating = false;
+		object animationLock = new object();
+
+		private async void SetFavouriteSprite(bool favourited)
+		{
+			if (favourited)
+			{
+				lock (animationLock)
+				{
+					currentFrame = 0;
+					//Reset animation and exit
+					if (isAnimating)
+						return;
+					isAnimating = true;
+				}
+
+				//Animate.
+				while (currentFrame < favSprite.Frames.Length)
+				{
+					lock (animationLock)
+					{
+						if (!isAnimating)
+							break;
+					}
+					picFavourite.Image = favSprite.Frames[currentFrame++];
+					await Task.Delay(16);
+				}
+
+				isAnimating = false;
+			}
+			else
+			{
+				lock (animationLock)
+					isAnimating = false;
+				picFavourite.Image = favSprite.Frames[0];
+			}
+		}
+
+		private async void picFavourite_Click(object sender, EventArgs e)
+		{
+			bool favouriteStatus = !songInfoStream.currentInfo.extended?.favorite ?? false;
+			SetFavouriteSprite(favouriteStatus);
+
+			string result = await WebHelper.Post("/api/songs/favorite", Settings.GetStringSetting("Token"), new Dictionary<string, string>() {
+				{ "song", songInfoStream.currentInfo.song_id.ToString() }
+			});
+
+			var response = Json.Parse<FavouritesResponse>(result);
+
+			if (songInfoStream.currentInfo.extended != null)
+				songInfoStream.currentInfo.extended.favorite = response.favorite;
+
+			if (response.success && response.favorite != favouriteStatus)
+				SetFavouriteSprite(response.favorite);
 		}
 	}
 }

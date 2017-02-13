@@ -7,28 +7,34 @@ using System.Threading.Tasks;
 
 namespace CrappyListenMoe
 {
-    class Settings
-    {
-        static Dictionary<string, int> intDefaults = new Dictionary<string, int>()
-        {
-            { "LocationX", 100 },
-            { "LocationY", 100 }
-        };
-        static Dictionary<string, float> floatDefaults = new Dictionary<string, float>()
-        {
-            { "Volume", 1.0f }
-        };
-        static Dictionary<string, bool> boolDefaults = new Dictionary<string, bool>()
-        {
-            { "TopMost", false },
+	class Settings
+	{
+		static Dictionary<string, int> intDefaults = new Dictionary<string, int>()
+		{
+			{ "LocationX", 100 },
+			{ "LocationY", 100 }
+		};
+		static Dictionary<string, float> floatDefaults = new Dictionary<string, float>()
+		{
+			{ "Volume", 1.0f }
+		};
+		static Dictionary<string, bool> boolDefaults = new Dictionary<string, bool>()
+		{
+			{ "TopMost", false },
 			{ "IgnoreUpdates", false }
-        };
+		};
+		static Dictionary<string, string> stringDefaults = new Dictionary<string, string>()
+		{
+			{ "Token", "" },
+			{ "Username", "" }
+		};
 
         private const string settingsFileLocation = "listenMoeSettings.ini";
 
         static Dictionary<string, int> intValues = new Dictionary<string, int>();
         static Dictionary<string, float> floatValues = new Dictionary<string, float>();
         static Dictionary<string, bool> boolValues = new Dictionary<string, bool>();
+		static Dictionary<string, string> stringValues = new Dictionary<string, string>();
 
         static object mutex = new object();
 
@@ -44,7 +50,7 @@ namespace CrappyListenMoe
             string[] lines = File.ReadAllLines(settingsFileLocation);
             foreach (string line in lines)
             {
-                string[] parts = line.Split('=');
+                string[] parts = line.Split(new char[] { '=' }, 2);
                 if (string.IsNullOrWhiteSpace(parts[0]))
                     continue;
 
@@ -69,6 +75,10 @@ namespace CrappyListenMoe
                         continue;
                     boolValues.Add(parts[0].Substring(1), val);
                 }
+				else if (parts[0][0] == 's')
+				{
+					stringValues.Add(parts[0].Substring(1), parts[1]);
+				}
             }
         }
 
@@ -78,23 +88,23 @@ namespace CrappyListenMoe
             intValues = new Dictionary<string, int>(intDefaults);
             floatValues = new Dictionary<string, float>(floatDefaults);
             boolValues = new Dictionary<string, bool>(boolDefaults);
+			stringValues = new Dictionary<string, string>(stringDefaults);
         }
 
         public static void WriteSettings()
         {
             StringBuilder sb = new StringBuilder();
             foreach (var kp in intValues)
-            {
                 sb.AppendLine("i" + kp.Key + "=" + kp.Value.ToString());
-            }
+
             foreach (var kp in floatValues)
-            {
                 sb.AppendLine("f" + kp.Key + "=" + kp.Value.ToString());
-            }
+
             foreach (var kp in boolValues)
-            {
                 sb.AppendLine("b" + kp.Key + "=" + kp.Value.ToString());
-            }
+
+			foreach (var kp in stringValues)
+				sb.AppendLine("s" + kp.Key + "=" + kp.Value.ToString());
 
             lock (mutex)
             {
@@ -136,6 +146,16 @@ namespace CrappyListenMoe
             return boolValues[key];
         }
 
+		public static string GetStringSetting(string key)
+		{
+			if (!stringValues.ContainsKey(key))
+			{
+				stringValues[key] = stringDefaults[key];
+				WriteSettings();
+			}
+			return stringValues[key];
+		}
+
         public static void SetIntSetting(string key, int value)
         {
             intValues[key] = value;
@@ -150,5 +170,10 @@ namespace CrappyListenMoe
         {
             boolValues[key] = value;
         }
+
+		public static void SetStringSetting(string key, string value)
+		{
+			stringValues[key] = value;
+		}
     }
 }

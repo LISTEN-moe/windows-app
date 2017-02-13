@@ -11,25 +11,38 @@ namespace CrappyListenMoe
 {
     class OpenSans
     {
-        //Font loading stuff
-        [DllImport("gdi32.dll")]
-        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [In] ref uint pcFonts);
         private static PrivateFontCollection fonts = new PrivateFontCollection();
+
+		private static Dictionary<float, Font> fontCache = new Dictionary<float, Font>();
 
         static OpenSans()
         {
             byte[] fontData = Properties.Resources.OpenSans_Regular;
-            IntPtr fontPtr = Marshal.AllocCoTaskMem(fontData.Length);
-            Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
-            uint dummy = 0;
-            fonts.AddMemoryFont(fontPtr, Properties.Resources.OpenSans_Regular.Length);
-            AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.OpenSans_Regular.Length, IntPtr.Zero, ref dummy);
-            Marshal.FreeCoTaskMem(fontPtr);
+			var handle = GCHandle.Alloc(fontData, GCHandleType.Pinned);
+			IntPtr pointer = handle.AddrOfPinnedObject();
+			try
+			{
+				fonts.AddMemoryFont(pointer, fontData.Length);
+			}
+			finally
+			{
+				handle.Free();
+			}
         }
 
-        public static Font CreateFont(float size)
+        public static Font GetFont(float size)
         {
-            return new Font(fonts.Families[0], size);
+			if (fontCache.ContainsKey(size))
+				return fontCache[size];
+
+			var font = new Font(fonts.Families[0], size);
+			fontCache.Add(size, font);
+			return font;
         }
+
+		public static FontFamily GetFontFamily()
+		{
+			return fonts.Families[0];
+		}
     }
 }

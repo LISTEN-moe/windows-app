@@ -45,7 +45,6 @@ namespace CrappyListenMoe
 
 			provideThread = new Thread(() =>
 			{
-				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 				HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
 				HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
 				
