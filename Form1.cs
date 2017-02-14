@@ -68,6 +68,7 @@ namespace CrappyListenMoe
 		FormLogin loginForm;
 
 		Sprite favSprite;
+		Sprite fadedFavSprite;
 
         public Form1()
 		{
@@ -93,6 +94,7 @@ namespace CrappyListenMoe
             lblVol.Font = volumeFont;
 			
 			favSprite = SpriteLoader.LoadFavSprite();
+			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
 			picFavourite.Image = favSprite.Frames[0];
 			
 			player = new WebStreamPlayer("https://listen.moe/stream");
@@ -241,12 +243,9 @@ namespace CrappyListenMoe
 			lblArtist.Text = artistAnimeName.Trim() + middle + songInfo.requested_by;
 
 			if (songInfo.extended != null)
-			{
-				if (songInfo.extended.favorite)
-					picFavourite.Image = favSprite.Frames[favSprite.Frames.Length - 1];
-				else
-					picFavourite.Image = favSprite.Frames[0];
-			}
+				SetFavouriteSprite(songInfo.extended.favorite);
+			else
+				picFavourite.Visible = false;
 		}
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -326,6 +325,7 @@ namespace CrappyListenMoe
 
 		private async void SetFavouriteSprite(bool favourited)
 		{
+			picFavourite.Visible = true;
 			if (favourited)
 			{
 				lock (animationLock)
@@ -361,8 +361,8 @@ namespace CrappyListenMoe
 
 		private async void picFavourite_Click(object sender, EventArgs e)
 		{
-			bool favouriteStatus = !songInfoStream.currentInfo.extended?.favorite ?? false;
-			SetFavouriteSprite(favouriteStatus);
+			bool favouriteStatus = songInfoStream.currentInfo.extended?.favorite ?? false;
+			picFavourite.Image = favouriteStatus ? fadedFavSprite.Frames[1] : fadedFavSprite.Frames[0];
 
 			string result = await WebHelper.Post("/api/songs/favorite", Settings.GetStringSetting("Token"), new Dictionary<string, string>() {
 				{ "song", songInfoStream.currentInfo.song_id.ToString() }
@@ -370,11 +370,7 @@ namespace CrappyListenMoe
 
 			var response = Json.Parse<FavouritesResponse>(result);
 
-			if (songInfoStream.currentInfo.extended != null)
-				songInfoStream.currentInfo.extended.favorite = response.favorite;
-
-			if (response.success && response.favorite != favouriteStatus)
-				SetFavouriteSprite(response.favorite);
+			songInfoStream.Update();
 		}
 	}
 }

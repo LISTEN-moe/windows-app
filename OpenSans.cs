@@ -35,7 +35,7 @@ namespace CrappyListenMoe
 			if (fontCache.ContainsKey(size))
 				return fontCache[size];
 
-			var font = new Font(fonts.Families[0], size);
+			var font = new Font(fonts.Families[0], size, GraphicsUnit.Point);
 			fontCache.Add(size, font);
 			return font;
         }

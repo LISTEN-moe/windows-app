@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -88,7 +89,7 @@ namespace CrappyListenMoe
 
 		protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.TranslateTransform(currentPosition, 0);
+			e.Graphics.TranslateTransform(currentPosition, 0);
             RectangleF rect = new RectangleF(ClientRectangle.Location, new SizeF(stringWidth, ClientRectangle.Height));
             e.Graphics.DrawString(Text, Font, Brushes.White, rect);
 

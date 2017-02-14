@@ -65,6 +65,11 @@ namespace CrappyListenMoe
 			};
 
 			socket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+			Connect();
+		}
+
+		private void Connect()
+		{
 			socket.Connect();
 
 			string token = Settings.GetStringSetting("Token");
@@ -72,15 +77,20 @@ namespace CrappyListenMoe
 				Authenticate(token);
 		}
 
+		public void Update()
+		{
+			socket.Send("update");
+		}
+
 		public void Authenticate(string token)
 		{
-			socket.Send(Encoding.ASCII.GetBytes("{ \"token\": \"" + token + "\" }"));
+			socket.Send("{ \"token\": \"" + token + "\" }");
 		}
 
 		public void ReconnectIfDead()
 		{
 			if (!socket.IsAlive)
-				socket.Connect();
+				Connect();
 		}
 
 		private void ParseSongInfo(string data)
