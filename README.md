@@ -1,7 +1,7 @@
 # ListenMoeClient
 A simple lightweight [Listen.moe](https://listen.moe) client for Windows.
 
-![](https://my.mixtape.moe/wkrwbo.png)
+![](http://i.imgur.com/nQuZyh5.gif)
 
 # Instructions
 Download the latest release from [here](https://github.com/anonymousthing/ListenMoeClient/releases).  
