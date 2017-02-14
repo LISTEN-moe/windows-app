@@ -164,7 +164,8 @@ namespace CrappyListenMoe
 				return;
 
 			Brush brush = new SolidBrush(updateState == 1 ? Color.Yellow : Color.LimeGreen);
-			e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48) * updatePercent, 3);
+			//48px for pause/play button, 75 for the RHS area
+			e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48 - 75) * updatePercent, 3);
 		}
 
 		private void ApplyLoadedSettings()
