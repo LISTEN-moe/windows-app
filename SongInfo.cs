@@ -61,7 +61,7 @@ namespace CrappyListenMoe
 			socket.OnError += (sender, e) => { throw e.Exception; };
 			socket.OnClose += (sender, e) =>
 			{
-				socket.Connect();
+				Connect();
 			};
 
 			socket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
