@@ -46,7 +46,7 @@ namespace CrappyListenMoe
 			postData.Add("username", textBox1.Text);
 			postData.Add("password", textBox2.Text);
 
-			string resp = await WebHelper.Post("/api/authenticate", postData);
+			string resp = await WebHelper.Post("https://listen.moe/api/authenticate", postData);
 			var response = Json.Parse<AuthenticateResponse>(resp);
 			tokenCallback(response.success, response.token, textBox1.Text, response.message ?? "");
 			this.Close();

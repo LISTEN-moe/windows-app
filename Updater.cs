@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,28 +13,47 @@ namespace CrappyListenMoe
 {
 	class Updater
 	{
+		//Mono has issues with Application.ProductVersion in the ILMerge'd binary, so we store our version here.
+		//Application.ProductVersion will still stay up to date 
+		const string CURRENT_VERS = "1.2.2";
+
+		[DataContract]
+		class LatestReleaseResponse
+		{
+			[DataMember]
+			public string tag_name { get; set; }
+			[DataMember]
+			public LatestReleaseAsset[] assets { get; set; }
+		}
+
+		[DataContract]
+		class LatestReleaseAsset
+		{
+			[DataMember]
+			public string browser_download_url { get; set; }
+			[DataMember]
+			public string name { get; set; }
+		}
+
 		public static async Task<bool> CheckGithubVersion()
 		{
-			string html = await new WebClient().DownloadStringTaskAsync("https://github.com/anonymousthing/ListenMoeClient/releases");
-			html = html.Substring(html.IndexOf("release label-latest"));
-			html = html.Substring(html.IndexOf("release-meta"));
-			html = html.Substring(html.IndexOf("tag-references"));
-			html = html.Substring(html.IndexOf("octicon-tag")); //Under the assumption that the tag icon comes before the span
-			html = html.Substring(html.IndexOf("<span"));
-			html = html.Substring(html.IndexOf('>') + 1);
+			string rawResponse = await WebHelper.Get("https://api.github.com/repos/anonymousthing/ListenMoeClient/releases/latest");
+			LatestReleaseResponse response = Json.Parse<LatestReleaseResponse>(rawResponse);
 
-			string version = html.Substring(0, html.IndexOf('<'));
+			var version = response.tag_name;
+
 			if (version.StartsWith("v"))
 				version = version.Substring(1);
 
-			string ourVersion = Application.ProductVersion.Substring(0, Application.ProductVersion.LastIndexOf('.')); //Strip build number
+			Console.WriteLine(CURRENT_VERS);
+			Console.WriteLine(version);
 
 			//Same version
-			if (version.Trim() == ourVersion)
+			if (version.Trim() == CURRENT_VERS)
 				return false;
 
 			var latestParts = version.Trim().Split(new char[] { '.' });
-			var ourParts = ourVersion.Split(new char[] { '.' });
+			var ourParts = CURRENT_VERS.Split(new char[] { '.' });
 
 			//Must be really out of date if we've changed versioning schemes...
 			if (latestParts.Length != ourParts.Length)
@@ -60,15 +80,18 @@ namespace CrappyListenMoe
 
 		public static async Task UpdateToNewVersion(DownloadProgressChangedEventHandler dpceh, System.ComponentModel.AsyncCompletedEventHandler aceh)
 		{
-			string html = await new WebClient().DownloadStringTaskAsync("https://github.com/anonymousthing/ListenMoeClient/releases");
-			html = html.Substring(html.IndexOf("release label-latest"));
-			html = html.Substring(html.IndexOf("release-body"));
-			html = html.Substring(html.IndexOf("release-downloads"));
+			string rawResponse = await WebHelper.Get("https://api.github.com/repos/anonymousthing/ListenMoeClient/releases/latest");
+			LatestReleaseResponse response = Json.Parse<LatestReleaseResponse>(rawResponse);
+
+			if (response.assets.Length == 0)
+			{
+				MessageBox.Show("Unable to download new executable. Please update manually from the Github releases page.");
+				return;
+			}
 
 			//First download link is fine for now... probably
-			html = html.Substring(html.IndexOf("<a href=") + 9);
-			var link = "https://github.com" + html.Substring(0, html.IndexOf('"'));
-
+			var link = response.assets[0].browser_download_url;
+			
 			var downloadPath = Path.GetTempFileName();
 			WebClient wc = new WebClient();
 			wc.DownloadProgressChanged += dpceh;

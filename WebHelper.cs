@@ -39,19 +39,19 @@ namespace CrappyListenMoe
 			return Encoding.UTF8.GetBytes(result.ToString());
 		}
 
-		public static async Task<string> Post(string endpoint, string token, Dictionary<string, string> postData)
+		public static async Task<string> Post(string url, string token, Dictionary<string, string> postData)
 		{
-			return await Post(endpoint, token, postData, "application/json");
+			return await Post(url, token, postData, "application/json");
 		}
 
-		public static async Task<string> Post(string endpoint, Dictionary<string, string> postData)
+		public static async Task<string> Post(string url, Dictionary<string, string> postData)
 		{
-			return await Post(endpoint, "", postData, "application/json");
+			return await Post(url, "", postData, "application/json");
 		}
 
-		public static async Task<string> Post(string endpoint, string token, Dictionary<string, string> postData, string contentType)
+		public static async Task<string> Post(string url, string token, Dictionary<string, string> postData, string contentType)
 		{
-			HttpWebRequest hwr = WebRequest.CreateHttp("https://listen.moe" + endpoint);
+			HttpWebRequest hwr = WebRequest.CreateHttp(url);
 			hwr.ContentType = contentType;
 			hwr.Method = "POST";
 			hwr.Timeout = 2000;
@@ -85,18 +85,20 @@ namespace CrappyListenMoe
 			return await Get(endpoint, "");
 		}
 		
-		public static async Task<string> Get(string endpoint, string token)
+		public static async Task<string> Get(string url, string token)
 		{
-			HttpWebRequest hwr = WebRequest.CreateHttp("https://listen.moe" + endpoint);
+			HttpWebRequest hwr = WebRequest.CreateHttp(url);
 			hwr.Method = "GET";
 			hwr.Timeout = 2000;
+			hwr.UserAgent = "Listen.moe Client";
 			if (token.Trim() != "")
 				hwr.Headers["authorization"] = token;
 
 			Stream respStream;
 			try
 			{
-				respStream = (await hwr.GetResponseAsync()).GetResponseStream();
+				var response = await hwr.GetResponseAsync();
+				respStream = response.GetResponseStream();
 			}
 			catch (WebException e)
 			{

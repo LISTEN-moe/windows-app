@@ -141,7 +141,7 @@ namespace CrappyListenMoe
 		{
 			//lol
 			string token = Settings.GetStringSetting("Token");
-			string response = await WebHelper.Get("/api/user/favorites", token);
+			string response = await WebHelper.Get("https://listen.moe/api/user/favorites", token);
 			var result = Json.Parse<ListenMoeResponse>(response);
 			if (result.success)
 				picFavourite.Visible = true;
@@ -404,7 +404,7 @@ namespace CrappyListenMoe
 			bool favouriteStatus = songInfoStream.currentInfo.extended?.favorite ?? false;
 			picFavourite.Image = favouriteStatus ? fadedFavSprite.Frames[1] : fadedFavSprite.Frames[0];
 
-			string result = await WebHelper.Post("/api/songs/favorite", Settings.GetStringSetting("Token"), new Dictionary<string, string>() {
+			string result = await WebHelper.Post("https://listen.moe/api/songs/favorite", Settings.GetStringSetting("Token"), new Dictionary<string, string>() {
 				{ "song", songInfoStream.currentInfo.song_id.ToString() }
 			});
 
