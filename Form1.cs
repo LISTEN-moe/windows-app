@@ -66,6 +66,8 @@ namespace CrappyListenMoe
 			{
 				Point cursorDiff = new Point(Cursor.Position.X - preMoveCursorLocation.X, Cursor.Position.Y - preMoveCursorLocation.Y);
 				this.Location = new Point(preMoveFormLocation.X + cursorDiff.X, preMoveFormLocation.Y + cursorDiff.Y);
+				if (loginForm != null)
+					loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
 			}
 		}
 
@@ -79,6 +81,9 @@ namespace CrappyListenMoe
 				if (CloseToEdge(this.Top, s.WorkingArea.Top)) this.Top = s.WorkingArea.Top;
 				if (CloseToEdge(s.WorkingArea.Right, this.Right)) this.Left = s.WorkingArea.Right - this.Width;
 				if (CloseToEdge(s.WorkingArea.Bottom, this.Bottom)) this.Top = s.WorkingArea.Bottom - this.Height;
+
+				if (loginForm != null)
+					loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
 
 				Settings.SetIntSetting("LocationX", this.Location.X);
 				Settings.SetIntSetting("LocationY", this.Location.Y);
