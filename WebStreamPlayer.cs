@@ -91,8 +91,12 @@ namespace CrappyListenMoe
 
         public float AddVolume(float vol)
         {
-			return audioPlayer.AddVolume(vol);
-        }
+			if (audioPlayer != null)
+				return audioPlayer.AddVolume(vol);
+
+			Console.WriteLine("OpenAL was not loaded!");
+			return 1;
+		}
 
 		public void Stop()
 		{
