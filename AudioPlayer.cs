@@ -73,7 +73,10 @@ namespace CrappyListenMoe
 			int processed;
 			AL.GetSource(source, ALGetSourcei.BuffersProcessed, out processed);
 			if (processed > 0)
-				AL.SourceUnqueueBuffers(source, processed);
+			{
+				int[] buffersToDispose = AL.SourceUnqueueBuffers(source, processed);
+				AL.DeleteBuffers(buffersToDispose);
+			}
 
 			//Shouldn't need this since our stream is real-time, but leaving it here just in case
 			//If we still have at least half of our buffers available, just return
