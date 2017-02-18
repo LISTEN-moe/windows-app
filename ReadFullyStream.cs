@@ -11,7 +11,7 @@ namespace CrappyListenMoe
 	public class ReadFullyStream : Stream
 	{
 		private readonly Stream sourceStream;
-		private long pos; // psuedo-position
+		private long pos;
 		private readonly byte[] readAheadBuffer;
 		private int readAheadLength;
 		private int readAheadOffset;

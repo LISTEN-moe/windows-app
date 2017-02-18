@@ -36,7 +36,7 @@ namespace CrappyListenMoe
 			}
 			result[result.Length - 1] = '}';
 
-			return Encoding.ASCII.GetBytes(result.ToString());
+			return Encoding.UTF8.GetBytes(result.ToString());
 		}
 
 		public static async Task<string> Post(string endpoint, string token, Dictionary<string, string> postData)

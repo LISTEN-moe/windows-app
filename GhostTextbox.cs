@@ -38,6 +38,10 @@ namespace CrappyListenMoe
 
 		private void updateGhostText()
 		{
+			PlatformID p = Environment.OSVersion.Platform;
+			if (p != PlatformID.Win32NT && p != PlatformID.Win32S && p != PlatformID.Win32Windows && p != PlatformID.WinCE)
+				return;
+
 			if (!this.IsHandleCreated || string.IsNullOrWhiteSpace(ghostText))
 				return;
 

@@ -12,48 +12,80 @@ namespace CrappyListenMoe
     public partial class Form1 : Form
     {
         #region Magical form stuff
-        //Form dragging
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
 
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [DllImport("user32.dll")]
-        public static extern bool ReleaseCapture();
+		private void BindChildEvents()
+		{
+			lblArtist.MouseDown += Form1_MouseDown;
+			lblArtist.MouseMove += Form1_MouseMove;
+			lblArtist.MouseUp += Form1_MouseUp;
 
-        private void Form1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                contextMenu1.Show(this, e.Location);
-            }
-        }
+			lblTitle.MouseDown += Form1_MouseDown;
+			lblTitle.MouseMove += Form1_MouseMove;
+			lblTitle.MouseUp += Form1_MouseUp;
 
-        //Screen edge snapping
-        private const int SnapDist = 10;
+			panel2.MouseDown += Form1_MouseDown;
+			panel2.MouseMove += Form1_MouseMove;
+			panel2.MouseUp += Form1_MouseUp;
+		}
+
+		Point preMoveFormLocation;
+		Point preMoveCursorLocation;
+		bool moving = false;
+
+		//Screen edge snapping
+		private const int SnapDist = 10;
 		private bool CloseToEdge(int pos, int edge)
 		{
 			return Math.Abs(pos - edge) <= SnapDist;
 		}
 
-		protected override void OnResizeEnd(EventArgs e)
+		private void Form1_MouseDown(object sender, MouseEventArgs e)
 		{
-			base.OnResizeEnd(e);
-			Screen s = Screen.FromPoint(this.Location);
-			if (CloseToEdge(this.Left, s.WorkingArea.Left)) this.Left = s.WorkingArea.Left;
-			if (CloseToEdge(this.Top, s.WorkingArea.Top)) this.Top = s.WorkingArea.Top;
-			if (CloseToEdge(s.WorkingArea.Right, this.Right)) this.Left = s.WorkingArea.Right - this.Width;
-			if (CloseToEdge(s.WorkingArea.Bottom, this.Bottom)) this.Top = s.WorkingArea.Bottom - this.Height;
+			if (e.Button == MouseButtons.Left)
+			{
+				preMoveCursorLocation = Cursor.Position;
+				preMoveFormLocation = this.Location;
+				moving = true;
 
-            Settings.SetIntSetting("LocationX", this.Location.X);
-            Settings.SetIntSetting("LocationY", this.Location.Y);
-            Settings.WriteSettings();
-        }
+				PlatformID p = Environment.OSVersion.Platform;
+				if (p != PlatformID.Win32NT && p != PlatformID.Win32S && p != PlatformID.Win32Windows && p != PlatformID.WinCE)
+					return;
+
+				//ReleaseCapture();
+                //SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                contextMenu1.Show(this, e.Location);
+            }
+		}
+
+		private void Form1_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (moving)
+			{
+				Point cursorDiff = new Point(Cursor.Position.X - preMoveCursorLocation.X, Cursor.Position.Y - preMoveCursorLocation.Y);
+				this.Location = new Point(preMoveFormLocation.X + cursorDiff.X, preMoveFormLocation.Y + cursorDiff.Y);
+			}
+		}
+
+		private void Form1_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (moving)
+			{
+				moving = false;
+				Screen s = Screen.FromPoint(this.Location);
+				if (CloseToEdge(this.Left, s.WorkingArea.Left)) this.Left = s.WorkingArea.Left;
+				if (CloseToEdge(this.Top, s.WorkingArea.Top)) this.Top = s.WorkingArea.Top;
+				if (CloseToEdge(s.WorkingArea.Right, this.Right)) this.Left = s.WorkingArea.Right - this.Width;
+				if (CloseToEdge(s.WorkingArea.Bottom, this.Bottom)) this.Top = s.WorkingArea.Bottom - this.Height;
+
+				Settings.SetIntSetting("LocationX", this.Location.X);
+				Settings.SetIntSetting("LocationY", this.Location.Y);
+				Settings.WriteSettings();
+			}
+		}
+		
         #endregion
 
         WebStreamPlayer player;
@@ -75,7 +107,7 @@ namespace CrappyListenMoe
         public Form1()
 		{
 			InitializeComponent();
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			BindChildEvents();
             Settings.LoadSettings();
 
 			ApplyLoadedSettings();
