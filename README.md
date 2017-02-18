@@ -13,19 +13,26 @@ The window will snap to the edges of your screen, and you can mouse scroll on th
 Download the latest release from [here](https://github.com/anonymousthing/ListenMoeClient/releases) and run it.
 
 ### Debian
-1) Download and install the alpha channel of Mono (currently 4.8) by running the following commands in your favourite shell:
-    ```
-    echo "deb http://download.mono-project.com/repo/debian alpha main" | sudo tee /etc/apt/sources.list.d/mono-xamarin-alpha.list  
-    sudo apt-get update
-    sudo apt-get install mono-complete
-    ```
-2) Download and install libopenal with 
-    ```
-    sudo apt-get install libopenal1
-    ```
-3) Download the latest release from [here](https://github.com/anonymousthing/ListenMoeClient/releases)
-4) Download [this config file](https://raw.githubusercontent.com/anonymousthing/ListenMoeClient/master/ListenMoe.exe.config) and place it in the same location where you downloaded `ListenMoe.exe`
-5) Run it with `mono ListenMoe.exe`
+ 1) Download and install the alpha channel of Mono (currently 4.8) by running the following commands in your favourite shell:  
+ 
+```
+echo "deb http://download.mono-project.com/repo/debian alpha main" | sudo tee /etc/apt/sources.list.d/mono-xamarin-alpha.list
+sudo apt-get update  
+sudo apt-get install mono-complete  
+```
+    
+ 2) Download and install libopenal with
+ 
+```
+sudo apt-get install libopenal1  
+```
+    
+ 3) Download the latest release from [here](https://github.com/anonymousthing/ListenMoeClient/releases)
+ 
+ 4) Download [this config file](https://raw.githubusercontent.com/anonymousthing/ListenMoeClient/master/ListenMoe.exe.config) and place it in the same location where you downloaded `ListenMoe.exe`
+ 
+ 5) Run it with `mono ListenMoe.exe`
+ 
 
 ## Updates
 Auto-updates are baked into the app (updates are checked on startup only though), which will check for updates, download the latest version and restart the app automatically for you if you click OK. It backs up your older version to `ListenMoe.bak` in the same folder. You can disable update checking on startup by changing `bIgnoreUpdates` in `listenMoeSettings.ini` to `True`. 
