@@ -13,6 +13,8 @@ The window will snap to the edges of your screen, and you can mouse scroll on th
 Download the latest release from [here](https://github.com/anonymousthing/ListenMoeClient/releases) and run it.
 
 ### Debian
+The Listen.moe client can run on Ubuntu/Debian on Mono, but requires version 4.8 or later (which is currently in alpha). You can install it with the following instructions:  
+
  1) Download and install the alpha channel of Mono (currently 4.8) by running the following commands in your favourite shell:  
  
 ```
