@@ -15,7 +15,7 @@ namespace CrappyListenMoe
 	{
 		//Mono has issues with Application.ProductVersion in the ILMerge'd binary, so we store our version here.
 		//Application.ProductVersion will still stay up to date 
-		const string CURRENT_VERS = "1.2.3";
+		const string CURRENT_VERS = "1.2.4";
 
 		[DataContract]
 		class LatestReleaseResponse
