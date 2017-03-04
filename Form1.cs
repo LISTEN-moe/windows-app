@@ -107,12 +107,12 @@ namespace CrappyListenMoe
 		Sprite favSprite;
 		Sprite fadedFavSprite;
 
-		bool shiftDown = false;
-
         public Form1()
 		{
 			InitializeComponent();
 			BindChildEvents();
+			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
+
             Settings.LoadSettings();
 
 			ApplyLoadedSettings();
@@ -140,6 +140,15 @@ namespace CrappyListenMoe
 			StartPlayback();
 
 			TestToken();
+		}
+
+		protected override void WndProc(ref Message m)
+		{
+			WM message = (WM)m.Msg;
+			if (message == WM.INPUT)
+				RawInput.ProcessMessage(m.LParam);
+
+			base.WndProc(ref m);
 		}
 
 		private async void TestToken()
@@ -225,15 +234,13 @@ namespace CrappyListenMoe
             artistFont = OpenSans.GetFont(8.0f);
             volumeFont = OpenSans.GetFont(8.0f);
         }
-
-
-
+		
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
         {
             if (e.Delta != 0)
             {
 				float delta = 0.05f;
-				if (shiftDown)
+				if (RawInput.IsPressed(VirtualKeys.Shift))
 					delta = 0.01f;
                 float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * delta;
                 float newVol = player.AddVolume(volumeChange);
@@ -416,18 +423,6 @@ namespace CrappyListenMoe
 			var response = Json.Parse<FavouritesResponse>(result);
 
 			songInfoStream.Update();
-		}
-
-		private void Form1_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Shift)
-				shiftDown = true;
-		}
-
-		private void Form1_KeyUp(object sender, KeyEventArgs e)
-		{
-			if (!e.Shift)
-				shiftDown = false;
 		}
 	}
 }

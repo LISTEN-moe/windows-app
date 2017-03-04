@@ -33,19 +33,19 @@
 			this.menuItemCopySongInfo = new System.Windows.Forms.MenuItem();
 			this.menuItemTopmost = new System.Windows.Forms.MenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.picPlayPause = new CrappyListenMoe.BetterPictureBox();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.picFavourite = new CrappyListenMoe.BetterPictureBox();
 			this.picClose = new CrappyListenMoe.BetterPictureBox();
 			this.picLogin = new CrappyListenMoe.BetterPictureBox();
-			this.picPlayPause = new CrappyListenMoe.BetterPictureBox();
 			this.lblArtist = new CrappyListenMoe.MarqueeLabel();
 			this.lblTitle = new CrappyListenMoe.MarqueeLabel();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picFavourite)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picLogin)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// lblVol
@@ -93,6 +93,22 @@
 			this.panel1.Click += new System.EventHandler(this.playPause_Click);
 			this.panel1.MouseEnter += new System.EventHandler(this.panel1_MouseEnter);
 			this.panel1.MouseLeave += new System.EventHandler(this.panel1_MouseLeave);
+			// 
+			// picPlayPause
+			// 
+			this.picPlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.picPlayPause.BackColor = System.Drawing.Color.Transparent;
+			this.picPlayPause.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.picPlayPause.Image = global::CrappyListenMoe.Properties.Resources.pause;
+			this.picPlayPause.Location = new System.Drawing.Point(16, 16);
+			this.picPlayPause.Name = "picPlayPause";
+			this.picPlayPause.Size = new System.Drawing.Size(16, 16);
+			this.picPlayPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.picPlayPause.TabIndex = 0;
+			this.picPlayPause.TabStop = false;
+			this.picPlayPause.Click += new System.EventHandler(this.playPause_Click);
 			// 
 			// panel2
 			// 
@@ -152,22 +168,6 @@
 			this.picLogin.TabStop = false;
 			this.picLogin.Click += new System.EventHandler(this.picLogin_Click);
 			// 
-			// picPlayPause
-			// 
-			this.picPlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.picPlayPause.BackColor = System.Drawing.Color.Transparent;
-			this.picPlayPause.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picPlayPause.Image = global::CrappyListenMoe.Properties.Resources.pause;
-			this.picPlayPause.Location = new System.Drawing.Point(16, 16);
-			this.picPlayPause.Name = "picPlayPause";
-			this.picPlayPause.Size = new System.Drawing.Size(16, 16);
-			this.picPlayPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.picPlayPause.TabIndex = 0;
-			this.picPlayPause.TabStop = false;
-			this.picPlayPause.Click += new System.EventHandler(this.playPause_Click);
-			// 
 			// lblArtist
 			// 
 			this.lblArtist.BackColor = System.Drawing.Color.Transparent;
@@ -208,18 +208,16 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Listen.moe";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
-			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
 			this.panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).EndInit();
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picFavourite)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picLogin)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).EndInit();
 			this.ResumeLayout(false);
 
 		}
