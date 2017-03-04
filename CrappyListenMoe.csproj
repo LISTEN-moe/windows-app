@@ -108,6 +108,7 @@
     <Compile Include="MarqueeLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MonoHelper.cs" />
     <Compile Include="Ogg.cs" />
     <Compile Include="OpenSans.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
