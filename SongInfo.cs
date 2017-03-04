@@ -93,8 +93,8 @@ namespace CrappyListenMoe
 			if (!socket.IsAlive)
 				Connect();
 		}
-
-		private async void ParseSongInfo(string data)
+        
+		private void ParseSongInfo(string data)
 		{
 			if (data.Trim() == "")
 				return;
@@ -103,16 +103,19 @@ namespace CrappyListenMoe
 			currentInfo.artist_name = currentInfo.artist_name.Trim().Replace('\n', ' ');
 			currentInfo.song_name = currentInfo.song_name.Trim().Replace('\n', ' ');
 
-            if (!firstInfo)
-            {
-                await Task.Delay(10000);
-            }
-            firstInfo = false;
-
-			await factory.StartNew(() =>
+			new Thread(() =>
 			{
-				OnSongInfoReceived(currentInfo);
-			});
+				if (!firstInfo)
+				{
+					Thread.Sleep(10000);
+				}
+				firstInfo = false;
+
+				factory.StartNew(() =>
+				{
+					OnSongInfoReceived(currentInfo);
+				});
+			}).Start();
 		}
 	}
 }
