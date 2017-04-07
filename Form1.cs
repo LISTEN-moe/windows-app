@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -28,15 +26,16 @@ namespace CrappyListenMoe
 			panel2.MouseUp += Form1_MouseUp;
 		}
 
-		Point preMoveFormLocation;
+		Point originalLocation;
 		Point preMoveCursorLocation;
+        int cursorLeftDiff, cursorRightDiff, cursorTopDiff, cursorBottomDiff;
 		bool moving = false;
 
 		//Screen edge snapping
-		private const int SnapDist = 10;
+		private const int snapDistance = 10;
 		private bool CloseToEdge(int pos, int edge)
 		{
-			return Math.Abs(pos - edge) <= SnapDist;
+			return Math.Abs(pos - edge) <= snapDistance;
 		}
 
 		private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -44,15 +43,13 @@ namespace CrappyListenMoe
 			if (e.Button == MouseButtons.Left)
 			{
 				preMoveCursorLocation = Cursor.Position;
-				preMoveFormLocation = this.Location;
+				originalLocation = this.Location;
 				moving = true;
 
-				PlatformID p = Environment.OSVersion.Platform;
-				if (p != PlatformID.Win32NT && p != PlatformID.Win32S && p != PlatformID.Win32Windows && p != PlatformID.WinCE)
-					return;
-
-				//ReleaseCapture();
-                //SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                cursorLeftDiff = preMoveCursorLocation.X - this.Left;
+                cursorRightDiff = this.Right - preMoveCursorLocation.X;
+                cursorTopDiff = preMoveCursorLocation.Y - this.Top;
+                cursorBottomDiff = this.Bottom - preMoveCursorLocation.Y;
             }
             else if (e.Button == MouseButtons.Right)
             {
@@ -63,9 +60,39 @@ namespace CrappyListenMoe
 		private void Form1_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (moving)
-			{
-				Point cursorDiff = new Point(Cursor.Position.X - preMoveCursorLocation.X, Cursor.Position.Y - preMoveCursorLocation.Y);
-				this.Location = new Point(preMoveFormLocation.X + cursorDiff.X, preMoveFormLocation.Y + cursorDiff.Y);
+            {
+                Point cursorDiff = new Point(Cursor.Position.X - preMoveCursorLocation.X, Cursor.Position.Y - preMoveCursorLocation.Y);
+                Point newLocation = new Point(originalLocation.X + cursorDiff.X, originalLocation.Y + cursorDiff.Y);
+
+                if (RawInput.IsPressed(VirtualKeys.Shift))
+                {
+                    this.Location = newLocation;
+                }
+                else
+                {
+                    Screen s = Screen.FromPoint(newLocation);
+
+                    bool hSnapped = false;
+                    bool vSnapped = false;
+                    if ((hSnapped = CloseToEdge(s.WorkingArea.Left, newLocation.X))) this.Left = s.WorkingArea.Left;
+                    if ((vSnapped = CloseToEdge(s.WorkingArea.Top, newLocation.Y))) this.Top = s.WorkingArea.Top;
+                    if (!hSnapped && (hSnapped = CloseToEdge(s.WorkingArea.Right, newLocation.X + Width))) this.Left = s.WorkingArea.Right - this.Width;
+                    if (!vSnapped && (vSnapped = CloseToEdge(s.WorkingArea.Bottom, newLocation.Y + Height))) this.Top = s.WorkingArea.Bottom - this.Height;
+
+                    int finalX = newLocation.X;
+                    int finalY = newLocation.Y;
+                    if (hSnapped)
+                        finalX = this.Location.X;
+                    if (vSnapped)
+                        finalY = this.Location.Y;
+
+                    this.Location = new Point(finalX, finalY);
+
+                    Settings.SetIntSetting("LocationX", this.Location.X);
+                    Settings.SetIntSetting("LocationY", this.Location.Y);
+                    Settings.WriteSettings();
+                }
+                
 				if (loginForm != null)
 					loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
 			}
@@ -74,21 +101,7 @@ namespace CrappyListenMoe
 		private void Form1_MouseUp(object sender, MouseEventArgs e)
 		{
 			if (moving)
-			{
 				moving = false;
-				Screen s = Screen.FromPoint(this.Location);
-				if (CloseToEdge(this.Left, s.WorkingArea.Left)) this.Left = s.WorkingArea.Left;
-				if (CloseToEdge(this.Top, s.WorkingArea.Top)) this.Top = s.WorkingArea.Top;
-				if (CloseToEdge(s.WorkingArea.Right, this.Right)) this.Left = s.WorkingArea.Right - this.Width;
-				if (CloseToEdge(s.WorkingArea.Bottom, this.Bottom)) this.Top = s.WorkingArea.Bottom - this.Height;
-
-				if (loginForm != null)
-					loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
-
-				Settings.SetIntSetting("LocationX", this.Location.X);
-				Settings.SetIntSetting("LocationY", this.Location.Y);
-				Settings.WriteSettings();
-			}
 		}
 		
         #endregion
