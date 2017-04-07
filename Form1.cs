@@ -7,9 +7,9 @@ using System.Windows.Forms;
 
 namespace CrappyListenMoe
 {
-    public partial class Form1 : Form
-    {
-        #region Magical form stuff
+	public partial class Form1 : Form
+	{
+		#region Magical form stuff
 
 		private void BindChildEvents()
 		{
@@ -28,7 +28,7 @@ namespace CrappyListenMoe
 
 		Point originalLocation;
 		Point preMoveCursorLocation;
-        int cursorLeftDiff, cursorRightDiff, cursorTopDiff, cursorBottomDiff;
+		int cursorLeftDiff, cursorRightDiff, cursorTopDiff, cursorBottomDiff;
 		bool moving = false;
 
 		//Screen edge snapping
@@ -46,53 +46,53 @@ namespace CrappyListenMoe
 				originalLocation = this.Location;
 				moving = true;
 
-                cursorLeftDiff = preMoveCursorLocation.X - this.Left;
-                cursorRightDiff = this.Right - preMoveCursorLocation.X;
-                cursorTopDiff = preMoveCursorLocation.Y - this.Top;
-                cursorBottomDiff = this.Bottom - preMoveCursorLocation.Y;
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                contextMenu1.Show(this, e.Location);
-            }
+				cursorLeftDiff = preMoveCursorLocation.X - this.Left;
+				cursorRightDiff = this.Right - preMoveCursorLocation.X;
+				cursorTopDiff = preMoveCursorLocation.Y - this.Top;
+				cursorBottomDiff = this.Bottom - preMoveCursorLocation.Y;
+			}
+			else if (e.Button == MouseButtons.Right)
+			{
+				contextMenu1.Show(this, e.Location);
+			}
 		}
 
 		private void Form1_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (moving)
-            {
-                Point cursorDiff = new Point(Cursor.Position.X - preMoveCursorLocation.X, Cursor.Position.Y - preMoveCursorLocation.Y);
-                Point newLocation = new Point(originalLocation.X + cursorDiff.X, originalLocation.Y + cursorDiff.Y);
+			{
+				Point cursorDiff = new Point(Cursor.Position.X - preMoveCursorLocation.X, Cursor.Position.Y - preMoveCursorLocation.Y);
+				Point newLocation = new Point(originalLocation.X + cursorDiff.X, originalLocation.Y + cursorDiff.Y);
 
-                if (RawInput.IsPressed(VirtualKeys.Shift))
-                {
-                    this.Location = newLocation;
-                }
-                else
-                {
-                    Screen s = Screen.FromPoint(newLocation);
+				if (RawInput.IsPressed(VirtualKeys.Shift))
+				{
+					this.Location = newLocation;
+				}
+				else
+				{
+					Screen s = Screen.FromPoint(newLocation);
 
-                    bool hSnapped = false;
-                    bool vSnapped = false;
-                    if ((hSnapped = CloseToEdge(s.WorkingArea.Left, newLocation.X))) this.Left = s.WorkingArea.Left;
-                    if ((vSnapped = CloseToEdge(s.WorkingArea.Top, newLocation.Y))) this.Top = s.WorkingArea.Top;
-                    if (!hSnapped && (hSnapped = CloseToEdge(s.WorkingArea.Right, newLocation.X + Width))) this.Left = s.WorkingArea.Right - this.Width;
-                    if (!vSnapped && (vSnapped = CloseToEdge(s.WorkingArea.Bottom, newLocation.Y + Height))) this.Top = s.WorkingArea.Bottom - this.Height;
+					bool hSnapped = false;
+					bool vSnapped = false;
+					if ((hSnapped = CloseToEdge(s.WorkingArea.Left, newLocation.X))) this.Left = s.WorkingArea.Left;
+					if ((vSnapped = CloseToEdge(s.WorkingArea.Top, newLocation.Y))) this.Top = s.WorkingArea.Top;
+					if (!hSnapped && (hSnapped = CloseToEdge(s.WorkingArea.Right, newLocation.X + Width))) this.Left = s.WorkingArea.Right - this.Width;
+					if (!vSnapped && (vSnapped = CloseToEdge(s.WorkingArea.Bottom, newLocation.Y + Height))) this.Top = s.WorkingArea.Bottom - this.Height;
 
-                    int finalX = newLocation.X;
-                    int finalY = newLocation.Y;
-                    if (hSnapped)
-                        finalX = this.Location.X;
-                    if (vSnapped)
-                        finalY = this.Location.Y;
+					int finalX = newLocation.X;
+					int finalY = newLocation.Y;
+					if (hSnapped)
+						finalX = this.Location.X;
+					if (vSnapped)
+						finalY = this.Location.Y;
 
-                    this.Location = new Point(finalX, finalY);
+					this.Location = new Point(finalX, finalY);
 
-                    Settings.SetIntSetting("LocationX", this.Location.X);
-                    Settings.SetIntSetting("LocationY", this.Location.Y);
-                    Settings.WriteSettings();
-                }
-                
+					Settings.SetIntSetting("LocationX", this.Location.X);
+					Settings.SetIntSetting("LocationY", this.Location.Y);
+					Settings.WriteSettings();
+				}
+				
 				if (loginForm != null)
 					loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
 			}
@@ -104,14 +104,14 @@ namespace CrappyListenMoe
 				moving = false;
 		}
 		
-        #endregion
+		#endregion
 
-        WebStreamPlayer player;
+		WebStreamPlayer player;
 		SongInfoStream songInfoStream;
 
 		Font titleFont;
-        Font artistFont;
-        Font volumeFont;
+		Font artistFont;
+		Font volumeFont;
 
 		float updatePercent = 0;
 		int updateState = 0; //0 = not updating, 1 = in progress, 2 = complete
@@ -120,14 +120,14 @@ namespace CrappyListenMoe
 		Sprite favSprite;
 		Sprite fadedFavSprite;
 
-        public Form1()
+		public Form1()
 		{
 			InitializeComponent();
 			BindChildEvents();
 			if (MonoHelper.IsWindows())
 				RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 
-            Settings.LoadSettings();
+			Settings.LoadSettings();
 
 			ApplyLoadedSettings();
 
@@ -136,7 +136,7 @@ namespace CrappyListenMoe
 				CheckForUpdates();
 			}
 
-            this.MouseWheel += Form1_MouseWheel;
+			this.MouseWheel += Form1_MouseWheel;
 			this.Icon = Properties.Resources.icon;
 
 			LoadWebSocket();
@@ -144,7 +144,7 @@ namespace CrappyListenMoe
 			
 			lblTitle.Font = titleFont;
 			lblArtist.Font = artistFont;
-            lblVol.Font = volumeFont;
+			lblVol.Font = volumeFont;
 			
 			favSprite = SpriteLoader.LoadFavSprite();
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
@@ -234,47 +234,47 @@ namespace CrappyListenMoe
 		}
 
 		private void ApplyLoadedSettings()
-        {
-            this.Location = new Point(Settings.GetIntSetting("LocationX"), Settings.GetIntSetting("LocationY"));
+		{
+			this.Location = new Point(Settings.GetIntSetting("LocationX"), Settings.GetIntSetting("LocationY"));
 
-            float vol = Settings.GetFloatSetting("Volume");
-            SetVolumeLabel(vol);
+			float vol = Settings.GetFloatSetting("Volume");
+			SetVolumeLabel(vol);
 
-            bool topmost = Settings.GetBoolSetting("TopMost");
-            this.TopMost = topmost;
-            menuItemTopmost.Checked = topmost;
-        }
+			bool topmost = Settings.GetBoolSetting("TopMost");
+			this.TopMost = topmost;
+			menuItemTopmost.Checked = topmost;
+		}
 
-        private void LoadOpenSans()
-        {
-            titleFont = OpenSans.GetFont(11.0f);
-            artistFont = OpenSans.GetFont(8.0f);
-            volumeFont = OpenSans.GetFont(8.0f);
-        }
+		private void LoadOpenSans()
+		{
+			titleFont = OpenSans.GetFont(11.0f);
+			artistFont = OpenSans.GetFont(8.0f);
+			volumeFont = OpenSans.GetFont(8.0f);
+		}
 		
-        private void Form1_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (e.Delta != 0)
-            {
+		private void Form1_MouseWheel(object sender, MouseEventArgs e)
+		{
+			if (e.Delta != 0)
+			{
 				float delta = 0.05f;
 				if (RawInput.IsPressed(VirtualKeys.Shift))
 					delta = 0.01f;
-                float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * delta;
-                float newVol = player.AddVolume(volumeChange);
+				float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * delta;
+				float newVol = player.AddVolume(volumeChange);
 				if (newVol >= 0)
 				{
 					Settings.SetFloatSetting("Volume", newVol);
 					Settings.WriteSettings();
 					SetVolumeLabel(newVol);
 				}
-            }
-        }
+			}
+		}
 
-        private void SetVolumeLabel(float vol)
-        {
-            int newVol = (int)Math.Round(vol * 100);
-            lblVol.Text = newVol.ToString() + "%";
-        }
+		private void SetVolumeLabel(float vol)
+		{
+			int newVol = (int)Math.Round(vol * 100);
+			lblVol.Text = newVol.ToString() + "%";
+		}
 
 		private void playPause_Click(object sender, EventArgs e)
 		{
@@ -293,7 +293,7 @@ namespace CrappyListenMoe
 
 		private void picClose_Click(object sender, EventArgs e)
 		{
-            this.Close();
+			this.Close();
 		}
 
 		void ProcessSongInfo(SongInfo songInfo)
@@ -317,22 +317,22 @@ namespace CrappyListenMoe
 				picFavourite.Visible = false;
 		}
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.Hide();
-            player.Stop();
-            player.Dispose();
-        }
+		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			this.Hide();
+			player.Stop();
+			player.Dispose();
+		}
 
-        private void menuItemTopmost_Click(object sender, EventArgs e)
-        {
-            menuItemTopmost.Checked = !menuItemTopmost.Checked;
-            this.TopMost = menuItemTopmost.Checked;
+		private void menuItemTopmost_Click(object sender, EventArgs e)
+		{
+			menuItemTopmost.Checked = !menuItemTopmost.Checked;
+			this.TopMost = menuItemTopmost.Checked;
 			if (loginForm != null)
 				loginForm.TopMost = this.TopMost;
-            Settings.SetBoolSetting("TopMost", menuItemTopmost.Checked);
-            Settings.WriteSettings();
-        }
+			Settings.SetBoolSetting("TopMost", menuItemTopmost.Checked);
+			Settings.WriteSettings();
+		}
 
 		private void panel1_MouseEnter(object sender, EventArgs e)
 		{
