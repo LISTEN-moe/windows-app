@@ -38,9 +38,6 @@ namespace CrappyListenMoe
 
 		private void updateGhostText()
 		{
-			if (!MonoHelper.IsWindows())
-				return;
-
 			if (!this.IsHandleCreated || string.IsNullOrWhiteSpace(ghostText))
 				return;
 

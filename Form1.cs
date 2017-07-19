@@ -124,8 +124,7 @@ namespace CrappyListenMoe
 		{
 			InitializeComponent();
 			BindChildEvents();
-			if (MonoHelper.IsWindows())
-				RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
+			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 
 			Settings.LoadSettings();
 
@@ -161,13 +160,9 @@ namespace CrappyListenMoe
 
 		protected override void WndProc(ref Message m)
 		{
-			if (MonoHelper.IsWindows())
-			{
-				WM message = (WM)m.Msg;
-				if (message == WM.INPUT)
-					RawInput.ProcessMessage(m.LParam);
-			}
-
+			WM message = (WM)m.Msg;
+			if (message == WM.INPUT)
+				RawInput.ProcessMessage(m.LParam);
 			base.WndProc(ref m);
 		}
 

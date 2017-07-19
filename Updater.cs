@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,7 @@ namespace CrappyListenMoe
 {
 	class Updater
 	{
-		//Mono has issues with Application.ProductVersion in the ILMerge'd binary, so we store our version here.
-		//Application.ProductVersion will still stay up to date 
-		const string CURRENT_VERS = "1.2.6";
+		static string CURRENT_VERS = Application.ProductVersion.Substring(0, Application.ProductVersion.LastIndexOf('.')); //Strip build number
 
 		[DataContract]
 		class LatestReleaseResponse

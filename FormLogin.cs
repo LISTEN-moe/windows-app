@@ -29,14 +29,18 @@ namespace CrappyListenMoe
             checkBox1.Font = OpenSans.GetFont(9);
             checkBox2.Font = OpenSans.GetFont(9);
             checkBox3.Font = OpenSans.GetFont(9);
+            label1.Font = OpenSans.GetFont(8);
+
+            checkBox1.Checked = Settings.GetBoolSetting("TopMost");
+            checkBox2.Checked = Settings.GetBoolSetting("IgnoreUpdates");
+            checkBox3.Checked = Settings.GetBoolSetting("CloseToTray");
+
             var username = Settings.GetStringSetting("Username").Trim();
 
 			if (username != "")
 			{
 				var loginString = "Logged in as " + username;
-				textBox1.GhostText = loginString;
-				ToolTip tt = new ToolTip();
-				tt.SetToolTip(textBox1, loginString);
+                label1.Text = loginString;
 			}
 
 			this.tokenCallback = tokenCallback;
@@ -58,5 +62,23 @@ namespace CrappyListenMoe
 		{
 			await Login();
 		}
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.SetBoolSetting("TopMost", checkBox1.Checked);
+            Settings.WriteSettings();
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.SetBoolSetting("IgnoreUpdates", checkBox2.Checked);
+            Settings.WriteSettings();
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.SetBoolSetting("CloseToTray", checkBox3.Checked);
+            Settings.WriteSettings();
+        }
     }
 }
