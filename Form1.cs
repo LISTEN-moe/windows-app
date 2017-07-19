@@ -145,7 +145,10 @@ namespace CrappyListenMoe
 			lblTitle.Font = titleFont;
 			lblArtist.Font = artistFont;
 			lblVol.Font = volumeFont;
-			
+
+			notifyIcon1.ContextMenu = contextMenu2;
+			notifyIcon1.Icon = Properties.Resources.icon;
+
 			favSprite = SpriteLoader.LoadFavSprite();
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
 			picFavourite.Image = favSprite.Frames[0];
@@ -243,6 +246,9 @@ namespace CrappyListenMoe
 			bool topmost = Settings.GetBoolSetting("TopMost");
 			this.TopMost = topmost;
 			menuItemTopmost.Checked = topmost;
+
+			bool minimiseToTray = Settings.GetBoolSetting("MinimiseToTray");
+			menuItemMinimiseToTray.Checked = minimiseToTray;
 		}
 
 		private void LoadOpenSans()
@@ -293,7 +299,15 @@ namespace CrappyListenMoe
 
 		private void picClose_Click(object sender, EventArgs e)
 		{
-			this.Close();
+			if (Settings.GetBoolSetting("MinimiseToTray"))
+			{
+				notifyIcon1.Visible = true;
+				this.Hide();
+			}
+			else
+			{
+				this.Close();
+			}
 		}
 
 		void ProcessSongInfo(SongInfo songInfo)
@@ -319,9 +333,15 @@ namespace CrappyListenMoe
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
+			Exit();
+		}
+
+		private void Exit()
+		{
 			this.Hide();
 			player.Stop();
 			player.Dispose();
+			Application.Exit();
 		}
 
 		private void menuItemTopmost_Click(object sender, EventArgs e)
@@ -390,6 +410,25 @@ namespace CrappyListenMoe
 
 		int currentFrame = 0;
 		bool isAnimating = false;
+
+		private void menuItemExit_Click(object sender, EventArgs e)
+		{
+			Exit();
+		}
+
+		private void menuItemMinimiseToTray_Click(object sender, EventArgs e)
+		{
+			menuItemTopmost.Checked = !menuItemTopmost.Checked;
+			Settings.SetBoolSetting("MinimiseToTray", menuItemTopmost.Checked);
+			Settings.WriteSettings();
+		}
+
+		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			this.Show();
+			notifyIcon1.Visible = false;
+		}
+
 		object animationLock = new object();
 
 		private async void SetFavouriteSprite(bool favourited)

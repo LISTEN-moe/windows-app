@@ -21,7 +21,8 @@ namespace CrappyListenMoe
 		static Dictionary<string, bool> boolDefaults = new Dictionary<string, bool>()
 		{
 			{ "TopMost", false },
-			{ "IgnoreUpdates", false }
+			{ "IgnoreUpdates", false },
+			{ "MinimiseToTray", true }
 		};
 		static Dictionary<string, string> stringDefaults = new Dictionary<string, string>()
 		{

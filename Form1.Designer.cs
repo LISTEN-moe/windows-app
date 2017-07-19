@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.lblVol = new System.Windows.Forms.Label();
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuItemCopySongInfo = new System.Windows.Forms.MenuItem();
@@ -40,6 +41,10 @@
 			this.picLogin = new CrappyListenMoe.BetterPictureBox();
 			this.lblArtist = new CrappyListenMoe.MarqueeLabel();
 			this.lblTitle = new CrappyListenMoe.MarqueeLabel();
+			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
+			this.menuItemExit = new System.Windows.Forms.MenuItem();
+			this.menuItemMinimiseToTray = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panel2.SuspendLayout();
@@ -64,7 +69,8 @@
 			// 
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItemCopySongInfo,
-            this.menuItemTopmost});
+            this.menuItemTopmost,
+            this.menuItemMinimiseToTray});
 			// 
 			// menuItemCopySongInfo
 			// 
@@ -193,6 +199,28 @@
 			this.lblTitle.TabIndex = 1;
 			this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
 			// 
+			// notifyIcon1
+			// 
+			this.notifyIcon1.Text = "Listen.moe";
+			this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+			// 
+			// contextMenu2
+			// 
+			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItemExit});
+			// 
+			// menuItemExit
+			// 
+			this.menuItemExit.Index = 0;
+			this.menuItemExit.Text = "Exit";
+			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
+			// 
+			// menuItemMinimiseToTray
+			// 
+			this.menuItemMinimiseToTray.Index = 2;
+			this.menuItemMinimiseToTray.Text = "Minimise to system tray";
+			this.menuItemMinimiseToTray.Click += new System.EventHandler(this.menuItemMinimiseToTray_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -236,6 +264,10 @@
 		private BetterPictureBox picLogin;
 		private BetterPictureBox picFavourite;
 		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.NotifyIcon notifyIcon1;
+		private System.Windows.Forms.ContextMenu contextMenu2;
+		private System.Windows.Forms.MenuItem menuItemExit;
+		private System.Windows.Forms.MenuItem menuItemMinimiseToTray;
 	}
 }
 
