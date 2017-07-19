@@ -175,7 +175,7 @@ namespace CrappyListenMoe
 		{
 			//lol
 			string token = Settings.GetStringSetting("Token");
-			string response = await WebHelper.Get("https://listen.moe/api/user/favorites", token);
+			string response = await WebHelper.Get("https://listen.moe/api/user", token);
 			var result = Json.Parse<ListenMoeResponse>(response);
 			if (result.success)
 				picFavourite.Visible = true;
@@ -477,8 +477,7 @@ namespace CrappyListenMoe
 			});
 
 			var response = Json.Parse<FavouritesResponse>(result);
-
-			songInfoStream.Update();
+			SetFavouriteSprite(response.favorite);
 		}
 	}
 }

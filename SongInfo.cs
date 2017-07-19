@@ -46,8 +46,6 @@ namespace CrappyListenMoe
 
 	public class SongInfoStream
 	{
-        private static bool firstInfo = true;
-		private bool expectingUpdate = false;
 		private WebSocket socket;
 		private TaskFactory factory;
 		public delegate void StatsReceived(SongInfo info);
@@ -79,12 +77,6 @@ namespace CrappyListenMoe
 				Authenticate(token);
 		}
 
-		public void Update()
-		{
-			expectingUpdate = true;
-			socket.Send("update");
-		}
-
 		public void Authenticate(string token)
 		{
 			socket.Send("{ \"token\": \"" + token + "\" }");
@@ -98,6 +90,8 @@ namespace CrappyListenMoe
         
 		private void ParseSongInfo(string data)
 		{
+			if (data.Contains("MALFORMED-JSON"))
+				return;
 			if (data.Trim() == "")
 				return;
 			currentInfo = Json.Parse<SongInfo>(data);
@@ -107,13 +101,6 @@ namespace CrappyListenMoe
 
 			new Thread(() =>
 			{
-				if (!firstInfo && !expectingUpdate)
-				{
-					Thread.Sleep(10000);
-				}
-				firstInfo = false;
-				expectingUpdate = false;
-
 				factory.StartNew(() =>
 				{
 					OnSongInfoReceived(currentInfo);
