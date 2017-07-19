@@ -29,7 +29,7 @@ namespace CrappyListenMoe
             checkBox1.Font = OpenSans.GetFont(9);
             checkBox2.Font = OpenSans.GetFont(9);
             checkBox3.Font = OpenSans.GetFont(9);
-            label1.Font = OpenSans.GetFont(9);
+            label1.Font = OpenSans.GetFont(8);
 
             checkBox1.Checked = Settings.GetBoolSetting("TopMost");
             checkBox2.Checked = Settings.GetBoolSetting("IgnoreUpdates");
