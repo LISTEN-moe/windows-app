@@ -303,6 +303,8 @@ namespace CrappyListenMoe
 			{
 				notifyIcon1.Visible = true;
 				this.Hide();
+				if (loginForm != null)
+					loginForm.Hide();
 			}
 			else
 			{
@@ -426,6 +428,8 @@ namespace CrappyListenMoe
 		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			this.Show();
+			if (loginForm != null)
+				loginForm.Show();
 			notifyIcon1.Visible = false;
 		}
 
