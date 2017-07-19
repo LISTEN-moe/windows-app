@@ -23,11 +23,13 @@ namespace CrappyListenMoe
 		public FormLogin(Action<bool, string, string, string> tokenCallback)
 		{
 			InitializeComponent();
-			button1.Font = OpenSans.GetFont(8);
+			button1.Font = OpenSans.GetFont(11);
 			textBox1.Font = OpenSans.GetFont(9);
 			textBox2.Font = OpenSans.GetFont(9);
-
-			var username = Settings.GetStringSetting("Username").Trim();
+            checkBox1.Font = OpenSans.GetFont(9);
+            checkBox2.Font = OpenSans.GetFont(9);
+            checkBox3.Font = OpenSans.GetFont(9);
+            var username = Settings.GetStringSetting("Username").Trim();
 
 			if (username != "")
 			{
@@ -56,5 +58,5 @@ namespace CrappyListenMoe
 		{
 			await Login();
 		}
-	}
+    }
 }

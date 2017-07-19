@@ -44,7 +44,7 @@
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemExit = new System.Windows.Forms.MenuItem();
-			this.menuItemMinimiseToTray = new System.Windows.Forms.MenuItem();
+			this.menuItemCloseToTray = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panel2.SuspendLayout();
@@ -70,7 +70,7 @@
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItemCopySongInfo,
             this.menuItemTopmost,
-            this.menuItemMinimiseToTray});
+            this.menuItemCloseToTray});
 			// 
 			// menuItemCopySongInfo
 			// 
@@ -217,9 +217,9 @@
 			// 
 			// menuItemMinimiseToTray
 			// 
-			this.menuItemMinimiseToTray.Index = 2;
-			this.menuItemMinimiseToTray.Text = "Minimise to system tray";
-			this.menuItemMinimiseToTray.Click += new System.EventHandler(this.menuItemMinimiseToTray_Click);
+			this.menuItemCloseToTray.Index = 2;
+			this.menuItemCloseToTray.Text = "Minimise to system tray";
+			this.menuItemCloseToTray.Click += new System.EventHandler(this.menuItemCloseToTray_Click);
 			// 
 			// Form1
 			// 
@@ -267,7 +267,7 @@
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu2;
 		private System.Windows.Forms.MenuItem menuItemExit;
-		private System.Windows.Forms.MenuItem menuItemMinimiseToTray;
+		private System.Windows.Forms.MenuItem menuItemCloseToTray;
 	}
 }
 

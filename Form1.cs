@@ -247,8 +247,8 @@ namespace CrappyListenMoe
 			this.TopMost = topmost;
 			menuItemTopmost.Checked = topmost;
 
-			bool minimiseToTray = Settings.GetBoolSetting("MinimiseToTray");
-			menuItemMinimiseToTray.Checked = minimiseToTray;
+			bool closeToTray = Settings.GetBoolSetting("CloseToTray");
+			menuItemCloseToTray.Checked = closeToTray;
 		}
 
 		private void LoadOpenSans()
@@ -299,7 +299,7 @@ namespace CrappyListenMoe
 
 		private void picClose_Click(object sender, EventArgs e)
 		{
-			if (Settings.GetBoolSetting("MinimiseToTray"))
+			if (Settings.GetBoolSetting("CloseToTray"))
 			{
 				notifyIcon1.Visible = true;
 				this.Hide();
@@ -416,10 +416,10 @@ namespace CrappyListenMoe
 			Exit();
 		}
 
-		private void menuItemMinimiseToTray_Click(object sender, EventArgs e)
+		private void menuItemCloseToTray_Click(object sender, EventArgs e)
 		{
 			menuItemTopmost.Checked = !menuItemTopmost.Checked;
-			Settings.SetBoolSetting("MinimiseToTray", menuItemTopmost.Checked);
+			Settings.SetBoolSetting("CloseToTray", menuItemTopmost.Checked);
 			Settings.WriteSettings();
 		}
 
