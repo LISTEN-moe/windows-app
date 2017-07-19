@@ -48,10 +48,6 @@ namespace CrappyListenMoe
 			Buffer.BlockCopy(samples, 0, bytes, 0, bytes.Length);
 			provider.AddSamples(bytes, 0, bytes.Length);
 		}
-
-		public void Process()
-		{
-		}
 		
 		private float BoundVolume(float vol)
 		{

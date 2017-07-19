@@ -63,7 +63,6 @@ namespace CrappyListenMoe
 								short[] rawBuffer = new short[frameSize * 2]; //2 channels
 								var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
 								audioPlayer.QueueBuffer(rawBuffer);
-								audioPlayer.Process();
 							}
 							catch (Concentus.OpusException e)
 							{
