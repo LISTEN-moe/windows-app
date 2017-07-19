@@ -46,6 +46,8 @@ namespace CrappyListenMoe
 
 	public class SongInfoStream
 	{
+        private static bool firstInfo = true;
+		private bool expectingUpdate = false;
 		private WebSocket socket;
 		private TaskFactory factory;
 		public delegate void StatsReceived(SongInfo info);
@@ -101,6 +103,12 @@ namespace CrappyListenMoe
 
 			new Thread(() =>
 			{
+				if (!firstInfo)
+				{
+					Thread.Sleep(10000);
+				}
+				firstInfo = false;
+
 				factory.StartNew(() =>
 				{
 					OnSongInfoReceived(currentInfo);
