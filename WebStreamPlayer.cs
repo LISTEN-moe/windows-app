@@ -7,8 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Concentus.Structs;
-using OpenTK.Audio;
-using OpenTK.Audio.OpenAL;
 
 namespace CrappyListenMoe
 {
