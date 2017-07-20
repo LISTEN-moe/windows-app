@@ -402,12 +402,20 @@ namespace CrappyListenMoe
 		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Left)
-			{
-				this.Show();
-				if (loginForm != null)
-					loginForm.Show();
-				notifyIcon1.Visible = false;
-			}
+				Restore();
+		}
+
+		private void menuItemShow_Click(object sender, EventArgs e)
+		{
+			Restore();
+		}
+
+		private void Restore()
+		{
+			this.Show();
+			if (loginForm != null)
+				loginForm.Show();
+			notifyIcon1.Visible = false;
 		}
 
 		object animationLock = new object();

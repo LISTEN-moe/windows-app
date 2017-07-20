@@ -43,6 +43,7 @@
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemExit = new System.Windows.Forms.MenuItem();
+			this.menuItemShow = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panel2.SuspendLayout();
@@ -198,13 +199,20 @@
 			// contextMenu2
 			// 
 			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItemShow,
             this.menuItemExit});
 			// 
 			// menuItemExit
 			// 
-			this.menuItemExit.Index = 0;
+			this.menuItemExit.Index = 1;
 			this.menuItemExit.Text = "Exit";
 			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
+			// 
+			// menuItemShow
+			// 
+			this.menuItemShow.Index = 0;
+			this.menuItemShow.Text = "Show";
+			this.menuItemShow.Click += new System.EventHandler(this.menuItemShow_Click);
 			// 
 			// Form1
 			// 
@@ -251,6 +259,7 @@
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu2;
 		private System.Windows.Forms.MenuItem menuItemExit;
+		private System.Windows.Forms.MenuItem menuItemShow;
 	}
 }
 
