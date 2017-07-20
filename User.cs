@@ -36,14 +36,14 @@ namespace CrappyListenMoe
 
 			string resp = await WebHelper.Post("https://listen.moe/api/authenticate", postData);
 			var response = Json.Parse<AuthenticateResponse>(resp);
-			Settings.SetStringSetting("username", response.success ? username : "");
+			Settings.SetStringSetting("Username", response.success ? username : "");
 			loggedIn = response.success;
 			if (loggedIn)
 			{
 				foreach (var callback in loginCallbacks)
 					callback();
 				//Save successful credentials
-				Settings.SetStringSetting("username", username);
+				Settings.SetStringSetting("Username", username);
 				Settings.SetStringSetting("Token", response.token);
 			}
 
@@ -66,7 +66,7 @@ namespace CrappyListenMoe
 			//Clear saved credentials on failure
 			if (!result.success)
 			{
-				Settings.SetStringSetting("username", "");
+				Settings.SetStringSetting("Username", "");
 				Settings.SetStringSetting("Token", "");
 			}
 			return result.success;
