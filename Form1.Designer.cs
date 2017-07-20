@@ -32,7 +32,6 @@
 			this.lblVol = new System.Windows.Forms.Label();
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuItemCopySongInfo = new System.Windows.Forms.MenuItem();
-			this.menuItemTopmost = new System.Windows.Forms.MenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.picPlayPause = new CrappyListenMoe.BetterPictureBox();
 			this.panel2 = new System.Windows.Forms.Panel();
@@ -44,7 +43,6 @@
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemExit = new System.Windows.Forms.MenuItem();
-			this.menuItemCloseToTray = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panel2.SuspendLayout();
@@ -68,21 +66,13 @@
 			// contextMenu1
 			// 
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItemCopySongInfo,
-            this.menuItemTopmost,
-            this.menuItemCloseToTray});
+            this.menuItemCopySongInfo});
 			// 
 			// menuItemCopySongInfo
 			// 
 			this.menuItemCopySongInfo.Index = 0;
 			this.menuItemCopySongInfo.Text = "Copy song info";
 			this.menuItemCopySongInfo.Click += new System.EventHandler(this.menuItemCopySongInfo_Click);
-			// 
-			// menuItemTopmost
-			// 
-			this.menuItemTopmost.Index = 1;
-			this.menuItemTopmost.Text = "Always on top";
-			this.menuItemTopmost.Click += new System.EventHandler(this.menuItemTopmost_Click);
 			// 
 			// panel1
 			// 
@@ -197,6 +187,7 @@
 			this.lblTitle.ScrollSpeed = 50F;
 			this.lblTitle.Size = new System.Drawing.Size(321, 43);
 			this.lblTitle.TabIndex = 1;
+			this.lblTitle.Text = "Connecting...";
 			this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
 			// 
 			// notifyIcon1
@@ -214,12 +205,6 @@
 			this.menuItemExit.Index = 0;
 			this.menuItemExit.Text = "Exit";
 			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
-			// 
-			// menuItemMinimiseToTray
-			// 
-			this.menuItemCloseToTray.Index = 2;
-			this.menuItemCloseToTray.Text = "Minimise to system tray";
-			this.menuItemCloseToTray.Click += new System.EventHandler(this.menuItemCloseToTray_Click);
 			// 
 			// Form1
 			// 
@@ -258,7 +243,6 @@
 		private MarqueeLabel lblArtist;
         private System.Windows.Forms.Label lblVol;
         private System.Windows.Forms.ContextMenu contextMenu1;
-        private System.Windows.Forms.MenuItem menuItemTopmost;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.MenuItem menuItemCopySongInfo;
 		private BetterPictureBox picLogin;
@@ -267,7 +251,6 @@
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu2;
 		private System.Windows.Forms.MenuItem menuItemExit;
-		private System.Windows.Forms.MenuItem menuItemCloseToTray;
 	}
 }
 

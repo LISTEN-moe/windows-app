@@ -138,7 +138,6 @@ namespace CrappyListenMoe
 			this.MouseWheel += Form1_MouseWheel;
 			this.Icon = Properties.Resources.icon;
 
-			LoadWebSocket();
 			LoadOpenSans();
 			
 			lblTitle.Font = titleFont;
@@ -152,10 +151,16 @@ namespace CrappyListenMoe
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
 			picFavourite.Image = favSprite.Frames[0];
 			
-			player = new WebStreamPlayer("https://listen.moe/stream");
-			StartPlayback();
-
-			TestToken();
+			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+			Task.Run(async () =>
+			{
+				var savedToken = Settings.GetStringSetting("Token");
+				if (savedToken.Trim() != "")
+					picFavourite.Visible = await User.Login(savedToken);
+				await LoadWebSocket(scheduler);
+				player = new WebStreamPlayer("https://listen.moe/stream");
+				await StartPlayback();
+			});
 		}
 
 		protected override void WndProc(ref Message m)
@@ -166,26 +171,15 @@ namespace CrappyListenMoe
 			base.WndProc(ref m);
 		}
 
-		private async void TestToken()
-		{
-			//lol
-			string token = Settings.GetStringSetting("Token");
-			string response = await WebHelper.Get("https://listen.moe/api/user", token);
-			var result = Json.Parse<ListenMoeResponse>(response);
-			if (result.success)
-				picFavourite.Visible = true;
-		}
-
 		//Assumes that the player is in the stopped state
-		private async void StartPlayback()
+		private async Task StartPlayback()
 		{
 			player.Open();
 			await Task.Run(() => player.Play());
 		}
 
-		private async void LoadWebSocket()
+		private async Task LoadWebSocket(TaskScheduler scheduler)
 		{
-			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
 			await Task.Run(() =>
 			{
 				songInfoStream = new SongInfoStream(scheduler);
@@ -237,13 +231,6 @@ namespace CrappyListenMoe
 
 			float vol = Settings.GetFloatSetting("Volume");
 			SetVolumeLabel(vol);
-
-			bool topmost = Settings.GetBoolSetting("TopMost");
-			this.TopMost = topmost;
-			menuItemTopmost.Checked = topmost;
-
-			bool closeToTray = Settings.GetBoolSetting("CloseToTray");
-			menuItemCloseToTray.Checked = closeToTray;
 		}
 
 		private void LoadOpenSans()
@@ -277,7 +264,7 @@ namespace CrappyListenMoe
 			lblVol.Text = newVol.ToString() + "%";
 		}
 
-		private void playPause_Click(object sender, EventArgs e)
+		private async void playPause_Click(object sender, EventArgs e)
 		{
 			if (player.IsPlaying())
 			{
@@ -288,7 +275,7 @@ namespace CrappyListenMoe
 			{
 				picPlayPause.Image = Properties.Resources.pause;
 				songInfoStream.ReconnectIfDead();
-				StartPlayback();
+				await StartPlayback();
 			}
 		}
 
@@ -341,13 +328,12 @@ namespace CrappyListenMoe
 			Application.Exit();
 		}
 
-		private void menuItemTopmost_Click(object sender, EventArgs e)
+		public void SetTopMost(bool topMost)
 		{
-			menuItemTopmost.Checked = !menuItemTopmost.Checked;
-			this.TopMost = menuItemTopmost.Checked;
+			this.TopMost = topMost;
 			if (loginForm != null)
-				loginForm.TopMost = this.TopMost;
-			Settings.SetBoolSetting("TopMost", menuItemTopmost.Checked);
+				loginForm.TopMost = topMost;
+			Settings.SetBoolSetting("TopMost", topMost);
 			Settings.WriteSettings();
 		}
 
@@ -371,7 +357,7 @@ namespace CrappyListenMoe
 			Clipboard.SetText(info.song_name + " \n" + info.artist_name + " \n" + info.anime_name);
 		}
 
-		public void SaveToken(bool success, string token, string username, string message)
+		public void AfterLogin(bool success, string token, string username, string message)
 		{
 			picLogin.Image = Properties.Resources.up;
 			loginForm.Dispose();
@@ -391,7 +377,7 @@ namespace CrappyListenMoe
 			if (loginForm == null)
 			{
 				picLogin.Image = Properties.Resources.down;
-				loginForm = new FormLogin(SaveToken);
+				loginForm = new FormLogin(this);
 				loginForm.TopMost = this.TopMost;
 				loginForm.Show();
 				loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
@@ -411,13 +397,6 @@ namespace CrappyListenMoe
 		private void menuItemExit_Click(object sender, EventArgs e)
 		{
 			Exit();
-		}
-
-		private void menuItemCloseToTray_Click(object sender, EventArgs e)
-		{
-			menuItemTopmost.Checked = !menuItemTopmost.Checked;
-			Settings.SetBoolSetting("CloseToTray", menuItemTopmost.Checked);
-			Settings.WriteSettings();
 		}
 
 		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)

@@ -26,13 +26,20 @@ namespace CrappyListenMoe
 			this.sampleRate = sampleRate;
 			WaveFormat format = new WaveFormat(sampleRate, 2);
 			provider = new BufferedWaveProvider(format);
+			provider.BufferDuration = TimeSpan.FromSeconds(10);
 			provider.DiscardOnBufferOverflow = true;
 			waveOut.Init(provider);
 		}
 
-		public void BeginPlayback()
+		public void Play()
 		{
 			waveOut.Play();
+		}
+
+		public void Stop()
+		{
+			waveOut.Stop();
+			provider.ClearBuffer();
 		}
 
 		public void Dispose()

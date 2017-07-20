@@ -91,9 +91,7 @@ namespace CrappyListenMoe
         
 		private void ParseSongInfo(string data)
 		{
-			if (data.Contains("MALFORMED-JSON"))
-				return;
-			if (data.Trim() == "")
+			if (data.Trim() == "{\"reason\":\"MALFORMED-JSON\"}" || data.Trim() == "{\"reason\":\"CLEANUP\"}" || data.Trim() == "")
 				return;
 			currentInfo = Json.Parse<SongInfo>(data);
 			currentInfo.anime_name = currentInfo.anime_name.Trim().Replace('\n', ' ');

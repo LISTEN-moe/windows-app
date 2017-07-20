@@ -14,7 +14,7 @@ namespace CrappyListenMoe
 	{
 		const int SAMPLE_RATE = 48000;
 
-		AudioPlayer audioPlayer;
+		AudioPlayer audioPlayer = new AudioPlayer(SAMPLE_RATE);
 		
 		Thread provideThread;
 
@@ -37,7 +37,7 @@ namespace CrappyListenMoe
 
 		public void Open()
 		{
-			audioPlayer = new AudioPlayer(SAMPLE_RATE);
+			audioPlayer.Play();
 			playing = true;
 
 			provideThread = new Thread(() =>
@@ -82,17 +82,13 @@ namespace CrappyListenMoe
 			while (!opened)
 				Thread.Sleep(1);
 
-			audioPlayer.BeginPlayback();
+			audioPlayer.Play();
 			audioPlayer.SetVolume(initialVolume);
 		}
 
         public float AddVolume(float vol)
         {
-			if (audioPlayer != null)
-				return audioPlayer.AddVolume(vol);
-
-			Console.WriteLine("OpenAL was not loaded!");
-			return 1;
+			return audioPlayer.AddVolume(vol);
 		}
 
 		public void Stop()
@@ -102,7 +98,7 @@ namespace CrappyListenMoe
 				opened = false;
 				playing = false;
 
-				audioPlayer.Dispose();
+				audioPlayer.Stop();
 
 				if (provideThread != null)
 				{

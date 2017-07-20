@@ -122,6 +122,7 @@
     <Compile Include="SongInfo.cs" />
     <Compile Include="SpriteLoader.cs" />
     <Compile Include="Updater.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="WebStreamPlayer.cs" />
     <EmbeddedResource Include="Form1.resx">
