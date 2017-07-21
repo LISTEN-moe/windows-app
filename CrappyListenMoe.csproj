@@ -173,6 +173,14 @@
     <None Include="Resources\up.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+  echo Running ILMerge...
+  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\CrappyListenMoe.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
+  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\CrappyListenMoe.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
+  echo Done.
+)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
