@@ -151,31 +151,21 @@ namespace CrappyListenMoe
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
 			picFavourite.Image = favSprite.Frames[0];
 			
+			Connect();
+		}
+
+		private async void Connect()
+		{
 			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-			Task.Run(async () =>
+			var savedToken = Settings.GetStringSetting("Token");
+			if (savedToken.Trim() != "")
 			{
-				var savedToken = Settings.GetStringSetting("Token");
-				if (savedToken.Trim() != "")
-					picFavourite.Visible = await User.Login(savedToken);
+				picFavourite.Visible = await User.Login(savedToken);
+				//Load web socket only after token has been tested and saved
 				await LoadWebSocket(scheduler);
-				player = new WebStreamPlayer("https://listen.moe/stream");
-				await StartPlayback();
-			});
-		}
-
-		protected override void WndProc(ref Message m)
-		{
-			WM message = (WM)m.Msg;
-			if (message == WM.INPUT)
-				RawInput.ProcessMessage(m.LParam);
-			base.WndProc(ref m);
-		}
-
-		//Assumes that the player is in the stopped state
-		private async Task StartPlayback()
-		{
-			player.Open();
-			await Task.Run(() => player.Play());
+			}
+			player = new WebStreamPlayer("https://listen.moe/stream");
+			player.Play();
 		}
 
 		private async Task LoadWebSocket(TaskScheduler scheduler)
@@ -185,6 +175,14 @@ namespace CrappyListenMoe
 				songInfoStream = new SongInfoStream(scheduler);
 				songInfoStream.OnSongInfoReceived += ProcessSongInfo;
 			});
+		}
+
+		protected override void WndProc(ref Message m)
+		{
+			WM message = (WM)m.Msg;
+			if (message == WM.INPUT)
+				RawInput.ProcessMessage(m.LParam);
+			base.WndProc(ref m);
 		}
 
 		private async void CheckForUpdates()
@@ -264,7 +262,7 @@ namespace CrappyListenMoe
 			lblVol.Text = newVol.ToString() + "%";
 		}
 
-		private async void playPause_Click(object sender, EventArgs e)
+		private void playPause_Click(object sender, EventArgs e)
 		{
 			if (player.IsPlaying())
 			{
@@ -275,7 +273,7 @@ namespace CrappyListenMoe
 			{
 				picPlayPause.Image = Properties.Resources.pause;
 				songInfoStream.ReconnectIfDead();
-				await StartPlayback();
+				player.Play();
 			}
 		}
 

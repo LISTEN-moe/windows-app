@@ -61,15 +61,17 @@ namespace CrappyListenMoe
 			var result = Json.Parse<ListenMoeResponse>(response);
 			loggedIn = result.success;
 			if (loggedIn)
+			{
 				foreach (var callback in loginCallbacks)
 					callback();
-			//Clear saved credentials on failure
-			if (!result.success)
+			}
+			else
 			{
+				//Clear saved credentials on failure
 				Settings.SetStringSetting("Username", "");
 				Settings.SetStringSetting("Token", "");
 			}
-			return result.success;
+			return loggedIn;
 		}
 	}
 }

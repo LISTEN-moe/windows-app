@@ -35,7 +35,7 @@ namespace CrappyListenMoe
 			Stop();
 		}
 
-		public void Open()
+		public void Play()
 		{
 			audioPlayer.Play();
 			playing = true;
@@ -74,16 +74,6 @@ namespace CrappyListenMoe
 				}
 			});
 			provideThread.Start();
-		}
-
-        public void Play() { Play(Settings.GetFloatSetting("Volume")); }
-		public void Play(float initialVolume)
-		{
-			while (!opened)
-				Thread.Sleep(1);
-
-			audioPlayer.Play();
-			audioPlayer.SetVolume(initialVolume);
 		}
 
         public float AddVolume(float vol)

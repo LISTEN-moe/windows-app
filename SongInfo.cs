@@ -46,7 +46,6 @@ namespace CrappyListenMoe
 
 	public class SongInfoStream
 	{
-        private static bool firstInfo = true;
 		private WebSocket socket;
 		private TaskFactory factory;
 		public delegate void StatsReceived(SongInfo info);
@@ -97,20 +96,11 @@ namespace CrappyListenMoe
 			currentInfo.anime_name = currentInfo.anime_name.Trim().Replace('\n', ' ');
 			currentInfo.artist_name = currentInfo.artist_name.Trim().Replace('\n', ' ');
 			currentInfo.song_name = currentInfo.song_name.Trim().Replace('\n', ' ');
-
-			new Thread(() =>
+			
+			factory.StartNew(() =>
 			{
-				if (!firstInfo)
-				{
-					Thread.Sleep(10000);
-				}
-				firstInfo = false;
-
-				factory.StartNew(() =>
-				{
-					OnSongInfoReceived(currentInfo);
-				});
-			}).Start();
+				OnSongInfoReceived(currentInfo);
+			});
 		}
 	}
 }
