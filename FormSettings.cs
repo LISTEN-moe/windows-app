@@ -10,17 +10,17 @@ using System.Windows.Forms;
 
 namespace CrappyListenMoe
 {
-	public partial class FormLogin : Form
+	public partial class FormSettings : Form
 	{
 		Form1 parent;
 
 		//Empty constructor only so the designer can be used. Do not put anything in here, it won't be called.
-		public FormLogin()
+		public FormSettings()
 		{
 			InitializeComponent();
 		}
 
-		public FormLogin(Form1 parent)
+		public FormSettings(Form1 parent)
 		{
 			InitializeComponent();
 			this.parent = parent;

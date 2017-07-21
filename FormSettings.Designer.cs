@@ -1,6 +1,6 @@
 ﻿namespace CrappyListenMoe
 {
-	partial class FormLogin
+	partial class FormSettings
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLogin));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
 			this.button1 = new System.Windows.Forms.Button();
 			this.textBox2 = new CrappyListenMoe.GhostTextbox();
 			this.textBox1 = new CrappyListenMoe.GhostTextbox();
@@ -155,7 +155,7 @@
 			this.checkBox1.UseVisualStyleBackColor = true;
 			this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
 			// 
-			// FormLogin
+			// FormSettings
 			// 
 			this.AcceptButton = this.button1;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -166,7 +166,7 @@
 			this.Controls.Add(this.panel1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "FormLogin";
+			this.Name = "FormSettings";
 			this.ShowInTaskbar = false;
 			this.Text = "Login";
 			this.panel1.ResumeLayout(false);

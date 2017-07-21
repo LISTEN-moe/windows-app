@@ -130,7 +130,7 @@ namespace CrappyListenMoe
 
 		float updatePercent = 0;
 		int updateState = 0; //0 = not updating, 1 = in progress, 2 = complete
-		FormLogin loginForm;
+		FormSettings loginForm;
 
 		Sprite favSprite;
 		Sprite fadedFavSprite;
@@ -183,7 +183,7 @@ namespace CrappyListenMoe
 		{
 			var screen = Screen.FromPoint(this.Location);
 			bool previous = openMenuUpwards;
-			//FormLogin height
+			//FormSettings height
 			openMenuUpwards = Location.Y - screen.Bounds.Top > 365;
 			if (openMenuUpwards != previous)
 			{
@@ -411,7 +411,7 @@ namespace CrappyListenMoe
 			if (loginForm == null)
 			{
 				picLogin.Image = openMenuUpwards ? Properties.Resources.down : Properties.Resources.up;
-				loginForm = new FormLogin(this);
+				loginForm = new FormSettings(this);
 				loginForm.TopMost = this.TopMost;
 				loginForm.Show();
 				if (openMenuUpwards)
