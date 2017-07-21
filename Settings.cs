@@ -22,7 +22,8 @@ namespace CrappyListenMoe
 		{
 			{ "TopMost", false },
 			{ "IgnoreUpdates", false },
-			{ "CloseToTray", false }
+			{ "CloseToTray", false },
+			{ "HideFromAltTab", false }
 		};
 		static Dictionary<string, string> stringDefaults = new Dictionary<string, string>()
 		{

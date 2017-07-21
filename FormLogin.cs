@@ -73,5 +73,5 @@ namespace CrappyListenMoe
             Settings.SetBoolSetting("CloseToTray", checkBox3.Checked);
             Settings.WriteSettings();
         }
-    }
+	}
 }

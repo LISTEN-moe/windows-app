@@ -42,8 +42,8 @@
 			this.lblTitle = new CrappyListenMoe.MarqueeLabel();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
-			this.menuItemExit = new System.Windows.Forms.MenuItem();
 			this.menuItemShow = new System.Windows.Forms.MenuItem();
+			this.menuItemExit = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panel2.SuspendLayout();
@@ -202,17 +202,17 @@
             this.menuItemShow,
             this.menuItemExit});
 			// 
-			// menuItemExit
-			// 
-			this.menuItemExit.Index = 1;
-			this.menuItemExit.Text = "Exit";
-			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
-			// 
 			// menuItemShow
 			// 
 			this.menuItemShow.Index = 0;
 			this.menuItemShow.Text = "Show";
 			this.menuItemShow.Click += new System.EventHandler(this.menuItemShow_Click);
+			// 
+			// menuItemExit
+			// 
+			this.menuItemExit.Index = 1;
+			this.menuItemExit.Text = "Exit";
+			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 			// 
 			// Form1
 			// 

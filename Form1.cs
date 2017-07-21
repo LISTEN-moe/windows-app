@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -10,6 +11,13 @@ namespace CrappyListenMoe
 	public partial class Form1 : Form
 	{
 		#region Magical form stuff
+		[DllImport("user32.dll")]
+		public static extern int SetWindowLong(IntPtr window, int index, int value);
+		[DllImport("user32.dll")]
+		public static extern int GetWindowLong(IntPtr window, int index);
+		const int GWL_EXSTYLE = -20;
+		const int WS_EX_TOOLWINDOW = 0x00000080;
+		const int WS_EX_APPWINDOW = 0x00040000;
 
 		private void BindChildEvents()
 		{
@@ -87,14 +95,21 @@ namespace CrappyListenMoe
 						finalY = this.Location.Y;
 
 					this.Location = new Point(finalX, finalY);
+					
+					RecalculateMenuDirection();
 
 					Settings.SetIntSetting("LocationX", this.Location.X);
 					Settings.SetIntSetting("LocationY", this.Location.Y);
 					Settings.WriteSettings();
 				}
-				
+
 				if (loginForm != null)
-					loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
+				{
+					if (openMenuUpwards)
+						loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
+					else
+						loginForm.Location = new Point(Location.X, Location.Y + this.Height);
+				}
 			}
 		}
 
@@ -120,12 +135,13 @@ namespace CrappyListenMoe
 		Sprite favSprite;
 		Sprite fadedFavSprite;
 
+		bool openMenuUpwards = true;
+
 		public Form1()
 		{
 			InitializeComponent();
 			BindChildEvents();
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
-
 			Settings.LoadSettings();
 
 			ApplyLoadedSettings();
@@ -147,11 +163,32 @@ namespace CrappyListenMoe
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
 
+			if (Settings.GetBoolSetting("HideFromAltTab"))
+			{
+				this.ShowInTaskbar = false;
+				int windowStyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
+				SetWindowLong(this.Handle, GWL_EXSTYLE, windowStyle | WS_EX_TOOLWINDOW);
+				notifyIcon1.Visible = true;
+			}
+
 			favSprite = SpriteLoader.LoadFavSprite();
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
 			picFavourite.Image = favSprite.Frames[0];
 			
 			Connect();
+			RecalculateMenuDirection();
+		}
+
+		private void RecalculateMenuDirection()
+		{
+			var screen = Screen.FromPoint(this.Location);
+			bool previous = openMenuUpwards;
+			//FormLogin height
+			openMenuUpwards = Location.Y - screen.Bounds.Top > 365;
+			if (openMenuUpwards != previous)
+			{
+				picLogin.Image = openMenuUpwards ? Properties.Resources.up : Properties.Resources.down;
+			}
 		}
 
 		private async void Connect()
@@ -161,9 +198,8 @@ namespace CrappyListenMoe
 			if (savedToken.Trim() != "")
 			{
 				picFavourite.Visible = await User.Login(savedToken);
-				//Load web socket only after token has been tested and saved
-				await LoadWebSocket(scheduler);
 			}
+			await LoadWebSocket(scheduler);
 			player = new WebStreamPlayer("https://listen.moe/stream");
 			player.Play();
 		}
@@ -374,18 +410,21 @@ namespace CrappyListenMoe
 		{
 			if (loginForm == null)
 			{
-				picLogin.Image = Properties.Resources.down;
+				picLogin.Image = openMenuUpwards ? Properties.Resources.down : Properties.Resources.up;
 				loginForm = new FormLogin(this);
 				loginForm.TopMost = this.TopMost;
 				loginForm.Show();
-				loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
+				if (openMenuUpwards)
+					loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
+				else
+					loginForm.Location = new Point(Location.X, Location.Y + this.Height);
 			}
 			else
 			{
 				loginForm.Close();
 				loginForm.Dispose();
 				loginForm = null;
-				picLogin.Image = Properties.Resources.up;
+				picLogin.Image = openMenuUpwards ? Properties.Resources.up : Properties.Resources.down;
 			}
 		}
 
@@ -411,9 +450,14 @@ namespace CrappyListenMoe
 		private void Restore()
 		{
 			this.Show();
+			this.Activate();
 			if (loginForm != null)
+			{
 				loginForm.Show();
-			notifyIcon1.Visible = false;
+				loginForm.Activate();
+			}
+			if (!Settings.GetBoolSetting("HideFromAltTab"))
+				notifyIcon1.Visible = false;
 		}
 
 		object animationLock = new object();

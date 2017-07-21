@@ -16,8 +16,6 @@ namespace CrappyListenMoe
 
 		BufferedWaveProvider provider;
 		WaveOut waveOut = new WaveOut();
-		
-		float volume;
 
 		Queue<short[]> samplesToPlay = new Queue<short[]>();
 
@@ -29,6 +27,7 @@ namespace CrappyListenMoe
 			provider.BufferDuration = TimeSpan.FromSeconds(10);
 			provider.DiscardOnBufferOverflow = true;
 			waveOut.Init(provider);
+			waveOut.Volume = Settings.GetFloatSetting("Volume");
 		}
 
 		public void Play()
@@ -66,14 +65,13 @@ namespace CrappyListenMoe
 
 		public float AddVolume(float vol)
 		{
-			SetVolume(volume + vol);
-			return volume;
+			SetVolume(waveOut.Volume + vol);
+			return waveOut.Volume;
 		}
 
 		public void SetVolume(float vol)
 		{
-			volume = BoundVolume(vol);
-			waveOut.Volume = volume;
+			waveOut.Volume = BoundVolume(vol);
 		}
 	}
 }
