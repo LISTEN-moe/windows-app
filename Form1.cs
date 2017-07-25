@@ -262,7 +262,7 @@ namespace CrappyListenMoe
 		private void ApplyLoadedSettings()
 		{
 			this.Location = new Point(Settings.GetIntSetting("LocationX"), Settings.GetIntSetting("LocationY"));
-
+			SetTopMost(Settings.GetBoolSetting("TopMost"));
 			float vol = Settings.GetFloatSetting("Volume");
 			SetVolumeLabel(vol);
 		}
