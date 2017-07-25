@@ -19,21 +19,6 @@ namespace CrappyListenMoe
 		const int WS_EX_TOOLWINDOW = 0x00000080;
 		const int WS_EX_APPWINDOW = 0x00040000;
 
-		private void BindChildEvents()
-		{
-			lblArtist.MouseDown += Form1_MouseDown;
-			lblArtist.MouseMove += Form1_MouseMove;
-			lblArtist.MouseUp += Form1_MouseUp;
-
-			lblTitle.MouseDown += Form1_MouseDown;
-			lblTitle.MouseMove += Form1_MouseMove;
-			lblTitle.MouseUp += Form1_MouseUp;
-
-			panel2.MouseDown += Form1_MouseDown;
-			panel2.MouseMove += Form1_MouseMove;
-			panel2.MouseUp += Form1_MouseUp;
-		}
-
 		Point originalLocation;
 		Point preMoveCursorLocation;
 		int cursorLeftDiff, cursorRightDiff, cursorTopDiff, cursorBottomDiff;
@@ -140,7 +125,6 @@ namespace CrappyListenMoe
 		public Form1()
 		{
 			InitializeComponent();
-			BindChildEvents();
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 			Settings.LoadSettings();
 

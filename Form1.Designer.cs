@@ -175,6 +175,8 @@
 			this.lblArtist.Size = new System.Drawing.Size(321, 22);
 			this.lblArtist.TabIndex = 3;
 			this.lblArtist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
+			this.lblArtist.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
+			this.lblArtist.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
 			// 
 			// lblTitle
 			// 
@@ -190,6 +192,8 @@
 			this.lblTitle.TabIndex = 1;
 			this.lblTitle.Text = "Connecting...";
 			this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
+			this.lblTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
+			this.lblTitle.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
 			// 
 			// notifyIcon1
 			// 
