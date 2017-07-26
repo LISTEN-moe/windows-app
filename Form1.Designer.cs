@@ -44,6 +44,7 @@
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemShow = new System.Windows.Forms.MenuItem();
 			this.menuItemExit = new System.Windows.Forms.MenuItem();
+			this.menuItemPlayPause = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panel2.SuspendLayout();
@@ -203,20 +204,27 @@
 			// contextMenu2
 			// 
 			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItemPlayPause,
             this.menuItemShow,
             this.menuItemExit});
 			// 
 			// menuItemShow
 			// 
-			this.menuItemShow.Index = 0;
+			this.menuItemShow.Index = 1;
 			this.menuItemShow.Text = "Show";
 			this.menuItemShow.Click += new System.EventHandler(this.menuItemShow_Click);
 			// 
 			// menuItemExit
 			// 
-			this.menuItemExit.Index = 1;
+			this.menuItemExit.Index = 2;
 			this.menuItemExit.Text = "Exit";
 			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
+			// 
+			// menuItemPlayPause
+			// 
+			this.menuItemPlayPause.Index = 0;
+			this.menuItemPlayPause.Text = "Pause";
+			this.menuItemPlayPause.Click += new System.EventHandler(this.playPause_Click);
 			// 
 			// Form1
 			// 
@@ -264,6 +272,7 @@
 		private System.Windows.Forms.ContextMenu contextMenu2;
 		private System.Windows.Forms.MenuItem menuItemExit;
 		private System.Windows.Forms.MenuItem menuItemShow;
+		private System.Windows.Forms.MenuItem menuItemPlayPause;
 	}
 }
 

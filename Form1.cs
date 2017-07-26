@@ -288,10 +288,12 @@ namespace CrappyListenMoe
 			{
 				player.Stop();
 				picPlayPause.Image = Properties.Resources.play;
+				menuItemPlayPause.Text = "Play";
 			}
 			else
 			{
 				picPlayPause.Image = Properties.Resources.pause;
+				menuItemPlayPause.Text = "Pause";
 				songInfoStream.ReconnectIfDead();
 				player.Play();
 			}
