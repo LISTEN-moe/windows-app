@@ -59,6 +59,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Concentus, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Concentus.1.1.3\lib\portable-net45+win+wpa81+wp80\Concentus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NAudio, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\NAudio.1.8.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
@@ -168,15 +172,12 @@
   <ItemGroup>
     <None Include="Resources\up.png" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\OggVorbis.dll" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
   echo Running ILMerge...
-  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\CrappyListenMoe.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll"
-  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\CrappyListenMoe.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll"
+  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\CrappyListenMoe.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
+  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\CrappyListenMoe.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
   echo Done.
 )</PostBuildEvent>
   </PropertyGroup>

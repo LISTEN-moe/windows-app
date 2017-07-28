@@ -96,8 +96,7 @@ namespace CrappyListenMoe
 
 		public override long Seek(long offset, SeekOrigin origin)
 		{
-			//Not implemented, but it is called by the Vorbis decoder on the first frame.
-			return 0;
+			throw new InvalidOperationException();
 		}
 
 		public override void SetLength(long value)

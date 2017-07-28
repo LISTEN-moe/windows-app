@@ -184,7 +184,7 @@ namespace CrappyListenMoe
 				picFavourite.Visible = await User.Login(savedToken);
 			}
 			await LoadWebSocket(scheduler);
-			player = new WebStreamPlayer("https://listen.moe/stream");
+			player = new WebStreamPlayer("https://listen.moe/opus");
 			player.Play();
 		}
 
