@@ -48,6 +48,11 @@ namespace CrappyListenMoe
 			waveOut.Dispose();
 		}
 
+		public void QueueBuffer(byte[] samples)
+		{
+			provider.AddSamples(samples, 0, samples.Length);
+		}
+
 		public void QueueBuffer(short[] samples)
 		{
 			byte[] bytes = new byte[samples.Length * 2];

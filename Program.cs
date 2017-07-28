@@ -18,6 +18,11 @@ namespace CrappyListenMoe
 		[STAThread]
 		static void Main()
 		{
+			if (!File.Exists("OggVorbis.dll"))
+			{
+				File.WriteAllBytes("OggVorbis.dll", Properties.Resources.OggVorbis);
+			}
+
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			Environment.SetEnvironmentVariable("LANG", "ja_JP.utf-8");
 			Application.EnableVisualStyles();

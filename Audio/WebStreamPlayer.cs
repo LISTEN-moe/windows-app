@@ -3,26 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Concentus.Structs;
 
 namespace CrappyListenMoe
 {
 	class WebStreamPlayer
 	{
-		const int SAMPLE_RATE = 48000;
+		const int SAMPLE_RATE = 44100;
+		const int VORBIS_BLOCK_SIZE = 16384;
 
 		AudioPlayer audioPlayer = new AudioPlayer(SAMPLE_RATE);
 		
 		Thread provideThread;
 
 		Ogg ogg = new Ogg();
-		OpusDecoder decoder = OpusDecoder.Create(SAMPLE_RATE, 2);
 
 		bool playing = false;
-		bool opened = false;
 		string url;
 
 		public WebStreamPlayer(string url)
@@ -43,33 +42,19 @@ namespace CrappyListenMoe
 			provideThread = new Thread(() =>
 			{
 				HttpWebRequest req = WebRequest.CreateHttp(url);
+
+				var dll = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "OggVorbis.dll"));
+				Type type = dll.GetExportedTypes().First(t => t.Name == "OggDecodeStream");
 				
 				using (var stream = req.GetResponse().GetResponseStream())
 				{
 					var readFullyStream = new ReadFullyStream(stream);
-					
-					opened = true;
-
+					var reader = Activator.CreateInstance(type, new object[] { readFullyStream });
 					while (playing)
 					{
-						byte[][] packets = ogg.GetAudioPackets(readFullyStream);
-
-						for (int i = 0; i < packets.Length; i++)
-						{
-							var streamBytes = packets[i];
-							try
-							{
-								int frameSize = OpusPacketInfo.GetNumSamplesPerFrame(streamBytes, 0, SAMPLE_RATE); //Get frame size from opus packet
-								short[] rawBuffer = new short[frameSize * 2]; //2 channels
-								var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
-								audioPlayer.QueueBuffer(rawBuffer);
-							}
-							catch (Concentus.OpusException e)
-							{
-								//Skip this frame
-								//Note: the first 2 frames will hit this exception (I'm pretty sure they're not audio data frames)
-							}
-						}
+						byte[] buffer = new byte[VORBIS_BLOCK_SIZE];
+						type.InvokeMember("Read", BindingFlags.InvokeMethod, null, reader, new object[] { buffer, 0, VORBIS_BLOCK_SIZE });
+						audioPlayer.QueueBuffer(buffer);
 					}
 				}
 			});
@@ -85,7 +70,6 @@ namespace CrappyListenMoe
 		{
 			if (playing)
 			{
-				opened = false;
 				playing = false;
 
 				audioPlayer.Stop();
@@ -95,8 +79,6 @@ namespace CrappyListenMoe
 					provideThread.Abort();
 					provideThread = null;
 				}
-
-				decoder.ResetState();
 			}
 		}
 
