@@ -161,6 +161,9 @@ namespace CrappyListenMoe
 			
 			Connect();
 			RecalculateMenuDirection();
+
+			player = new WebStreamPlayer("https://listen.moe/opus");
+			player.Play();
 		}
 
 		private void RecalculateMenuDirection()
@@ -184,8 +187,6 @@ namespace CrappyListenMoe
 				picFavourite.Visible = await User.Login(savedToken);
 			}
 			await LoadWebSocket(scheduler);
-			player = new WebStreamPlayer("https://listen.moe/opus");
-			player.Play();
 		}
 
 		private async Task LoadWebSocket(TaskScheduler scheduler)
@@ -282,19 +283,20 @@ namespace CrappyListenMoe
 			lblVol.Text = newVol.ToString() + "%";
 		}
 
-		private void playPause_Click(object sender, EventArgs e)
+		private async void playPause_Click(object sender, EventArgs e)
 		{
 			if (player.IsPlaying())
 			{
-				player.Stop();
 				picPlayPause.Image = Properties.Resources.play;
 				menuItemPlayPause.Text = "Play";
+				await player.Stop();
 			}
 			else
 			{
 				picPlayPause.Image = Properties.Resources.pause;
 				menuItemPlayPause.Text = "Pause";
-				songInfoStream.ReconnectIfDead();
+				if (songInfoStream != null)
+					songInfoStream.ReconnectIfDead();
 				player.Play();
 			}
 		}
@@ -335,16 +337,15 @@ namespace CrappyListenMoe
 				picFavourite.Visible = false;
 		}
 
-		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+		private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			Exit();
+			await Exit();
 		}
 
-		private void Exit()
+		private async Task Exit()
 		{
 			this.Hide();
-			player.Stop();
-			player.Dispose();
+			await player.Dispose();
 			Application.Exit();
 		}
 
@@ -417,9 +418,9 @@ namespace CrappyListenMoe
 		int currentFrame = 0;
 		bool isAnimating = false;
 
-		private void menuItemExit_Click(object sender, EventArgs e)
+		private async void menuItemExit_Click(object sender, EventArgs e)
 		{
-			Exit();
+			await Exit();
 		}
 
 		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)

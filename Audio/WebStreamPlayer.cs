@@ -29,9 +29,9 @@ namespace CrappyListenMoe
 			this.url = url;
 		}
 
-		public void Dispose()
+		public async Task Dispose()
 		{
-			Stop();
+			await Stop();
 		}
 
 		public void Play()
@@ -78,7 +78,7 @@ namespace CrappyListenMoe
 			return audioPlayer.AddVolume(vol);
 		}
 
-		public void Stop()
+		public async Task Stop()
 		{
 			if (playing)
 			{
@@ -88,7 +88,7 @@ namespace CrappyListenMoe
 
 				if (provideThread != null)
 				{
-					provideThread.Abort();
+					await Task.Run(() => { provideThread.Abort(); });
 					provideThread = null;
 				}
 
