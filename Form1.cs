@@ -162,7 +162,7 @@ namespace CrappyListenMoe
 			Connect();
 			RecalculateMenuDirection();
 
-			player = new WebStreamPlayer("https://listen.moe/opus");
+			player = new WebStreamPlayer("https://listen.moe/stream");
 			player.Play();
 		}
 
