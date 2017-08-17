@@ -7,8 +7,8 @@
     <ProjectGuid>{88B02799-425E-4622-A849-202ADB19601B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CrappyListenMoe</RootNamespace>
-    <AssemblyName>CrappyListenMoe</AssemblyName>
+    <RootNamespace>ListenMoeClient</RootNamespace>
+    <AssemblyName>ListenMoeClient</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -177,8 +177,8 @@
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
   echo Running ILMerge...
-  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\CrappyListenMoe.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
-  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\CrappyListenMoe.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
+  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
+  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
   echo Done.
 )</PostBuildEvent>
   </PropertyGroup>

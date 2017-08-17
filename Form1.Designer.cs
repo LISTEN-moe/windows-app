@@ -1,4 +1,4 @@
-﻿namespace CrappyListenMoe
+﻿namespace ListenMoeClient
 {
 	partial class Form1
 	{
@@ -33,13 +33,13 @@
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuItemCopySongInfo = new System.Windows.Forms.MenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.picPlayPause = new CrappyListenMoe.BetterPictureBox();
+			this.picPlayPause = new ListenMoeClient.BetterPictureBox();
 			this.panel2 = new System.Windows.Forms.Panel();
-			this.picFavourite = new CrappyListenMoe.BetterPictureBox();
-			this.picClose = new CrappyListenMoe.BetterPictureBox();
-			this.picLogin = new CrappyListenMoe.BetterPictureBox();
-			this.lblArtist = new CrappyListenMoe.MarqueeLabel();
-			this.lblTitle = new CrappyListenMoe.MarqueeLabel();
+			this.picFavourite = new ListenMoeClient.BetterPictureBox();
+			this.picClose = new ListenMoeClient.BetterPictureBox();
+			this.picLogin = new ListenMoeClient.BetterPictureBox();
+			this.lblArtist = new ListenMoeClient.MarqueeLabel();
+			this.lblTitle = new ListenMoeClient.MarqueeLabel();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemPlayPause = new System.Windows.Forms.MenuItem();
@@ -99,7 +99,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.picPlayPause.BackColor = System.Drawing.Color.Transparent;
 			this.picPlayPause.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picPlayPause.Image = global::CrappyListenMoe.Properties.Resources.pause;
+			this.picPlayPause.Image = global::ListenMoeClient.Properties.Resources.pause;
 			this.picPlayPause.Location = new System.Drawing.Point(16, 16);
 			this.picPlayPause.Name = "picPlayPause";
 			this.picPlayPause.Size = new System.Drawing.Size(16, 16);
@@ -143,7 +143,7 @@
 			this.picClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.picClose.BackColor = System.Drawing.Color.Transparent;
 			this.picClose.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picClose.Image = global::CrappyListenMoe.Properties.Resources.close;
+			this.picClose.Image = global::ListenMoeClient.Properties.Resources.close;
 			this.picClose.Location = new System.Drawing.Point(57, 5);
 			this.picClose.Name = "picClose";
 			this.picClose.Size = new System.Drawing.Size(12, 12);
@@ -157,7 +157,7 @@
 			this.picLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.picLogin.BackColor = System.Drawing.Color.Transparent;
 			this.picLogin.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picLogin.Image = global::CrappyListenMoe.Properties.Resources.up;
+			this.picLogin.Image = global::ListenMoeClient.Properties.Resources.up;
 			this.picLogin.Location = new System.Drawing.Point(39, 5);
 			this.picLogin.Name = "picLogin";
 			this.picLogin.Size = new System.Drawing.Size(12, 12);

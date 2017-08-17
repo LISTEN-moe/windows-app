@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using NAudio;
 using NAudio.Wave;
 
-namespace CrappyListenMoe
+namespace ListenMoeClient
 {
 	class AudioPlayer : IDisposable
 	{

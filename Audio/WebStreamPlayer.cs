@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Concentus.Structs;
 
-namespace CrappyListenMoe
+namespace ListenMoeClient
 {
 	class WebStreamPlayer
 	{

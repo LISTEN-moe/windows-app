@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrappyListenMoe
+namespace ListenMoeClient
 {
 	//Taken from the NAudio sample code
 	public class ReadFullyStream : Stream

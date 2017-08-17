@@ -1,4 +1,4 @@
-﻿namespace CrappyListenMoe
+﻿namespace ListenMoeClient
 {
 	partial class FormSettings
 	{
@@ -30,8 +30,8 @@
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
 			this.button1 = new System.Windows.Forms.Button();
-			this.textBox2 = new CrappyListenMoe.GhostTextbox();
-			this.textBox1 = new CrappyListenMoe.GhostTextbox();
+			this.textBox2 = new ListenMoeClient.GhostTextbox();
+			this.textBox1 = new ListenMoeClient.GhostTextbox();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.label1 = new System.Windows.Forms.Label();
 			this.panel2 = new System.Windows.Forms.Panel();

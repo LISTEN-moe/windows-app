@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrappyListenMoe
+namespace ListenMoeClient
 {
 	/// <summary>Enumeration containing flags for a raw input device.</summary>
 	[Flags()]

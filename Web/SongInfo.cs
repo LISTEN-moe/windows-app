@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
 
-namespace CrappyListenMoe
+namespace ListenMoeClient
 {
 	public class SongInfo
 	{
