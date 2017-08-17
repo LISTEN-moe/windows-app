@@ -41,34 +41,40 @@ namespace ListenMoeClient
 
 			provideThread = new Thread(() =>
 			{
-				HttpWebRequest req = WebRequest.CreateHttp(url);
-				req.UserAgent = Globals.USER_AGENT;
-				
-				using (var stream = req.GetResponse().GetResponseStream())
+				try
 				{
-					var readFullyStream = new ReadFullyStream(stream);
+					HttpWebRequest req = WebRequest.CreateHttp(url);
+					//req.UserAgent = Globals.USER_AGENT;
 
-					while (playing)
+					using (var stream = req.GetResponse().GetResponseStream())
 					{
-						byte[][] packets = ogg.GetAudioPackets(readFullyStream);
+						var readFullyStream = new ReadFullyStream(stream);
 
-						for (int i = 0; i < packets.Length; i++)
+						while (playing)
 						{
-							var streamBytes = packets[i];
-							try
+							byte[][] packets = ogg.GetAudioPackets(readFullyStream);
+
+							for (int i = 0; i < packets.Length; i++)
 							{
-								int frameSize = OpusPacketInfo.GetNumSamplesPerFrame(streamBytes, 0, SAMPLE_RATE); //Get frame size from opus packet
-								short[] rawBuffer = new short[frameSize * 2]; //2 channels
-								var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
-								audioPlayer.QueueBuffer(rawBuffer);
-							}
-							catch (Concentus.OpusException e)
-							{
-								//Skip this frame
-								//Note: the first 2 frames will hit this exception (I'm pretty sure they're not audio data frames)
+								var streamBytes = packets[i];
+								try
+								{
+									int frameSize = OpusPacketInfo.GetNumSamplesPerFrame(streamBytes, 0, SAMPLE_RATE); //Get frame size from opus packet
+									short[] rawBuffer = new short[frameSize * 2]; //2 channels
+									var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
+									audioPlayer.QueueBuffer(rawBuffer);
+								}
+								catch (Concentus.OpusException e)
+								{
+									//Skip this frame
+									//Note: the first 2 frames will hit this exception (I'm pretty sure they're not audio data frames)
+								}
 							}
 						}
 					}
+				} catch (Exception e)
+				{
+
 				}
 			});
 			provideThread.Start();

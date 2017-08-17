@@ -70,16 +70,23 @@ namespace ListenMoeClient
 
 		private void Connect()
 		{
-			socket.Connect();
+			try
+			{
+				socket.Connect();
 
-			string token = Settings.GetStringSetting("Token");
-			if (token != "")
-				Authenticate(token);
+				string token = Settings.GetStringSetting("Token");
+				if (token != "")
+					Authenticate(token);
+			}
+			catch (Exception e) { }
 		}
 
 		public void Authenticate(string token)
 		{
-			socket.Send("{ \"token\": \"" + token + "\" }");
+			try
+			{
+				socket.Send("{ \"token\": \"" + token + "\" }");
+			} catch (Exception e) { }
 		}
 
 		public void ReconnectIfDead()
@@ -87,20 +94,24 @@ namespace ListenMoeClient
 			if (!socket.IsAlive)
 				Connect();
 		}
-        
+
 		private void ParseSongInfo(string data)
 		{
 			if (data.Trim() == "{\"reason\":\"MALFORMED-JSON\"}" || data.Trim() == "{\"reason\":\"CLEANUP\"}" || data.Trim() == "")
 				return;
-			currentInfo = Json.Parse<SongInfo>(data);
-			currentInfo.anime_name = currentInfo.anime_name.Trim().Replace('\n', ' ');
-			currentInfo.artist_name = currentInfo.artist_name.Trim().Replace('\n', ' ');
-			currentInfo.song_name = currentInfo.song_name.Trim().Replace('\n', ' ');
-			
-			factory.StartNew(() =>
+
+			try
 			{
-				OnSongInfoReceived(currentInfo);
-			});
+				currentInfo = Json.Parse<SongInfo>(data);
+				currentInfo.anime_name = currentInfo.anime_name.Trim().Replace('\n', ' ');
+				currentInfo.artist_name = currentInfo.artist_name.Trim().Replace('\n', ' ');
+				currentInfo.song_name = currentInfo.song_name.Trim().Replace('\n', ' ');
+
+				factory.StartNew(() =>
+				{
+					OnSongInfoReceived(currentInfo);
+				});
+			} catch (Exception e) { }
 		}
 	}
 }
