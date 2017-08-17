@@ -90,7 +90,7 @@ namespace CrappyListenMoe
 			HttpWebRequest hwr = WebRequest.CreateHttp(url);
 			hwr.Method = "GET";
 			hwr.Timeout = 2000;
-			hwr.UserAgent = "Listen.moe Client";
+			hwr.UserAgent = Globals.USER_AGENT;
 			if (token.Trim() != "")
 				hwr.Headers["authorization"] = token;
 

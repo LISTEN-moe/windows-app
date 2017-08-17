@@ -103,6 +103,7 @@
     <Compile Include="Controls\GhostTextbox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Globals.cs" />
     <Compile Include="Web\Json.cs" />
     <Compile Include="Controls\MarqueeLabel.cs">
       <SubType>Component</SubType>

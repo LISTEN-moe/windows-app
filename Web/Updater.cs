@@ -14,8 +14,6 @@ namespace CrappyListenMoe
 {
 	class Updater
 	{
-		static string CURRENT_VERS = Application.ProductVersion.Substring(0, Application.ProductVersion.LastIndexOf('.')); //Strip build number
-
 		[DataContract]
 		class LatestReleaseResponse
 		{
@@ -44,15 +42,15 @@ namespace CrappyListenMoe
 			if (version.StartsWith("v"))
 				version = version.Substring(1);
 
-			Console.WriteLine(CURRENT_VERS);
+			Console.WriteLine(Globals.VERSION);
 			Console.WriteLine(version);
 
 			//Same version
-			if (version.Trim() == CURRENT_VERS)
+			if (version.Trim() == Globals.VERSION)
 				return false;
 
 			var latestParts = version.Trim().Split(new char[] { '.' });
-			var ourParts = CURRENT_VERS.Split(new char[] { '.' });
+			var ourParts = Globals.VERSION.Split(new char[] { '.' });
 
 			//Must be really out of date if we've changed versioning schemes...
 			if (latestParts.Length != ourParts.Length)
