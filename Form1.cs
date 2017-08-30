@@ -158,6 +158,11 @@ namespace ListenMoeClient
 			favSprite = SpriteLoader.LoadFavSprite();
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
 			picFavourite.Image = favSprite.Frames[0];
+
+			RawInput.RegisterCallback(VirtualKeys.MediaPlayPause, async () =>
+			{
+				await TogglePlayback();
+			});
 			
 			Connect();
 			RecalculateMenuDirection();
@@ -284,6 +289,11 @@ namespace ListenMoeClient
 		}
 
 		private async void playPause_Click(object sender, EventArgs e)
+		{
+			await TogglePlayback();
+		}
+
+		private async Task TogglePlayback()
 		{
 			if (player.IsPlaying())
 			{
