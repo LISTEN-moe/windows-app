@@ -23,6 +23,7 @@ namespace ListenMoeClient
 		public FormSettings(Form1 parent)
 		{
 			InitializeComponent();
+			this.Icon = Properties.Resources.icon;
 			this.parent = parent;
 			button1.Font = OpenSans.GetFont(11);
 			textBox1.Font = OpenSans.GetFont(9);
@@ -72,6 +73,7 @@ namespace ListenMoeClient
         {
             Settings.SetBoolSetting("CloseToTray", checkBox3.Checked);
             Settings.WriteSettings();
+			parent.SetNotifyIconVisible(checkBox3.Checked);
         }
 	}
 }

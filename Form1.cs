@@ -152,6 +152,9 @@ namespace ListenMoeClient
 				this.ShowInTaskbar = false;
 				int windowStyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
 				SetWindowLong(this.Handle, GWL_EXSTYLE, windowStyle | WS_EX_TOOLWINDOW);
+			}
+			if (Settings.GetBoolSetting("CloseToTray"))
+			{
 				notifyIcon1.Visible = true;
 			}
 
@@ -315,7 +318,6 @@ namespace ListenMoeClient
 		{
 			if (Settings.GetBoolSetting("CloseToTray"))
 			{
-				notifyIcon1.Visible = true;
 				this.Hide();
 				if (loginForm != null)
 					loginForm.Hide();
@@ -453,8 +455,6 @@ namespace ListenMoeClient
 				loginForm.Show();
 				loginForm.Activate();
 			}
-			if (!Settings.GetBoolSetting("HideFromAltTab"))
-				notifyIcon1.Visible = false;
 		}
 
 		object animationLock = new object();
@@ -506,6 +506,11 @@ namespace ListenMoeClient
 
 			var response = Json.Parse<FavouritesResponse>(result);
 			SetFavouriteSprite(response.favorite);
+		}
+
+		public void SetNotifyIconVisible(bool visible)
+		{
+			notifyIcon1.Visible = visible;
 		}
 	}
 }
