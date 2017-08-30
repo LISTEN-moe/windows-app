@@ -44,7 +44,7 @@ namespace ListenMoeClient
 				try
 				{
 					HttpWebRequest req = WebRequest.CreateHttp(url);
-					//req.UserAgent = Globals.USER_AGENT;
+					req.UserAgent = Globals.USER_AGENT;
 
 					using (var stream = req.GetResponse().GetResponseStream())
 					{
