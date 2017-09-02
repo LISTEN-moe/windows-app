@@ -12,21 +12,22 @@ namespace ListenMoeClient
 {
 	class WebStreamPlayer
 	{
-		const int SAMPLE_RATE = 48000;
-
-		AudioPlayer audioPlayer = new AudioPlayer(SAMPLE_RATE);
+		AudioPlayer audioPlayer = new AudioPlayer();
 		
 		Thread provideThread;
 
 		Ogg ogg = new Ogg();
-		OpusDecoder decoder = OpusDecoder.Create(SAMPLE_RATE, 2);
+		OpusDecoder decoder = OpusDecoder.Create(Globals.SAMPLE_RATE, 2);
 
 		bool playing = false;
 		string url;
+		
+		Action<short[]> onData;
 
-		public WebStreamPlayer(string url)
+		public WebStreamPlayer(string url, Action<short[]> onData)
 		{
 			this.url = url;
+			this.onData = onData;
 		}
 
 		public async Task Dispose()
@@ -59,10 +60,11 @@ namespace ListenMoeClient
 								var streamBytes = packets[i];
 								try
 								{
-									int frameSize = OpusPacketInfo.GetNumSamplesPerFrame(streamBytes, 0, SAMPLE_RATE); //Get frame size from opus packet
+									int frameSize = OpusPacketInfo.GetNumSamplesPerFrame(streamBytes, 0, Globals.SAMPLE_RATE); //Get frame size from opus packet
 									short[] rawBuffer = new short[frameSize * 2]; //2 channels
 									var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
 									audioPlayer.QueueBuffer(rawBuffer);
+									onData(rawBuffer);
 								}
 								catch (Concentus.OpusException e)
 								{

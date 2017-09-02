@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -80,7 +81,7 @@ namespace ListenMoeClient
 						finalY = this.Location.Y;
 
 					this.Location = new Point(finalX, finalY);
-					
+
 					RecalculateMenuDirection();
 
 					Settings.SetIntSetting("LocationX", this.Location.X);
@@ -103,7 +104,7 @@ namespace ListenMoeClient
 			if (moving)
 				moving = false;
 		}
-		
+
 		#endregion
 
 		WebStreamPlayer player;
@@ -122,12 +123,24 @@ namespace ListenMoeClient
 
 		bool openMenuUpwards = true;
 
+		MarqueeLabel lblArtist = new MarqueeLabel();
+		MarqueeLabel lblTitle = new MarqueeLabel();
+		Visualiser visualiser = new Visualiser();
+
+		Thread renderLoop;
+
 		public Form1()
 		{
 			InitializeComponent();
+			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 			Settings.LoadSettings();
 
+			visualiser.Bounds = new Rectangle(48, 48, 337, 48);
+			lblArtist.Bounds = new Rectangle(58, 26, 321, 22);
+			lblTitle.Bounds = new Rectangle(58, 5, 321, 43);
+			lblTitle.Text = "Connecting...";
+			
 			ApplyLoadedSettings();
 
 			if (!Settings.GetBoolSetting("IgnoreUpdates"))
@@ -139,7 +152,7 @@ namespace ListenMoeClient
 			this.Icon = Properties.Resources.icon;
 
 			LoadOpenSans();
-			
+
 			lblTitle.Font = titleFont;
 			lblArtist.Font = artistFont;
 			lblVol.Font = volumeFont;
@@ -166,12 +179,25 @@ namespace ListenMoeClient
 			{
 				await TogglePlayback();
 			});
-			
+
 			Connect();
 			RecalculateMenuDirection();
 
-			player = new WebStreamPlayer("https://listen.moe/stream");
+			player = new WebStreamPlayer("https://listen.moe/stream", rawBuffer =>
+			{
+				visualiser.AddSamples(rawBuffer);
+			});
 			player.Play();
+
+			renderLoop = new Thread(() =>
+			{
+				while (true)
+				{
+					this.Invalidate();
+					Thread.Sleep(33);
+				}
+			});
+			renderLoop.Start();
 		}
 
 		private void RecalculateMenuDirection()
@@ -220,7 +246,7 @@ namespace ListenMoeClient
 			{
 				System.Media.SystemSounds.Beep.Play(); //DING
 				if (MessageBox.Show(this, "An update is available for the Listen.moe player. Do you want to update and restart the application now?",
-						"Listen.moe client - Update available", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						"Listen.moe client - Update available - current version " + Globals.VERSION, MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					updateState = 1;
 					await Updater.UpdateToNewVersion(Wc_DownloadProgressChanged, Wc_DownloadFileCompleted);
@@ -240,16 +266,22 @@ namespace ListenMoeClient
 			this.Invalidate();
 		}
 
+		
+
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
 
-			if (updateState == 0)
-				return;
+			if (updateState != 0)
+			{
+				Brush brush = new SolidBrush(updateState == 1 ? Color.Yellow : Color.LimeGreen);
+				//48px for pause/play button, 75 for the RHS area
+				e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48 - 75) * updatePercent, 3);
+			}
 
-			Brush brush = new SolidBrush(updateState == 1 ? Color.Yellow : Color.LimeGreen);
-			//48px for pause/play button, 75 for the RHS area
-			e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48 - 75) * updatePercent, 3);
+			visualiser.Render(e.Graphics);
+			lblTitle.Render(e.Graphics);
+			lblArtist.Render(e.Graphics);
 		}
 
 		private void ApplyLoadedSettings()
@@ -266,7 +298,7 @@ namespace ListenMoeClient
 			artistFont = OpenSans.GetFont(8.0f);
 			volumeFont = OpenSans.GetFont(8.0f);
 		}
-		
+
 		private void Form1_MouseWheel(object sender, MouseEventArgs e)
 		{
 			if (e.Delta != 0)
@@ -358,6 +390,7 @@ namespace ListenMoeClient
 		{
 			this.Hide();
 			await player.Dispose();
+			renderLoop.Abort();
 			Application.Exit();
 		}
 

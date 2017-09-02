@@ -38,8 +38,6 @@
 			this.picFavourite = new ListenMoeClient.BetterPictureBox();
 			this.picClose = new ListenMoeClient.BetterPictureBox();
 			this.picLogin = new ListenMoeClient.BetterPictureBox();
-			this.lblArtist = new ListenMoeClient.MarqueeLabel();
-			this.lblTitle = new ListenMoeClient.MarqueeLabel();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemPlayPause = new System.Windows.Forms.MenuItem();
@@ -166,36 +164,6 @@
 			this.picLogin.TabStop = false;
 			this.picLogin.Click += new System.EventHandler(this.picLogin_Click);
 			// 
-			// lblArtist
-			// 
-			this.lblArtist.BackColor = System.Drawing.Color.Transparent;
-			this.lblArtist.ForeColor = System.Drawing.Color.White;
-			this.lblArtist.Location = new System.Drawing.Point(58, 26);
-			this.lblArtist.Name = "lblArtist";
-			this.lblArtist.ScrollSpeed = 50F;
-			this.lblArtist.Size = new System.Drawing.Size(321, 22);
-			this.lblArtist.TabIndex = 3;
-			this.lblArtist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
-			this.lblArtist.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
-			this.lblArtist.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
-			// 
-			// lblTitle
-			// 
-			this.lblTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.lblTitle.BackColor = System.Drawing.Color.Transparent;
-			this.lblTitle.ForeColor = System.Drawing.Color.White;
-			this.lblTitle.Location = new System.Drawing.Point(58, 5);
-			this.lblTitle.Name = "lblTitle";
-			this.lblTitle.ScrollSpeed = 50F;
-			this.lblTitle.Size = new System.Drawing.Size(321, 43);
-			this.lblTitle.TabIndex = 1;
-			this.lblTitle.Text = "Connecting...";
-			this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
-			this.lblTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
-			this.lblTitle.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
-			// 
 			// notifyIcon1
 			// 
 			this.notifyIcon1.Text = "Listen.moe";
@@ -234,8 +202,6 @@
 			this.ClientSize = new System.Drawing.Size(460, 48);
 			this.Controls.Add(this.panel2);
 			this.Controls.Add(this.panel1);
-			this.Controls.Add(this.lblArtist);
-			this.Controls.Add(this.lblTitle);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -258,9 +224,7 @@
 		#endregion
 
 		private BetterPictureBox picPlayPause;
-		private MarqueeLabel lblTitle;
 		private BetterPictureBox picClose;
-		private MarqueeLabel lblArtist;
         private System.Windows.Forms.Label lblVol;
         private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.Panel panel1;

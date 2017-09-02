@@ -63,11 +63,20 @@
       <HintPath>packages\Concentus.1.1.3\lib\portable-net45+win+wpa81+wp80\Concentus.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DequeNet, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\DequeNet.1.0.2\lib\netstandard1.1\DequeNet.dll</HintPath>
+    </Reference>
     <Reference Include="NAudio, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\NAudio.1.8.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -85,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\AudioPlayer.cs" />
+    <Compile Include="Audio\FFT.cs" />
     <Compile Include="Controls\BetterPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -104,10 +114,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Controls\Visualiser.cs" />
     <Compile Include="Web\Json.cs" />
-    <Compile Include="Controls\MarqueeLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Controls\MarqueeLabel.cs" />
     <Compile Include="Audio\Ogg.cs" />
     <Compile Include="Controls\OpenSans.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -177,8 +186,8 @@
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
   echo Running ILMerge...
-  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
-  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /copyattrs /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll"
+  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" /attr:"$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll" "$(ProjectDir)\bin\Release\DequeNet.dll"
+  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" /attr:"$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll" "$(ProjectDir)\bin\Release\DequeNet.dll"
   echo Done.
 )</PostBuildEvent>
   </PropertyGroup>

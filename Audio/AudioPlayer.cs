@@ -11,20 +11,16 @@ namespace ListenMoeClient
 {
 	class AudioPlayer : IDisposable
 	{
-		const int MIN_BUFFER_COUNT = 50;
-		int sampleRate;
-
 		BufferedWaveProvider provider;
 		WaveOut waveOut = new WaveOut();
 
 		Queue<short[]> samplesToPlay = new Queue<short[]>();
 
-		public AudioPlayer(int sampleRate)
+		public AudioPlayer()
 		{
-			this.sampleRate = sampleRate;
-			WaveFormat format = new WaveFormat(sampleRate, 2);
+			WaveFormat format = new WaveFormat(Globals.SAMPLE_RATE, 2);
 			provider = new BufferedWaveProvider(format);
-			provider.BufferDuration = TimeSpan.FromSeconds(10);
+			provider.BufferDuration = TimeSpan.FromSeconds(5);
 			provider.DiscardOnBufferOverflow = true;
 			waveOut.Init(provider);
 			waveOut.Volume = Settings.GetFloatSetting("Volume");
