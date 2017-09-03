@@ -17,9 +17,11 @@ namespace ListenMoeClient
 		
 		float[] lastFftPoints;
 		bool logarithmic = false;
-		float bias = 0.5f;
+		float bias = 0.3f;
 		float ScaleFactor = 1f;
 		float normalisationFactor = 1.0f;
+
+		bool stopped = false;
 
 		public Rectangle Bounds;
 
@@ -27,6 +29,9 @@ namespace ListenMoeClient
 
 		public void AddSamples(short[] samples)
 		{
+			if (stopped)
+				return;
+
 			if (anchor == DateTime.MinValue)
 				anchor = DateTime.Now;
 
@@ -43,6 +48,18 @@ namespace ListenMoeClient
 			}
 		}
 
+		public void Stop()
+		{
+			stopped = true;
+			sampleBuffer.Clear();
+			anchor = DateTime.MinValue;
+		}
+
+		public void Start()
+		{
+			stopped = false;
+		}
+
 		private float[] CalculateNextFftFrame()
 		{
 			if (sampleBuffer == null)
@@ -55,8 +72,7 @@ namespace ListenMoeClient
 			short[] window = new short[fftSize];
 			for (int i = 0; i < fftSize; i++)
 				window[i] = sampleBuffer[currentPos + i];
-
-
+			
 			applyWindowFunction(window);
 			float[] bins = FFT.Fft(window);
 			bins = bins.Take(bins.Length / 4).ToArray();
@@ -79,12 +95,17 @@ namespace ListenMoeClient
 			float[] fftPoints = CalculateNextFftFrame();
 			if (fftPoints == null)
 				fftPoints = lastFftPoints;
+			if (stopped == true)
+				fftPoints = new float[fftPoints.Length];
 
 			if (fftPoints != null)
-			{				
+			{
 				//Process points
 				PointF[] points = new PointF[fftPoints.Length];
 				int j = 0;
+
+				for (int i = 1; i < points.Length; i++)
+					fftPoints[i] = fftPoints[i] * bias + lastFftPoints[i] * (1 - bias);
 
 				if (logarithmic)
 				{
@@ -92,7 +113,7 @@ namespace ListenMoeClient
 					float maxNote = (float)(12 * Math.Log(((points.Length - 1) * binWidth) / 16.35, 2));
 					for (int i = 1; i < points.Length; i++)
 					{
-						var yVal = fftPoints[i] * bias + lastFftPoints[i] * (1 - bias);
+						var yVal = fftPoints[i];
 						yVal *= Bounds.Height * ScaleFactor * 0.1f;
 						if (float.IsInfinity(yVal) || float.IsNaN(yVal))
 							yVal = points[i - 1].Y;
@@ -111,7 +132,7 @@ namespace ListenMoeClient
 					float spacing = Bounds.Width / (float)points.Length;
 					for (int i = 1; i < points.Length; i++)
 					{
-						var yVal = fftPoints[i] * bias + lastFftPoints[i] * (1 - bias);
+						var yVal = fftPoints[i];
 						yVal *= Bounds.Height * ScaleFactor * 0.1f;
 						yVal = yVal + ((yVal * normalisationFactor * i / points.Length) - (yVal * normalisationFactor / 2));
 						if (float.IsInfinity(yVal) || float.IsNaN(yVal))

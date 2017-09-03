@@ -137,6 +137,7 @@ namespace ListenMoeClient
 			Settings.LoadSettings();
 
 			visualiser.Bounds = new Rectangle(48, 48, 337, 48);
+			visualiser.Start();
 			lblArtist.Bounds = new Rectangle(58, 26, 321, 22);
 			lblTitle.Bounds = new Rectangle(58, 5, 321, 43);
 			lblTitle.Text = "Connecting...";
@@ -334,6 +335,7 @@ namespace ListenMoeClient
 			{
 				picPlayPause.Image = Properties.Resources.play;
 				menuItemPlayPause.Text = "Play";
+				visualiser.Stop();
 				await player.Stop();
 			}
 			else
@@ -342,6 +344,7 @@ namespace ListenMoeClient
 				menuItemPlayPause.Text = "Pause";
 				if (songInfoStream != null)
 					songInfoStream.ReconnectIfDead();
+				visualiser.Start();
 				player.Play();
 			}
 		}
