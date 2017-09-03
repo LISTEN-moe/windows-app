@@ -238,6 +238,11 @@ namespace ListenMoeClient
 			WM message = (WM)m.Msg;
 			if (message == WM.INPUT)
 				RawInput.ProcessMessage(m.LParam);
+			if (m.Msg == Program.WM_SHOWME)
+			{
+				WindowState = FormWindowState.Normal;
+				this.Activate();
+			}
 			base.WndProc(ref m);
 		}
 
