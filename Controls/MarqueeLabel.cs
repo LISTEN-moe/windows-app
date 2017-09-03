@@ -14,7 +14,16 @@ namespace ListenMoeClient
     class MarqueeLabel
     {
         public float ScrollSpeed { get; set; } = 50; //In pixels per second
-		public string Text;
+		private string text;
+		public string Text
+		{
+			get { return text; }
+			set
+			{
+				text = value;
+				OnTextChanged();
+			}
+		}
 
         private float currentPosition = 0;
         private float spacing = 0.7f; //As a multiple of the width of the label
@@ -55,7 +64,7 @@ namespace ListenMoeClient
         {
 			if (textChanged)
 			{
-				stringWidth = g.MeasureString(Text, Font).Width + 2;
+				stringWidth = g.MeasureString(text, Font).Width + 2;
 				if (stringWidth > Bounds.Width)
 					scrolling = true;
 				else
@@ -69,14 +78,14 @@ namespace ListenMoeClient
 			UpdateTextPosition();
 			g.TranslateTransform(currentPosition, 0);
             RectangleF rect = new RectangleF(Bounds.Location, new SizeF(stringWidth, Bounds.Height));
-			g.DrawString(Text, Font, Brushes.White, rect.Location);
+			g.DrawString(text, Font, Brushes.White, rect.Location);
 
             if (scrolling)
             {
 				//Draw it on the other side for seamless looping
 				float secondPosition = stringWidth + Bounds.Width * spacing;
 				g.TranslateTransform(secondPosition, 0);
-                g.DrawString(Text, Font, Brushes.White, rect.Location);
+                g.DrawString(text, Font, Brushes.White, rect.Location);
 
 				g.TranslateTransform(-secondPosition, 0);
 			}
