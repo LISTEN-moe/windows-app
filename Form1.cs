@@ -152,7 +152,7 @@ namespace ListenMoeClient
 			this.MouseWheel += Form1_MouseWheel;
 			this.Icon = Properties.Resources.icon;
 
-			LoadOpenSans();
+			LoadFonts();
 
 			lblTitle.Font = titleFont;
 			lblArtist.Font = artistFont;
@@ -199,6 +199,14 @@ namespace ListenMoeClient
 				}
 			});
 			renderLoop.Start();
+		}
+
+		private void LoadFonts()
+		{
+			var family = Meiryo.GetFontFamily();
+			titleFont = new Font(family, 12);
+			albumFont = Meiryo.GetFont(8.0f);
+			volumeFont = Meiryo.GetFont(8.0f);
 		}
 
 		private void RecalculateMenuDirection()
@@ -296,13 +304,6 @@ namespace ListenMoeClient
 			SetTopMost(Settings.GetBoolSetting("TopMost"));
 			float vol = Settings.GetFloatSetting("Volume");
 			SetVolumeLabel(vol);
-		}
-
-		private void LoadOpenSans()
-		{
-			titleFont = OpenSans.GetFont(11.0f);
-			artistFont = OpenSans.GetFont(8.0f);
-			volumeFont = OpenSans.GetFont(8.0f);
 		}
 
 		private void Form1_MouseWheel(object sender, MouseEventArgs e)

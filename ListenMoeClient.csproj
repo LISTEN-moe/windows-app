@@ -146,7 +146,6 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\OpenSans-Regular.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -165,6 +164,7 @@
     <None Include="Resources\close.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Meiryo.ttf" />
     <None Include="Resources\pause.png" />
   </ItemGroup>
   <ItemGroup>

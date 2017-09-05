@@ -103,9 +103,9 @@ namespace ListenMoeClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] OpenSans_Regular {
+        internal static byte[] Meiryo {
             get {
-                object obj = ResourceManager.GetObject("OpenSans_Regular", resourceCulture);
+                object obj = ResourceManager.GetObject("Meiryo", resourceCulture);
                 return ((byte[])(obj));
             }
         }

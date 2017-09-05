@@ -25,13 +25,13 @@ namespace ListenMoeClient
 			InitializeComponent();
 			this.Icon = Properties.Resources.icon;
 			this.parent = parent;
-			button1.Font = OpenSans.GetFont(11);
-			textBox1.Font = OpenSans.GetFont(9);
-			textBox2.Font = OpenSans.GetFont(9);
-            checkBox1.Font = OpenSans.GetFont(9);
-            checkBox2.Font = OpenSans.GetFont(9);
-            checkBox3.Font = OpenSans.GetFont(9);
-            label1.Font = OpenSans.GetFont(8);
+			button1.Font = Meiryo.GetFont(11);
+			textBox1.Font = Meiryo.GetFont(9);
+			textBox2.Font = Meiryo.GetFont(9);
+            checkBox1.Font = Meiryo.GetFont(9);
+            checkBox2.Font = Meiryo.GetFont(9);
+            checkBox3.Font = Meiryo.GetFont(9);
+            label1.Font = Meiryo.GetFont(8);
 
             checkBox1.Checked = Settings.GetBoolSetting("TopMost");
             checkBox2.Checked = Settings.GetBoolSetting("IgnoreUpdates");
