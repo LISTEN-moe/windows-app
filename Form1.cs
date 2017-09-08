@@ -111,7 +111,7 @@ namespace ListenMoeClient
 		SongInfoStream songInfoStream;
 
 		Font titleFont;
-		Font artistFont;
+		Font albumFont;
 		Font volumeFont;
 
 		float updatePercent = 0;
@@ -123,7 +123,7 @@ namespace ListenMoeClient
 
 		bool openMenuUpwards = true;
 
-		MarqueeLabel lblArtist = new MarqueeLabel();
+		MarqueeLabel lblAlbum = new MarqueeLabel();
 		MarqueeLabel lblTitle = new MarqueeLabel();
 		Visualiser visualiser = new Visualiser();
 
@@ -135,12 +135,6 @@ namespace ListenMoeClient
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 			Settings.LoadSettings();
-
-			visualiser.Bounds = new Rectangle(48, 48, 337, 48);
-			visualiser.Start();
-			lblArtist.Bounds = new Rectangle(58, 26, 321, 22);
-			lblTitle.Bounds = new Rectangle(58, 5, 321, 43);
-			lblTitle.Text = "Connecting...";
 			
 			ApplyLoadedSettings();
 
@@ -155,8 +149,16 @@ namespace ListenMoeClient
 			LoadFonts();
 
 			lblTitle.Font = titleFont;
-			lblArtist.Font = artistFont;
+			lblTitle.Subfont = albumFont;
+			lblAlbum.Font = albumFont;
 			lblVol.Font = volumeFont;
+
+			lblAlbum.Bounds = new Rectangle(58, 26, 321, 22);
+			lblTitle.Bounds = new Rectangle(56, 5, 321, 43);
+			lblTitle.Text = "Connecting...";
+
+			visualiser.Bounds = new Rectangle(48, 48, 337, 48);
+			visualiser.Start();
 
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
@@ -184,10 +186,7 @@ namespace ListenMoeClient
 			Connect();
 			RecalculateMenuDirection();
 
-			player = new WebStreamPlayer("https://listen.moe/stream", rawBuffer =>
-			{
-				visualiser.AddSamples(rawBuffer);
-			});
+			player = new WebStreamPlayer("https://listen.moe/stream", visualiser);
 			player.Play();
 
 			renderLoop = new Thread(() =>
@@ -278,9 +277,7 @@ namespace ListenMoeClient
 		{
 			updatePercent = e.BytesReceived / (float)e.TotalBytesToReceive;
 			this.Invalidate();
-		}
-
-		
+		}		
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
@@ -295,7 +292,7 @@ namespace ListenMoeClient
 
 			visualiser.Render(e.Graphics);
 			lblTitle.Render(e.Graphics);
-			lblArtist.Render(e.Graphics);
+			lblAlbum.Render(e.Graphics);
 		}
 
 		private void ApplyLoadedSettings()
@@ -310,16 +307,27 @@ namespace ListenMoeClient
 		{
 			if (e.Delta != 0)
 			{
-				float delta = 0.05f;
-				if (RawInput.IsPressed(VirtualKeys.Shift))
-					delta = 0.01f;
-				float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * delta;
-				float newVol = player.AddVolume(volumeChange);
-				if (newVol >= 0)
+				if (RawInput.IsPressed(VirtualKeys.Control))
 				{
-					Settings.SetFloatSetting("Volume", newVol);
-					Settings.WriteSettings();
-					SetVolumeLabel(newVol);
+					visualiser.IncreaseBarWidth(0.5f * e.Delta / (float)SystemInformation.MouseWheelScrollDelta);
+				}
+				else if (RawInput.IsPressed(VirtualKeys.Menu))
+				{
+					visualiser.IncreaseResolution(e.Delta / SystemInformation.MouseWheelScrollDelta);
+				}
+				else
+				{
+					float delta = 0.05f;
+					if (RawInput.IsPressed(VirtualKeys.Shift))
+						delta = 0.01f;
+					float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * delta;
+					float newVol = player.AddVolume(volumeChange);
+					if (newVol >= 0)
+					{
+						Settings.SetFloatSetting("Volume", newVol);
+						Settings.WriteSettings();
+						SetVolumeLabel(newVol);
+					}
 				}
 			}
 		}
@@ -372,17 +380,16 @@ namespace ListenMoeClient
 		void ProcessSongInfo(SongInfo songInfo)
 		{
 			lblTitle.Text = songInfo.song_name;
-			string artistAnimeName = songInfo.artist_name;
-			if (!string.IsNullOrWhiteSpace(songInfo.anime_name))
+			lblTitle.Subtext = songInfo.artist_name.Trim();
+			string albumName = songInfo.anime_name;
+			string middle = "";
+			if (!string.IsNullOrEmpty(songInfo.requested_by))
 			{
-				if (!string.IsNullOrWhiteSpace(songInfo.artist_name))
-					artistAnimeName += " (" + songInfo.anime_name + ")";
-				else
-					artistAnimeName = songInfo.anime_name;
+				middle = songInfo.requested_by.Contains(" ") ? "" : "Requested by ";
+				if (!string.IsNullOrWhiteSpace(albumName))
+					middle = "; " + middle;
 			}
-			string middle = string.IsNullOrWhiteSpace(artistAnimeName) ? "Requested by " : "; Requested by ";
-			middle = string.IsNullOrEmpty(songInfo.requested_by) ? "" : middle;
-			lblArtist.Text = artistAnimeName.Trim() + middle + songInfo.requested_by;
+			lblAlbum.Text = albumName + middle + songInfo.requested_by;
 
 			if (songInfo.extended != null)
 				SetFavouriteSprite(songInfo.extended.favorite);

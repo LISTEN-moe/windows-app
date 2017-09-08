@@ -118,7 +118,7 @@
     <Compile Include="Web\Json.cs" />
     <Compile Include="Controls\MarqueeLabel.cs" />
     <Compile Include="Audio\Ogg.cs" />
-    <Compile Include="Controls\OpenSans.cs" />
+    <Compile Include="Controls\Meiryo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
