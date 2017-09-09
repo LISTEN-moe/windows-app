@@ -93,9 +93,9 @@ namespace ListenMoeClient
 
 		public static void LoadSettings()
 		{
+			LoadDefaultSettings();
 			if (!File.Exists(settingsFileLocation))
 			{
-				LoadDefaultSettings();
 				WriteSettings();
 				return;
 			}

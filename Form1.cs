@@ -432,6 +432,7 @@ namespace ListenMoeClient
 		private async Task Exit()
 		{
 			this.Hide();
+			notifyIcon1.Visible = false;
 			await player.Dispose();
 			renderLoop.Abort();
 			Environment.Exit(0);

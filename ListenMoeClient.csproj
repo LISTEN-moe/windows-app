@@ -189,8 +189,8 @@
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
   echo Running ILMerge...
-  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" /attr:"$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll" "$(ProjectDir)\bin\Release\DequeNet.dll"
-  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" /attr:"$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll" "$(ProjectDir)\bin\Release\DequeNet.dll"
+  "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" /attr:"$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll" "$(ProjectDir)\bin\Release\DequeNet.dll" "$(ProjectDir)\bin\Release\System.ValueTuple.dll"
+  echo "C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /ndebug /targetplatform:4.0,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:"$(ProjectDir)\bin\ListenMoe.exe" /attr:"$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\ListenMoeClient.exe" "$(ProjectDir)\bin\Release\NAudio.dll" "$(ProjectDir)\bin\Release\websocket-sharp.dll" "$(ProjectDir)\bin\Release\Concentus.dll" "$(ProjectDir)\bin\Release\DequeNet.dll" "$(ProjectDir)\bin\Release\System.ValueTuple.dll"
   echo Done.
 )</PostBuildEvent>
   </PropertyGroup>
