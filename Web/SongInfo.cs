@@ -74,7 +74,7 @@ namespace ListenMoeClient
 			{
 				socket.Connect();
 
-				string token = Settings.GetStringSetting("Token");
+				string token = Settings.Get<string>("Token");
 				if (token != "")
 					Authenticate(token);
 			}

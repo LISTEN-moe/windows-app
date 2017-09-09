@@ -23,7 +23,7 @@ namespace ListenMoeClient
 			provider.BufferDuration = TimeSpan.FromSeconds(5);
 			provider.DiscardOnBufferOverflow = true;
 			waveOut.Init(provider);
-			waveOut.Volume = Settings.GetFloatSetting("Volume");
+			waveOut.Volume = Settings.Get<float>("Volume");
 		}
 
 		public void Play()

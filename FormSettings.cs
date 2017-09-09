@@ -34,10 +34,10 @@ namespace ListenMoeClient
 			checkBox4.Font = Meiryo.GetFont(9);
             label1.Font = Meiryo.GetFont(8);
 
-            checkBox1.Checked = Settings.GetBoolSetting("TopMost");
-            checkBox2.Checked = Settings.GetBoolSetting("IgnoreUpdates");
-            checkBox3.Checked = Settings.GetBoolSetting("CloseToTray");
-			checkBox4.Checked = Settings.GetBoolSetting("EnableVisualiser");
+            checkBox1.Checked = Settings.Get<bool>("TopMost");
+            checkBox2.Checked = Settings.Get<bool>("IgnoreUpdates");
+            checkBox3.Checked = Settings.Get<bool>("CloseToTray");
+			checkBox4.Checked = Settings.Get<bool>("EnableVisualiser");
 
 			User.AddLoginCallback(RecheckLoginStatus);
 			RecheckLoginStatus();
@@ -47,7 +47,7 @@ namespace ListenMoeClient
 		{
 			if (User.LoggedIn)
 			{
-				var username = Settings.GetStringSetting("Username").Trim();
+				var username = Settings.Get<string>("Username").Trim();
 				var loginString = "Logged in as " + username;
 				label1.Text = loginString;
 			}
@@ -67,20 +67,20 @@ namespace ListenMoeClient
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.SetBoolSetting("IgnoreUpdates", checkBox2.Checked);
+            Settings.Set("IgnoreUpdates", checkBox2.Checked);
             Settings.WriteSettings();
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.SetBoolSetting("CloseToTray", checkBox3.Checked);
+            Settings.Set("CloseToTray", checkBox3.Checked);
             Settings.WriteSettings();
 			parent.SetNotifyIconVisible(checkBox3.Checked);
         }
 
 		private void checkBox4_CheckedChanged(object sender, EventArgs e)
 		{
-			Settings.SetBoolSetting("EnableVisualiser", checkBox4.Checked);
+			Settings.Set("EnableVisualiser", checkBox4.Checked);
 			Settings.WriteSettings();
 			if (checkBox4.Checked)
 				parent.StartVisualiser();

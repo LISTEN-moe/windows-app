@@ -1,184 +1,150 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ListenMoeClient
 {
 	class Settings
 	{
-		static Dictionary<string, int> intDefaults = new Dictionary<string, int>()
+		private const string settingsFileLocation = "listenMoeSettings.ini";
+
+		static object settingsMutex = new object();
+		static object fileMutex = new object();
+
+		static Dictionary<Type, object> typedSettings = new Dictionary<Type, object>();
+		static Dictionary<char, Type> typePrefixes = new Dictionary<char, Type>()
 		{
-			{ "LocationX", 100 },
-			{ "LocationY", 100 },
-			{ "VisualiserResolutionFactor", 3 }
+			{ 'i', typeof(int) },
+			{ 'f', typeof(float) },
+			{ 'b', typeof(bool) },
+			{ 's', typeof(string) }
 		};
-		static Dictionary<string, float> floatDefaults = new Dictionary<string, float>()
+		static Dictionary<Type, char> reverseTypePrefixes = new Dictionary<Type, char>()
 		{
-			{ "Volume", 1.0f },
-			{ "VisualiserBarWidth", 3f }
-		};
-		static Dictionary<string, bool> boolDefaults = new Dictionary<string, bool>()
-		{
-			{ "TopMost", false },
-			{ "IgnoreUpdates", false },
-			{ "CloseToTray", false },
-			{ "HideFromAltTab", false },
-			{ "EnableVisualiser", true }
-		};
-		static Dictionary<string, string> stringDefaults = new Dictionary<string, string>()
-		{
-			{ "Token", "" },
-			{ "Username", "" }
+			{ typeof(int), 'i'},
+			{ typeof(float), 'f'},
+			{ typeof(bool), 'b'},
+			{ typeof(string), 's'}
 		};
 
-        private const string settingsFileLocation = "listenMoeSettings.ini";
-
-        static Dictionary<string, int> intValues = new Dictionary<string, int>();
-        static Dictionary<string, float> floatValues = new Dictionary<string, float>();
-        static Dictionary<string, bool> boolValues = new Dictionary<string, bool>();
-		static Dictionary<string, string> stringValues = new Dictionary<string, string>();
-
-        static object mutex = new object();
-
-        public static void LoadSettings()
-        {
-            if (!File.Exists(settingsFileLocation))
-            {
-                LoadDefaultSettings();
-                WriteSettings();
-                return;
-            }
-
-            string[] lines = File.ReadAllLines(settingsFileLocation);
-            foreach (string line in lines)
-            {
-                string[] parts = line.Split(new char[] { '=' }, 2);
-                if (string.IsNullOrWhiteSpace(parts[0]))
-                    continue;
-
-                if (parts[0][0] == 'i')
-                {
-                    int val;
-                    if (!int.TryParse(parts[1], out val))
-                        continue;
-                    intValues.Add(parts[0].Substring(1), val);
-                }
-                else if (parts[0][0] == 'f')
-                {
-                    float val;
-                    if (!float.TryParse(parts[1], out val))
-                        continue;
-                    floatValues.Add(parts[0].Substring(1), val);
-                }
-                else if (parts[0][0] == 'b')
-                {
-                    bool val;
-                    if (!bool.TryParse(parts[1], out val))
-                        continue;
-                    boolValues.Add(parts[0].Substring(1), val);
-                }
-				else if (parts[0][0] == 's')
-				{
-					stringValues.Add(parts[0].Substring(1), parts[1]);
-				}
-            }
-        }
-
-        //TODO: proper defaults checking, for partial settings files
-        private static void LoadDefaultSettings()
-        {
-            intValues = new Dictionary<string, int>(intDefaults);
-            floatValues = new Dictionary<string, float>(floatDefaults);
-            boolValues = new Dictionary<string, bool>(boolDefaults);
-			stringValues = new Dictionary<string, string>(stringDefaults);
-        }
-
-        public static void WriteSettings()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var kp in intValues)
-                sb.AppendLine("i" + kp.Key + "=" + kp.Value.ToString());
-
-            foreach (var kp in floatValues)
-                sb.AppendLine("f" + kp.Key + "=" + kp.Value.ToString());
-
-            foreach (var kp in boolValues)
-                sb.AppendLine("b" + kp.Key + "=" + kp.Value.ToString());
-
-			foreach (var kp in stringValues)
-				sb.AppendLine("s" + kp.Key + "=" + kp.Value.ToString());
-
-            lock (mutex)
-            {
-                using (var fileStream = new FileStream(settingsFileLocation, FileMode.Create, FileAccess.Write))
-                {
-                    using (var streamWriter = new StreamWriter(fileStream))
-                        streamWriter.Write(sb.ToString());
-                }
-            }
-        }
-
-        public static int GetIntSetting(string key)
-        {
-            if (!intValues.ContainsKey(key))
-            {
-                intValues[key] = intDefaults[key];
-                WriteSettings();
-            }
-            return intValues[key];
-        }
-
-        public static float GetFloatSetting(string key)
-        {
-            if (!floatValues.ContainsKey(key))
-            {
-                floatValues[key] = floatDefaults[key];
-                WriteSettings();
-            }
-            return floatValues[key];
-        }
-
-        public static bool GetBoolSetting(string key)
-        {
-            if (!boolValues.ContainsKey(key))
-            {
-                boolValues[key] = boolDefaults[key];
-                WriteSettings();
-            }
-            return boolValues[key];
-        }
-
-		public static string GetStringSetting(string key)
+		static Dictionary<Type, Func<string, (bool Success, object Result)>> parseActions = new Dictionary<Type, Func<string, (bool, object)>>()
 		{
-			if (!stringValues.ContainsKey(key))
+			{ typeof(int), s => {
+				int i;
+				bool success = int.TryParse(s, out i);
+				return (success, i);
+			}},
+			{ typeof(float), s => {
+				float f;
+				bool success = float.TryParse(s, out f);
+				return (success, f);
+			}},
+			{ typeof(bool), s => {
+				bool b;
+				bool success = bool.TryParse(s, out b);
+				return (success, b);
+			}},
+			{ typeof(string), s => {
+				return (true, s);
+			}},
+		};
+
+		public static T Get<T>(string key)
+		{
+			lock (settingsMutex)
 			{
-				stringValues[key] = stringDefaults[key];
-				WriteSettings();
+				return ((Dictionary<string, T>)(typedSettings[typeof(T)]))[key];
 			}
-			return stringValues[key];
 		}
 
-        public static void SetIntSetting(string key, int value)
-        {
-            intValues[key] = value;
-        }
-
-        public static void SetFloatSetting(string key, float value)
-        {
-            floatValues[key] = value;
-        }
-
-        public static void SetBoolSetting(string key, bool value)
-        {
-            boolValues[key] = value;
-        }
-
-		public static void SetStringSetting(string key, string value)
+		public static void Set<T>(string key, T value)
 		{
-			stringValues[key] = value;
+			Type t = typeof(T);
+			lock (settingsMutex)
+			{
+				if (!typedSettings.ContainsKey(t))
+				{
+					typedSettings.Add(t, new Dictionary<string, T>());
+				}
+				((Dictionary<string, T>)typedSettings[t])[key] = value;
+			}
 		}
-    }
+
+		private static void LoadDefaultSettings()
+		{
+			Set("LocationX", 100);
+			Set("LocationY", 100);
+			Set("VisualiserResolutionFactor", 3);
+
+			Set("Volume", 1.0f);
+			Set("VisualiserBarWidth", 3.0f);
+
+			Set("TopMost", false);
+			Set("IgnoreUpdates", false);
+			Set("CloseToTray", false);
+			Set("HideFromAltTab", false);
+			Set("EnableVisualiser", true);
+
+			Set("Token", "");
+			Set("Username", "");
+		}
+
+		public static void LoadSettings()
+		{
+			if (!File.Exists(settingsFileLocation))
+			{
+				LoadDefaultSettings();
+				WriteSettings();
+				return;
+			}
+
+			string[] lines = File.ReadAllLines(settingsFileLocation);
+			foreach (string line in lines)
+			{
+				string[] parts = line.Split(new char[] { '=' }, 2);
+				if (string.IsNullOrWhiteSpace(parts[0]))
+					continue;
+
+				char prefix = parts[0][0];
+				Type t = typePrefixes[prefix];
+				var parseAction = parseActions[t];
+				(bool success, object o) = parseAction(parts[1]);
+				if (!success)
+					continue;
+
+				MethodInfo setMethod = typeof(Settings).GetMethod("Set", BindingFlags.Static | BindingFlags.Public);
+				MethodInfo genericSet = setMethod.MakeGenericMethod(t);
+				genericSet.Invoke(null, new object[] { parts[0].Substring(1), o });
+			}
+		}
+
+		public static void WriteSettings()
+		{
+			StringBuilder sb = new StringBuilder();
+			lock (settingsMutex)
+			{
+				foreach (var dict in typedSettings)
+				{
+					Type t = dict.Key;
+					var typedDict = (System.Collections.IDictionary)dict.Value;
+
+					foreach (dynamic setting in typedDict)
+					{
+						sb.AppendLine(reverseTypePrefixes[t] + setting.Key + "=" + setting.Value.ToString());
+					}
+				}
+			}
+
+			lock (fileMutex)
+			{
+				using (var fileStream = new FileStream(settingsFileLocation, FileMode.Create, FileAccess.Write))
+				{
+					using (var streamWriter = new StreamWriter(fileStream))
+						streamWriter.Write(sb.ToString());
+				}
+			}
+		}
+	}
 }

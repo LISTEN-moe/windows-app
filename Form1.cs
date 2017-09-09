@@ -84,8 +84,8 @@ namespace ListenMoeClient
 
 					RecalculateMenuDirection();
 
-					Settings.SetIntSetting("LocationX", this.Location.X);
-					Settings.SetIntSetting("LocationY", this.Location.Y);
+					Settings.Set("LocationX", this.Location.X);
+					Settings.Set("LocationY", this.Location.Y);
 					Settings.WriteSettings();
 				}
 
@@ -138,7 +138,7 @@ namespace ListenMoeClient
 			
 			ApplyLoadedSettings();
 
-			if (!Settings.GetBoolSetting("IgnoreUpdates"))
+			if (!Settings.Get<bool>("IgnoreUpdates"))
 			{
 				CheckForUpdates();
 			}
@@ -157,21 +157,16 @@ namespace ListenMoeClient
 			lblTitle.Bounds = new Rectangle(56, 5, 321, 43);
 			lblTitle.Text = "Connecting...";
 
-			if (Settings.GetBoolSetting("EnableVisualiser"))
-			{
-				StartVisualiser();
-			}
-
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
 
-			if (Settings.GetBoolSetting("HideFromAltTab"))
+			if (Settings.Get<bool>("HideFromAltTab"))
 			{
 				this.ShowInTaskbar = false;
 				int windowStyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
 				SetWindowLong(this.Handle, GWL_EXSTYLE, windowStyle | WS_EX_TOOLWINDOW);
 			}
-			if (Settings.GetBoolSetting("CloseToTray"))
+			if (Settings.Get<bool>("CloseToTray"))
 			{
 				notifyIcon1.Visible = true;
 			}
@@ -191,6 +186,11 @@ namespace ListenMoeClient
 			player = new WebStreamPlayer("https://listen.moe/stream");
 			player.SetVisualiser(visualiser);
 			player.Play();
+
+			if (Settings.Get<bool>("EnableVisualiser"))
+			{
+				StartVisualiser();
+			}
 
 			renderLoop = new Thread(() =>
 			{
@@ -247,7 +247,7 @@ namespace ListenMoeClient
 		private async void Connect()
 		{
 			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-			var savedToken = Settings.GetStringSetting("Token");
+			var savedToken = Settings.Get<string>("Token");
 			if (savedToken.Trim() != "")
 			{
 				picFavourite.Visible = await User.Login(savedToken);
@@ -324,9 +324,9 @@ namespace ListenMoeClient
 
 		private void ApplyLoadedSettings()
 		{
-			this.Location = new Point(Settings.GetIntSetting("LocationX"), Settings.GetIntSetting("LocationY"));
-			SetTopMost(Settings.GetBoolSetting("TopMost"));
-			float vol = Settings.GetFloatSetting("Volume");
+			this.Location = new Point(Settings.Get<int>("LocationX"), Settings.Get<int>("LocationY"));
+			SetTopMost(Settings.Get<bool>("TopMost"));
+			float vol = Settings.Get<float>("Volume");
 			SetVolumeLabel(vol);
 		}
 
@@ -351,7 +351,7 @@ namespace ListenMoeClient
 					float newVol = player.AddVolume(volumeChange);
 					if (newVol >= 0)
 					{
-						Settings.SetFloatSetting("Volume", newVol);
+						Settings.Set("Volume", newVol);
 						Settings.WriteSettings();
 						SetVolumeLabel(newVol);
 					}
@@ -392,7 +392,7 @@ namespace ListenMoeClient
 
 		private void picClose_Click(object sender, EventArgs e)
 		{
-			if (Settings.GetBoolSetting("CloseToTray"))
+			if (Settings.Get<bool>("CloseToTray"))
 			{
 				this.Hide();
 				if (loginForm != null)
@@ -434,7 +434,7 @@ namespace ListenMoeClient
 			this.Hide();
 			await player.Dispose();
 			renderLoop.Abort();
-			Application.Exit();
+			Environment.Exit(0);
 		}
 
 		public void SetTopMost(bool topMost)
@@ -442,7 +442,7 @@ namespace ListenMoeClient
 			this.TopMost = topMost;
 			if (loginForm != null)
 				loginForm.TopMost = topMost;
-			Settings.SetBoolSetting("TopMost", topMost);
+			Settings.Set("TopMost", topMost);
 			Settings.WriteSettings();
 		}
 
@@ -473,8 +473,8 @@ namespace ListenMoeClient
 			loginForm = null;
 			if (success)
 			{
-				Settings.SetStringSetting("Token", token);
-				Settings.SetStringSetting("Username", username);
+				Settings.Set("Token", token);
+				Settings.Set("Username", username);
 				Settings.WriteSettings();
 				songInfoStream.Authenticate(token);
 				picFavourite.Visible = true;
@@ -576,7 +576,7 @@ namespace ListenMoeClient
 			bool favouriteStatus = songInfoStream.currentInfo.extended?.favorite ?? false;
 			picFavourite.Image = favouriteStatus ? fadedFavSprite.Frames[1] : fadedFavSprite.Frames[0];
 
-			string result = await WebHelper.Post("https://listen.moe/api/songs/favorite", Settings.GetStringSetting("Token"), new Dictionary<string, string>() {
+			string result = await WebHelper.Post("https://listen.moe/api/songs/favorite", Settings.Get<string>("Token"), new Dictionary<string, string>() {
 				{ "song", songInfoStream.currentInfo.song_id.ToString() }
 			});
 
