@@ -125,7 +125,7 @@ namespace ListenMoeClient
 
 		MarqueeLabel lblAlbum = new MarqueeLabel();
 		MarqueeLabel lblTitle = new MarqueeLabel();
-		Visualiser visualiser = new Visualiser();
+		Visualiser visualiser;
 
 		Thread renderLoop;
 
@@ -157,8 +157,10 @@ namespace ListenMoeClient
 			lblTitle.Bounds = new Rectangle(56, 5, 321, 43);
 			lblTitle.Text = "Connecting...";
 
-			visualiser.Bounds = new Rectangle(48, 48, 337, 48);
-			visualiser.Start();
+			if (Settings.GetBoolSetting("EnableVisualiser"))
+			{
+				StartVisualiser();
+			}
 
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
@@ -186,7 +188,8 @@ namespace ListenMoeClient
 			Connect();
 			RecalculateMenuDirection();
 
-			player = new WebStreamPlayer("https://listen.moe/stream", visualiser);
+			player = new WebStreamPlayer("https://listen.moe/stream");
+			player.SetVisualiser(visualiser);
 			player.Play();
 
 			renderLoop = new Thread(() =>
@@ -198,6 +201,27 @@ namespace ListenMoeClient
 				}
 			});
 			renderLoop.Start();
+		}
+
+		public void StartVisualiser()
+		{
+			if (visualiser == null)
+			{
+				visualiser = new Visualiser();
+				visualiser.Bounds = new Rectangle(48, 48, 337, 48);
+				visualiser.Start();
+				player.SetVisualiser(visualiser);
+			}
+		}
+
+		public void StopVisualiser()
+		{
+			if (visualiser != null)
+			{
+				player.SetVisualiser(null);
+				visualiser.Stop();
+				visualiser = null;
+			}
 		}
 
 		private void LoadFonts()
@@ -290,7 +314,10 @@ namespace ListenMoeClient
 				e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48 - 75) * updatePercent, 3);
 			}
 
-			visualiser.Render(e.Graphics);
+			if (visualiser != null)
+			{
+				visualiser.Render(e.Graphics);
+			}
 			lblTitle.Render(e.Graphics);
 			lblAlbum.Render(e.Graphics);
 		}

@@ -24,15 +24,19 @@ namespace ListenMoeClient
 
 		Visualiser visualiser;
 
-		public WebStreamPlayer(string url, Visualiser visualiser)
+		public WebStreamPlayer(string url)
 		{
 			this.url = url;
-			this.visualiser = visualiser;
 		}
 
 		public async Task Dispose()
 		{
 			await Stop();
+		}
+
+		public void SetVisualiser(Visualiser visualiser)
+		{
+			this.visualiser = visualiser;
 		}
 
 		public void Play()
@@ -64,7 +68,9 @@ namespace ListenMoeClient
 									short[] rawBuffer = new short[frameSize * 2]; //2 channels
 									var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
 									audioPlayer.QueueBuffer(rawBuffer);
-									visualiser.AddSamples(rawBuffer);
+
+									if (visualiser != null)
+										visualiser.AddSamples(rawBuffer);
 								}
 								catch (Concentus.OpusException e)
 								{

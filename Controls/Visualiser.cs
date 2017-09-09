@@ -21,8 +21,8 @@ namespace ListenMoeClient
 		float ScaleFactor = 1f;
 		float normalisationFactor = 1.0f;
 
-		int resolutionFactor = 10; //higher = lower resolution, number is the number of samples to skip
-		float barWidth = 3f;
+		int resolutionFactor = Settings.GetIntSetting("VisualiserResolutionFactor"); //higher = lower resolution, number is the number of samples to skip
+		float barWidth = Settings.GetFloatSetting("VisualiserBarWidth");
 
 		bool bars = true;
 
@@ -74,12 +74,18 @@ namespace ListenMoeClient
 		public void IncreaseBarWidth(float amount)
 		{
 			barWidth += amount;
+			Settings.SetFloatSetting("VisualiserBarWidth", barWidth);
+			Settings.WriteSettings();
 		}
 
 		public void IncreaseResolution(int amount)
 		{
 			if (resolutionFactor - amount > 0)
+			{
 				resolutionFactor -= amount;
+				Settings.SetIntSetting("VisualiserResolutionFactor", resolutionFactor);
+				Settings.WriteSettings();
+			}
 		}
 
 		private float[] CalculateNextFftFrame()

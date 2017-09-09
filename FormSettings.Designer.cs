@@ -38,6 +38,7 @@
 			this.checkBox3 = new System.Windows.Forms.CheckBox();
 			this.checkBox2 = new System.Windows.Forms.CheckBox();
 			this.checkBox1 = new System.Windows.Forms.CheckBox();
+			this.checkBox4 = new System.Windows.Forms.CheckBox();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
 			this.SuspendLayout();
@@ -111,6 +112,7 @@
 			// panel2
 			// 
 			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(34)))), ((int)(((byte)(41)))));
+			this.panel2.Controls.Add(this.checkBox4);
 			this.panel2.Controls.Add(this.checkBox3);
 			this.panel2.Controls.Add(this.checkBox2);
 			this.panel2.Controls.Add(this.checkBox1);
@@ -155,6 +157,18 @@
 			this.checkBox1.UseVisualStyleBackColor = true;
 			this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
 			// 
+			// checkBox4
+			// 
+			this.checkBox4.AutoSize = true;
+			this.checkBox4.ForeColor = System.Drawing.Color.White;
+			this.checkBox4.Location = new System.Drawing.Point(126, 94);
+			this.checkBox4.Name = "checkBox4";
+			this.checkBox4.Size = new System.Drawing.Size(105, 17);
+			this.checkBox4.TabIndex = 1;
+			this.checkBox4.Text = "Enable visualiser";
+			this.checkBox4.UseVisualStyleBackColor = true;
+			this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
+			// 
 			// FormSettings
 			// 
 			this.AcceptButton = this.button1;
@@ -187,5 +201,6 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.CheckBox checkBox4;
 	}
 }

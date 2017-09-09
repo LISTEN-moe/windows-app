@@ -31,11 +31,13 @@ namespace ListenMoeClient
             checkBox1.Font = Meiryo.GetFont(9);
             checkBox2.Font = Meiryo.GetFont(9);
             checkBox3.Font = Meiryo.GetFont(9);
+			checkBox4.Font = Meiryo.GetFont(9);
             label1.Font = Meiryo.GetFont(8);
 
             checkBox1.Checked = Settings.GetBoolSetting("TopMost");
             checkBox2.Checked = Settings.GetBoolSetting("IgnoreUpdates");
             checkBox3.Checked = Settings.GetBoolSetting("CloseToTray");
+			checkBox4.Checked = Settings.GetBoolSetting("EnableVisualiser");
 
 			User.AddLoginCallback(RecheckLoginStatus);
 			RecheckLoginStatus();
@@ -75,5 +77,15 @@ namespace ListenMoeClient
             Settings.WriteSettings();
 			parent.SetNotifyIconVisible(checkBox3.Checked);
         }
+
+		private void checkBox4_CheckedChanged(object sender, EventArgs e)
+		{
+			Settings.SetBoolSetting("EnableVisualiser", checkBox4.Checked);
+			Settings.WriteSettings();
+			if (checkBox4.Checked)
+				parent.StartVisualiser();
+			else
+				parent.StopVisualiser();
+		}
 	}
 }

@@ -12,18 +12,21 @@ namespace ListenMoeClient
 		static Dictionary<string, int> intDefaults = new Dictionary<string, int>()
 		{
 			{ "LocationX", 100 },
-			{ "LocationY", 100 }
+			{ "LocationY", 100 },
+			{ "VisualiserResolutionFactor", 3 }
 		};
 		static Dictionary<string, float> floatDefaults = new Dictionary<string, float>()
 		{
-			{ "Volume", 1.0f }
+			{ "Volume", 1.0f },
+			{ "VisualiserBarWidth", 3f }
 		};
 		static Dictionary<string, bool> boolDefaults = new Dictionary<string, bool>()
 		{
 			{ "TopMost", false },
 			{ "IgnoreUpdates", false },
 			{ "CloseToTray", false },
-			{ "HideFromAltTab", false }
+			{ "HideFromAltTab", false },
+			{ "EnableVisualiser", true }
 		};
 		static Dictionary<string, string> stringDefaults = new Dictionary<string, string>()
 		{
