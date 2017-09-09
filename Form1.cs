@@ -135,7 +135,10 @@ namespace ListenMoeClient
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 			Settings.LoadSettings();
-			
+
+			float scaleFactor = Settings.Get<float>("Scale");
+			Scale(new SizeF(scaleFactor, scaleFactor));
+
 			ApplyLoadedSettings();
 
 			if (!Settings.Get<bool>("IgnoreUpdates"))
@@ -227,9 +230,10 @@ namespace ListenMoeClient
 		private void LoadFonts()
 		{
 			var family = Meiryo.GetFontFamily();
-			titleFont = new Font(family, 12);
-			albumFont = Meiryo.GetFont(8.0f);
-			volumeFont = Meiryo.GetFont(8.0f);
+			var scaleFactor = Settings.Get<float>("Scale");
+			titleFont = new Font(family, 12 * scaleFactor);
+			albumFont = Meiryo.GetFont(8 * scaleFactor);
+			volumeFont = Meiryo.GetFont(8 * scaleFactor);
 		}
 
 		private void RecalculateMenuDirection()
@@ -449,16 +453,18 @@ namespace ListenMoeClient
 
 		private void panel1_MouseEnter(object sender, EventArgs e)
 		{
-			picPlayPause.Size = new Size(18, 18);
-			picPlayPause.Location = new Point(15, 15);
+			var scale = Settings.Get<float>("Scale");
+			picPlayPause.Size = new Size((int)(18 * scale), (int)(18 * scale));
+			picPlayPause.Location = new Point((int)(15 * scale), (int)(15 * scale));
 		}
 
 		private void panel1_MouseLeave(object sender, EventArgs e)
 		{
 			if (panel1.ClientRectangle.Contains(PointToClient(Control.MousePosition)))
 				return;
-			picPlayPause.Size = new Size(16, 16);
-			picPlayPause.Location = new Point(16, 16);
+			var scale = Settings.Get<float>("Scale");
+			picPlayPause.Size = new Size((int)(16 * scale), (int)(16 * scale));
+			picPlayPause.Location = new Point((int)(16 * scale), (int)(16 * scale));
 		}
 
 		private void menuItemCopySongInfo_Click(object sender, EventArgs e)

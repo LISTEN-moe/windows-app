@@ -51,6 +51,11 @@ namespace ListenMoeClient
 			}},
 		};
 
+		static Settings()
+		{
+			LoadDefaultSettings();
+		}
+
 		public static T Get<T>(string key)
 		{
 			lock (settingsMutex)
@@ -80,6 +85,7 @@ namespace ListenMoeClient
 
 			Set("Volume", 1.0f);
 			Set("VisualiserBarWidth", 3.0f);
+			Set("Scale", 1.0f);
 
 			Set("TopMost", false);
 			Set("IgnoreUpdates", false);
@@ -93,7 +99,6 @@ namespace ListenMoeClient
 
 		public static void LoadSettings()
 		{
-			LoadDefaultSettings();
 			if (!File.Exists(settingsFileLocation))
 			{
 				WriteSettings();

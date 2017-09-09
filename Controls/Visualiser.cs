@@ -180,9 +180,12 @@ namespace ListenMoeClient
 				
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
+			var scale = Settings.Get<float>("Scale");
+
 			//Bins go from bottom to top
-			g.TranslateTransform(0, Bounds.Height);
+			g.TranslateTransform(0, Bounds.Height * scale);
 			g.ScaleTransform(1, -1);
+			g.ScaleTransform(scale, scale);
 
 			g.TranslateTransform(Bounds.X, 0);
 			if (bars)
@@ -203,8 +206,9 @@ namespace ListenMoeClient
 			}
 			g.TranslateTransform(-Bounds.X, 0);
 
+			g.ScaleTransform(1 / scale, 1 / scale);
 			g.ScaleTransform(1, -1);
-			g.TranslateTransform(0, -Bounds.Height);
+			g.TranslateTransform(0, -(Bounds.Height * scale));
 
 			lastFftPoints = fftPoints.Select(x => (float.IsInfinity(x) || float.IsNaN(x)) ? 0 : x).ToArray();
 		}

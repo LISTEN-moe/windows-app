@@ -23,16 +23,18 @@ namespace ListenMoeClient
 		public FormSettings(Form1 parent)
 		{
 			InitializeComponent();
+			var scale = Settings.Get<float>("Scale");
+			Scale(new SizeF(scale, scale));
 			this.Icon = Properties.Resources.icon;
 			this.parent = parent;
-			button1.Font = Meiryo.GetFont(11);
-			textBox1.Font = Meiryo.GetFont(9);
-			textBox2.Font = Meiryo.GetFont(9);
-            checkBox1.Font = Meiryo.GetFont(9);
-            checkBox2.Font = Meiryo.GetFont(9);
-            checkBox3.Font = Meiryo.GetFont(9);
-			checkBox4.Font = Meiryo.GetFont(9);
-            label1.Font = Meiryo.GetFont(8);
+			button1.Font = Meiryo.GetFont(11 * scale);
+			textBox1.Font = Meiryo.GetFont(9 * scale);
+			textBox2.Font = Meiryo.GetFont(9 * scale);
+            checkBox1.Font = Meiryo.GetFont(9 * scale);
+            checkBox2.Font = Meiryo.GetFont(9 * scale);
+            checkBox3.Font = Meiryo.GetFont(9 * scale);
+			checkBox4.Font = Meiryo.GetFont(9 * scale);
+            label1.Font = Meiryo.GetFont(8 * scale);
 
             checkBox1.Checked = Settings.Get<bool>("TopMost");
             checkBox2.Checked = Settings.Get<bool>("IgnoreUpdates");

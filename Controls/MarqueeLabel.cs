@@ -103,12 +103,15 @@ namespace ListenMoeClient
 			g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
 			UpdateTextPosition();
+
+			var scale = Settings.Get<float>("Scale");
+
 			g.TranslateTransform((int)currentPosition, 0);
-            RectangleF rect = new RectangleF(Bounds.Location, new SizeF(totalStringWidth, Bounds.Height));
+            RectangleF rect = new RectangleF(new PointF(Bounds.Location.X * scale, Bounds.Location.Y * scale), new SizeF(totalStringWidth, Bounds.Height));
 			g.DrawString(text, Font, Brushes.White, rect.Location);
 			if (subtext.Trim() != "")
 			{
-				g.DrawString(subtext, Subfont, Brushes.White, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
+				g.DrawString(subtext, Subfont, Brushes.White, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
 			}
 
             if (scrolling)
@@ -119,7 +122,7 @@ namespace ListenMoeClient
                 g.DrawString(text, Font, Brushes.White, rect.Location);
 				if (subtext.Trim() != "")
 				{
-					g.DrawString(subtext, Subfont, Brushes.White, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
+					g.DrawString(subtext, Subfont, Brushes.White, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
 				}
 
 				g.TranslateTransform(-secondPosition, 0);
