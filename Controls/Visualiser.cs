@@ -15,7 +15,9 @@ namespace ListenMoeClient
 		DateTime anchor;
 		Deque<short> sampleBuffer = new Deque<short>();
 
-		float[] lastFftPoints;
+		const int fftSize = 2048;
+
+		float[] lastFftPoints = new float[fftSize];
 		bool logarithmic = false;
 		float bias = 0.3f;
 		float ScaleFactor = 1f;
@@ -29,8 +31,6 @@ namespace ListenMoeClient
 		bool stopped = false;
 
 		public Rectangle Bounds;
-
-		int fftSize = 2048;
 
 		public void AddSamples(short[] samples)
 		{
@@ -105,8 +105,6 @@ namespace ListenMoeClient
 			float[] bins = FFT.Fft(window);
 			bins = bins.Take(bins.Length / 4).ToArray();
 			bins = bins.Select(f => (float)Math.Log10(f * 10) * 2 + 1).Select(f => ((f - 0.3f) * 1.5f) + 1.5f).ToArray();
-			if (lastFftPoints == null)
-				lastFftPoints = bins;
 			return bins;
 		}
 		
@@ -130,8 +128,6 @@ namespace ListenMoeClient
 				fftPoints = CalculateNextFftFrame();
 				if (fftPoints == null)
 				{
-					if (lastFftPoints == null)
-						return;
 					fftPoints = lastFftPoints;
 				}
 			}
