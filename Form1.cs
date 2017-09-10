@@ -135,6 +135,8 @@ namespace ListenMoeClient
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 			Settings.LoadSettings();
+			//Write immediately after loading to flush any new default settings
+			Settings.WriteSettings();
 
 			float scaleFactor = Settings.Get<float>("Scale");
 			Scale(new SizeF(scaleFactor, scaleFactor));
