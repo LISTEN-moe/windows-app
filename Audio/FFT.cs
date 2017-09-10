@@ -53,21 +53,20 @@ namespace ListenMoeClient
 			return complex;
 		}
 
-		public static float[] Fft(short[] buffer)
+		public static float[] Fft(short[] buffer, int exponent)
 		{
 			Complex[] data = ConvertToComplex(buffer);
-			Fft(data, buffer.Length);
+			Fft(data, buffer.Length, exponent);
 
-			float[] resultBuffer = new float[data.Length];
-			for (int i = 1; i < data.Length; i++)
+			float[] resultBuffer = new float[data.Length / 2];
+			for (int i = 1; i < resultBuffer.Length; i++)
 			{
 				resultBuffer[i] = (float)data[i].Magnitude / 64;
 			}
-
-			return resultBuffer.Take(data.Length / 2).ToArray();
+			return resultBuffer;
 		}
 
-		public static void Fft(Complex[] data, int fftSize)
+		public static void Fft(Complex[] data, int fftSize, int exponent)
 		{
 			int c = fftSize;
 
@@ -81,7 +80,6 @@ namespace ListenMoeClient
 			//move to outer scope to optimize performance
 			int j, i;
 
-			int exponent = (int)Math.Log(fftSize, 2);
 			for (int l = 0; l < exponent; l++)
 			{
 				n0 = 1;

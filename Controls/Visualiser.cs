@@ -16,6 +16,7 @@ namespace ListenMoeClient
 		Deque<short> sampleBuffer = new Deque<short>();
 
 		const int fftSize = 2048;
+		const int exponent = 11;
 
 		float[] lastFftPoints = new float[fftSize];
 		bool logarithmic = false;
@@ -31,6 +32,8 @@ namespace ListenMoeClient
 		bool stopped = false;
 
 		public Rectangle Bounds;
+		Brush barBrush = new SolidBrush(Color.FromArgb(128, 236, 26, 85));
+		Pen linePen = new Pen(Color.FromArgb(255, 236, 26, 85), 1);
 
 		public void AddSamples(short[] samples)
 		{
@@ -102,7 +105,7 @@ namespace ListenMoeClient
 				window[i] = sampleBuffer[currentPos + i];
 			
 			applyWindowFunction(window);
-			float[] bins = FFT.Fft(window);
+			float[] bins = FFT.Fft(window, exponent);
 			bins = bins.Take(bins.Length / 4).ToArray();
 			bins = bins.Select(f => (float)Math.Log10(f * 10) * 2 + 1).Select(f => ((f - 0.3f) * 1.5f) + 1.5f).ToArray();
 			return bins;
@@ -190,6 +193,7 @@ namespace ListenMoeClient
 			g.TranslateTransform(Bounds.X, 0);
 			if (bars)
 			{
+				RectangleF[] rectangles = new RectangleF[points.Length - 1];
 				for (int i = 0; i < points.Length - 1; i++)
 				{
 					var next = points[i + 1];
@@ -197,12 +201,13 @@ namespace ListenMoeClient
 
 					float pos = Math.Max(current.X, current.X + (next.X - current.X - barWidth) / 2);
 					float width = Math.Min(barWidth, next.X - current.X);
-					g.FillRectangle(new SolidBrush(Color.FromArgb(128, 236, 26, 85)), pos, 0, width, current.Y);
+					rectangles[i] = new RectangleF(pos, 0, width, current.Y);
 				}
+				g.FillRectangles(barBrush, rectangles);
 			}
 			else
 			{
-				g.DrawCurve(new Pen(Color.FromArgb(255, 236, 26, 85), 1), points);
+				g.DrawCurve(linePen, points);
 			}
 			g.TranslateTransform(-Bounds.X, 0);
 
