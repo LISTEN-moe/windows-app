@@ -22,7 +22,7 @@ namespace ListenMoeClient
 		bool logarithmic = false;
 		float bias = 0.3f;
 		float ScaleFactor = 1f;
-		float normalisationFactor = 1.0f;
+		float normalisationFactor = 0.9f;
 
 		int resolutionFactor = Settings.Get<int>("VisualiserResolutionFactor"); //higher = lower resolution, number is the number of samples to skip
 		float barWidth = Settings.Get<float>("VisualiserBarWidth");
