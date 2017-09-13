@@ -279,8 +279,7 @@ namespace ListenMoeClient
 				RawInput.ProcessMessage(m.LParam);
 			if (m.Msg == Program.WM_SHOWME)
 			{
-				WindowState = FormWindowState.Normal;
-				this.Activate();
+				Restore();
 			}
 			base.WndProc(ref m);
 		}
@@ -535,6 +534,7 @@ namespace ListenMoeClient
 
 		private void Restore()
 		{
+			WindowState = FormWindowState.Normal;
 			this.Show();
 			this.Activate();
 			if (loginForm != null)

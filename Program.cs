@@ -16,11 +16,11 @@ namespace ListenMoeClient
 		static Mutex mutex = new Mutex(true, "{6431a734-2693-40d4-8dff-ea662d8777d7}");
 
 		public const int HWND_BROADCAST = 0xffff;
-		public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+		public static readonly UInt32 WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
 		[DllImport("user32")]
-		public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
+		static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 		[DllImport("user32")]
-		public static extern int RegisterWindowMessage(string message);
+		static extern uint RegisterWindowMessage(string lpString);
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -38,7 +38,7 @@ namespace ListenMoeClient
 			}
 			else
 			{
-				PostMessage((IntPtr)HWND_BROADCAST, WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
+				SendMessage((IntPtr)HWND_BROADCAST, WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
 			}
 		}
 	}
