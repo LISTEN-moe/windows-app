@@ -103,7 +103,8 @@ namespace ListenMoeClient
 
 				if (provideThread != null)
 				{
-					await Task.Run(() => { provideThread.Abort(); });
+					provideThread.Abort();
+					provideThread.Join();
 					provideThread = null;
 				}
 
