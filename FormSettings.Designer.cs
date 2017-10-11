@@ -46,8 +46,11 @@
 			this.panelLoggedIn = new System.Windows.Forms.Panel();
 			this.lblLoginStatus = new System.Windows.Forms.Label();
 			this.btnLogout = new System.Windows.Forms.Button();
+			this.cbVisualiserBars = new System.Windows.Forms.CheckBox();
 			this.txtUsername = new ListenMoeClient.GhostTextbox();
 			this.txtPassword = new ListenMoeClient.GhostTextbox();
+			this.tbVisualiserOpacity = new System.Windows.Forms.TrackBar();
+			this.lblVisualiserOpacity = new System.Windows.Forms.Label();
 			this.tabControl.SuspendLayout();
 			this.tpGeneral.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).BeginInit();
@@ -55,6 +58,7 @@
 			this.tpAccount.SuspendLayout();
 			this.panelNotLoggedIn.SuspendLayout();
 			this.panelLoggedIn.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbVisualiserOpacity)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLogin
@@ -169,6 +173,9 @@
 			// 
 			// tpVisualiser
 			// 
+			this.tpVisualiser.Controls.Add(this.lblVisualiserOpacity);
+			this.tpVisualiser.Controls.Add(this.tbVisualiserOpacity);
+			this.tpVisualiser.Controls.Add(this.cbVisualiserBars);
 			this.tpVisualiser.Controls.Add(this.panelVisualiserColor);
 			this.tpVisualiser.Controls.Add(this.cbEnableVisualiser);
 			this.tpVisualiser.Location = new System.Drawing.Point(4, 22);
@@ -183,7 +190,7 @@
 			// 
 			this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
 			this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelVisualiserColor.Location = new System.Drawing.Point(8, 29);
+			this.panelVisualiserColor.Location = new System.Drawing.Point(8, 53);
 			this.panelVisualiserColor.Name = "panelVisualiserColor";
 			this.panelVisualiserColor.Size = new System.Drawing.Size(50, 33);
 			this.panelVisualiserColor.TabIndex = 1;
@@ -251,6 +258,16 @@
 			this.btnLogout.UseVisualStyleBackColor = true;
 			this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
 			// 
+			// cbVisualiserBars
+			// 
+			this.cbVisualiserBars.AutoSize = true;
+			this.cbVisualiserBars.Location = new System.Drawing.Point(8, 29);
+			this.cbVisualiserBars.Name = "cbVisualiserBars";
+			this.cbVisualiserBars.Size = new System.Drawing.Size(68, 17);
+			this.cbVisualiserBars.TabIndex = 2;
+			this.cbVisualiserBars.Text = "Use bars";
+			this.cbVisualiserBars.UseVisualStyleBackColor = true;
+			// 
 			// txtUsername
 			// 
 			this.txtUsername.GhostText = "Username";
@@ -268,6 +285,27 @@
 			this.txtPassword.Size = new System.Drawing.Size(181, 20);
 			this.txtPassword.TabIndex = 3;
 			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
+			// 
+			// tbVisualiserOpacity
+			// 
+			this.tbVisualiserOpacity.BackColor = System.Drawing.Color.White;
+			this.tbVisualiserOpacity.Location = new System.Drawing.Point(64, 52);
+			this.tbVisualiserOpacity.Maximum = 255;
+			this.tbVisualiserOpacity.Name = "tbVisualiserOpacity";
+			this.tbVisualiserOpacity.Size = new System.Drawing.Size(104, 45);
+			this.tbVisualiserOpacity.TabIndex = 3;
+			this.tbVisualiserOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
+			this.tbVisualiserOpacity.Value = 1;
+			this.tbVisualiserOpacity.Scroll += new System.EventHandler(this.tbVisualiserOpacity_Scroll);
+			// 
+			// lblVisualiserOpacity
+			// 
+			this.lblVisualiserOpacity.AutoSize = true;
+			this.lblVisualiserOpacity.Location = new System.Drawing.Point(95, 78);
+			this.lblVisualiserOpacity.Name = "lblVisualiserOpacity";
+			this.lblVisualiserOpacity.Size = new System.Drawing.Size(43, 13);
+			this.lblVisualiserOpacity.TabIndex = 4;
+			this.lblVisualiserOpacity.Text = "Opacity";
 			// 
 			// FormSettings
 			// 
@@ -290,6 +328,7 @@
 			this.panelNotLoggedIn.PerformLayout();
 			this.panelLoggedIn.ResumeLayout(false);
 			this.panelLoggedIn.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbVisualiserOpacity)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -316,5 +355,8 @@
 		private System.Windows.Forms.Panel panelLoggedIn;
 		private System.Windows.Forms.Label lblLoginStatus;
 		private System.Windows.Forms.Button btnLogout;
+		private System.Windows.Forms.CheckBox cbVisualiserBars;
+		private System.Windows.Forms.TrackBar tbVisualiserOpacity;
+		private System.Windows.Forms.Label lblVisualiserOpacity;
 	}
 }

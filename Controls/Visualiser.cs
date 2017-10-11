@@ -28,8 +28,7 @@ namespace ListenMoeClient
 		int resolutionFactor = Settings.Get<int>("VisualiserResolutionFactor"); //higher = lower resolution, number is the number of samples to skip
 		float barWidth = Settings.Get<float>("VisualiserBarWidth");
 
-		bool bars = Settings.Get<bool>("VisualiserBars");
-
+		bool bars = true;
 		bool stopped = false;
 
 		public Rectangle Bounds;
@@ -44,6 +43,7 @@ namespace ListenMoeClient
 
 		public void ReloadSettings()
 		{
+			bars = Settings.Get<bool>("VisualiserBars");
 			visualiserColor = Settings.GetVisualiserColor();
 			barBrush = new SolidBrush(visualiserColor);
 			linePen = new Pen(visualiserColor, 1);

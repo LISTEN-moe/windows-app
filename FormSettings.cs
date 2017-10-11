@@ -25,8 +25,13 @@ namespace ListenMoeClient
 			LoadAndBindCheckboxSetting(cbHideFromAltTab, "HideFromAltTab");
 			LoadAndBindCheckboxSetting(cbIgnoreUpdates, "IgnoreUpdates");
 			LoadAndBindCheckboxSetting(cbTopmost, "TopMost");
-			
-			tbResolutionScale.Value = (int)(Settings.Get<float>("Scale") * 10);
+			LoadAndBindCheckboxSetting(cbVisualiserBars, "VisualiserBars");
+
+			float scale = Settings.Get<float>("Scale");
+			tbResolutionScale.Value = (int)(scale * 10);
+			lblResolutionScale.Text = scale.ToString("N1");
+
+			tbVisualiserOpacity.Value = (int)(Settings.Get<float>("VisualiserTransparency") * 255);
 
 			panelVisualiserColor.BackColor = Settings.GetVisualiserColor();
 
@@ -114,6 +119,13 @@ namespace ListenMoeClient
 		{
 			if (e.KeyCode == Keys.Enter)
 				btnLogin.PerformClick();
+		}
+
+		private void tbVisualiserOpacity_Scroll(object sender, EventArgs e)
+		{
+			Settings.Set("VisualiserTransparency", tbVisualiserOpacity.Value / 255f);
+			Settings.WriteSettings();
+			mainForm.ReloadSettings();
 		}
 	}
 }
