@@ -180,9 +180,6 @@
     <None Include="Resources\fav_sprite.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\down.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\up.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
