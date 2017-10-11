@@ -79,7 +79,7 @@ namespace ListenMoeClient
 					{
 						readAheadLength = sourceStream.Read(readAheadBuffer, 0, readAheadBuffer.Length);
 					}
-					catch (Exception e)
+					catch (Exception)
 					{
 						//Read will throw an exception when pausing due to the thread dying, so we just ignore it.
 					}

@@ -84,6 +84,7 @@ namespace ListenMoeClient
 			Set("LocationX", 100);
 			Set("LocationY", 100);
 			Set("VisualiserResolutionFactor", 3);
+			Set("UpdateInterval", 3600); //in seconds
 
 			Set("Volume", 1.0f);
 			Set("VisualiserBarWidth", 3.0f);
@@ -91,7 +92,7 @@ namespace ListenMoeClient
 			Set("Scale", 1.0f);
 
 			Set("TopMost", false);
-			Set("IgnoreUpdates", false);
+			Set("UpdateAutocheck", true);
 			Set("CloseToTray", false);
 			Set("HideFromAltTab", false);
 			Set("EnableVisualiser", true);

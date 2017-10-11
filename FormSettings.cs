@@ -23,16 +23,18 @@ namespace ListenMoeClient
 			LoadAndBindCheckboxSetting(cbCloseToTray, "CloseToTray");
 			LoadAndBindCheckboxSetting(cbEnableVisualiser, "EnableVisualiser");
 			LoadAndBindCheckboxSetting(cbHideFromAltTab, "HideFromAltTab");
-			LoadAndBindCheckboxSetting(cbIgnoreUpdates, "IgnoreUpdates");
+			LoadAndBindCheckboxSetting(cbUpdateAutocheck, "UpdateAutocheck");
 			LoadAndBindCheckboxSetting(cbTopmost, "TopMost");
 			LoadAndBindCheckboxSetting(cbVisualiserBars, "VisualiserBars");
+
+			numericUpdateInterval.Value = Settings.Get<int>("UpdateInterval") / 60;
+			numericUpdateInterval.ValueChanged += NumericUpdateInterval_ValueChanged;
 
 			float scale = Settings.Get<float>("Scale");
 			tbResolutionScale.Value = (int)(scale * 10);
 			lblResolutionScale.Text = scale.ToString("N1");
 
 			tbVisualiserOpacity.Value = (int)(Settings.Get<float>("VisualiserTransparency") * 255);
-
 			panelVisualiserColor.BackColor = Settings.GetVisualiserColor();
 
 			panelNotLoggedIn.Visible = !User.LoggedIn;
@@ -56,6 +58,12 @@ namespace ListenMoeClient
 				panelNotLoggedIn.Visible = true;
 				panelNotLoggedIn.BringToFront();
 			};
+		}
+
+		private void NumericUpdateInterval_ValueChanged(object sender, EventArgs e)
+		{
+			Settings.Set("UpdateInterval", (int)numericUpdateInterval.Value * 60);
+			Settings.WriteSettings();
 		}
 
 		private void LoadAndBindCheckboxSetting(CheckBox checkbox, string settingsKey)

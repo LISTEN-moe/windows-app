@@ -32,9 +32,11 @@ namespace ListenMoeClient
 			public string name { get; set; }
 		}
 
+		private const string UPDATE_ENDPOINT = "https://api.github.com/repos/LISTEN-moe/windows-app/releases/latest";
+
 		public static async Task<bool> CheckGithubVersion()
 		{
-			string rawResponse = await WebHelper.Get("https://api.github.com/repos/anonymousthing/ListenMoeClient/releases/latest");
+			string rawResponse = await WebHelper.Get(UPDATE_ENDPOINT);
 			LatestReleaseResponse response = Json.Parse<LatestReleaseResponse>(rawResponse);
 
 			var version = response.tag_name;
@@ -79,7 +81,7 @@ namespace ListenMoeClient
 
 		public static async Task UpdateToNewVersion(DownloadProgressChangedEventHandler dpceh, System.ComponentModel.AsyncCompletedEventHandler aceh)
 		{
-			string rawResponse = await WebHelper.Get("https://api.github.com/repos/anonymousthing/ListenMoeClient/releases/latest");
+			string rawResponse = await WebHelper.Get(UPDATE_ENDPOINT);
 			LatestReleaseResponse response = Json.Parse<LatestReleaseResponse>(rawResponse);
 
 			if (response.assets.Length == 0)
@@ -111,7 +113,7 @@ namespace ListenMoeClient
 				Process.Start(exeName + ".exe");
 				Environment.Exit(0);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				MessageBox.Show("Unable to replace with updated executable. Check whether the executable is marked as read-only, or whether it is in a protected folder that requires administrative rights.");
 			}

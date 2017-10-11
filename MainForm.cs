@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -116,7 +117,10 @@ namespace ListenMoeClient
 		MarqueeLabel lblTitle = new MarqueeLabel();
 		Visualiser visualiser;
 
-		Thread renderLoop;
+		CancellationTokenSource cts;
+		CancellationToken ct;
+		Task updaterTask;
+		Task renderLoop;
 
 		public MainForm()
 		{
@@ -137,10 +141,12 @@ namespace ListenMoeClient
 
 			ApplyLoadedSettings();
 
-			if (!Settings.Get<bool>("IgnoreUpdates"))
-			{
-				CheckForUpdates();
-			}
+			cts = new CancellationTokenSource();
+			ct = cts.Token;
+#pragma warning disable CS4014
+			CheckForUpdates(new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()));
+#pragma warning restore CS4014
+			StartUpdateAutochecker();
 
 			this.MouseWheel += Form1_MouseWheel;
 			this.Icon = Properties.Resources.icon;
@@ -167,15 +173,14 @@ namespace ListenMoeClient
 			player.SetVisualiser(visualiser);
 			player.Play();
 
-			renderLoop = new Thread(() =>
+			renderLoop = Task.Run(() =>
 			{
-				while (true)
+				while (!ct.IsCancellationRequested)
 				{
 					this.Invalidate();
 					Thread.Sleep(33);
 				}
 			});
-			renderLoop.Start();
 			
 			ReloadSettings();
 			ReloadScale();
@@ -196,11 +201,13 @@ namespace ListenMoeClient
 		public void ReloadScale()
 		{
 			float scaleFactor = Settings.Get<float>("Scale");
-			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
+			SetBounds(Location.X, Location.Y, 480, 48);
+			this.Scale(new SizeF(scaleFactor, scaleFactor));
 			currentScale = scaleFactor;
 			
 			//Reload fonts to get newly scaled font sizes
 			LoadFonts();
+			SetPlayPauseSize(false);
 		}
 
 		public void StartVisualiser()
@@ -208,7 +215,7 @@ namespace ListenMoeClient
 			if (visualiser == null)
 			{
 				visualiser = new Visualiser();
-				visualiser.Bounds = new Rectangle(48, 48, 337, 48);
+				visualiser.Bounds = new Rectangle(48, 48, 357, 48);
 				visualiser.Start();
 				player.SetVisualiser(visualiser);
 			}
@@ -283,18 +290,49 @@ namespace ListenMoeClient
 			base.WndProc(ref m);
 		}
 
-		private async void CheckForUpdates()
+		private async Task CheckForUpdates(TaskFactory factory)
 		{
 			if (await Updater.CheckGithubVersion())
 			{
 				System.Media.SystemSounds.Beep.Play(); //DING
-				if (MessageBox.Show(this, "An update is available for the Listen.moe player. Do you want to update and restart the application now?",
-						"Listen.moe client - Update available - current version " + Globals.VERSION, MessageBoxButtons.YesNo) == DialogResult.Yes)
+				DialogResult result = await factory.StartNew(() => MessageBox.Show(this, "An update is available for the Listen.moe player. Do you want to update and restart the application now?",
+						"Listen.moe client - Update available - current version " + Globals.VERSION, MessageBoxButtons.YesNo));
+				if (result == DialogResult.Yes)
 				{
 					updateState = 1;
 					await Updater.UpdateToNewVersion(Wc_DownloadProgressChanged, Wc_DownloadFileCompleted);
 				}
 			}
+		}
+
+		private void StartUpdateAutochecker()
+		{
+			TaskFactory factory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+			updaterTask = Task.Run(async () =>
+			{
+				Stopwatch stopwatch = new Stopwatch();
+				stopwatch.Start();
+				long last = stopwatch.ElapsedMilliseconds;
+				while (!ct.IsCancellationRequested)
+				{
+					if (stopwatch.ElapsedMilliseconds - last > Settings.Get<int>("UpdateInterval") * 1000)
+					{
+						//We only check for the setting here, because I'm lazy to dispose/recreate this checker thread when they change the setting
+						if (!Settings.Get<bool>("UpdateAutocheck"))
+						{
+							last = stopwatch.ElapsedMilliseconds;
+							continue;
+						}
+
+						await CheckForUpdates(factory);
+						last = stopwatch.ElapsedMilliseconds;
+					}
+					else
+					{
+						Thread.Sleep(100);
+					}
+				}
+			});
 		}
 
 		private void Wc_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -388,8 +426,6 @@ namespace ListenMoeClient
 			{
 				picPlayPause.Image = Properties.Resources.pause;
 				menuItemPlayPause.Text = "Pause";
-				if (songInfoStream != null)
-					songInfoStream.ReconnectIfDead();
 				visualiser.Start();
 				player.Play();
 			}
@@ -430,6 +466,7 @@ namespace ListenMoeClient
 
 		private async Task Exit()
 		{
+			cts.Cancel();
 			if (SettingsForm != null)
 			{
 				SettingsForm.Close();
@@ -437,24 +474,34 @@ namespace ListenMoeClient
 			this.Hide();
 			notifyIcon1.Visible = false;
 			await player.Dispose();
-			renderLoop.Abort();
 			Environment.Exit(0);
 		}
 
 		private void panelPlayBtn_MouseEnter(object sender, EventArgs e)
 		{
-			var scale = Settings.Get<float>("Scale");
-			picPlayPause.Size = new Size((int)(18 * scale), (int)(18 * scale));
-			picPlayPause.Location = new Point((int)(15 * scale), (int)(15 * scale));
+			SetPlayPauseSize(true);
 		}
 
 		private void panelPlayBtn_MouseLeave(object sender, EventArgs e)
 		{
 			if (panelPlayBtn.ClientRectangle.Contains(PointToClient(Control.MousePosition)))
 				return;
+			SetPlayPauseSize(false);
+		}
+
+		private void SetPlayPauseSize(bool bigger)
+		{
 			var scale = Settings.Get<float>("Scale");
-			picPlayPause.Size = new Size((int)(16 * scale), (int)(16 * scale));
-			picPlayPause.Location = new Point((int)(16 * scale), (int)(16 * scale));
+			if (bigger)
+			{
+				picPlayPause.Size = new Size((int)(18 * scale), (int)(18 * scale));
+				picPlayPause.Location = new Point((int)(15 * scale), (int)(15 * scale));
+			}
+			else
+			{
+				picPlayPause.Size = new Size((int)(16 * scale), (int)(16 * scale));
+				picPlayPause.Location = new Point((int)(16 * scale), (int)(16 * scale));
+			}
 		}
 
 		private void menuItemCopySongInfo_Click(object sender, EventArgs e)

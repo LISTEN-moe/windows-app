@@ -84,7 +84,7 @@ namespace ListenMoeClient
 				if (User.LoggedIn)
 					Authenticate();
 			}
-			catch (Exception e) { }
+			catch (Exception) { }
 		}
 
 		public void Authenticate()
@@ -92,13 +92,7 @@ namespace ListenMoeClient
 			try
 			{
 				socket.Send("{ \"token\": \"" + Settings.Get<string>("Token") + "\" }");
-			} catch (Exception e) { }
-		}
-
-		public void ReconnectIfDead()
-		{
-			if (!socket.IsAlive)
-				Connect();
+			} catch (Exception) { }
 		}
 
 		private void ParseSongInfo(string data)
@@ -117,7 +111,7 @@ namespace ListenMoeClient
 				{
 					OnSongInfoReceived(currentInfo);
 				});
-			} catch (Exception e) { }
+			} catch (Exception) { }
 		}
 	}
 }

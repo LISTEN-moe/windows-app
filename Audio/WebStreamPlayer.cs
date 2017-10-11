@@ -72,7 +72,7 @@ namespace ListenMoeClient
 									if (visualiser != null)
 										visualiser.AddSamples(rawBuffer);
 								}
-								catch (Concentus.OpusException e)
+								catch (Concentus.OpusException)
 								{
 									//Skip this frame
 									//Note: the first 2 frames will hit this exception (I'm pretty sure they're not audio data frames)
@@ -80,7 +80,7 @@ namespace ListenMoeClient
 							}
 						}
 					}
-				} catch (Exception e)
+				} catch (Exception)
 				{
 
 				}
@@ -104,7 +104,7 @@ namespace ListenMoeClient
 				if (provideThread != null)
 				{
 					provideThread.Abort();
-					provideThread.Join();
+					await Task.Run(() => provideThread.Join());
 					provideThread = null;
 				}
 
