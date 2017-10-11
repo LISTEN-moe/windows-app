@@ -52,10 +52,17 @@ namespace ListenMoeClient
 		public event StatsReceived OnSongInfoReceived = (info) => { };
 		public SongInfo currentInfo;
 
-		public SongInfoStream(TaskScheduler scheduler)
+		private const string SOCKET_ADDR = "wss://listen.moe/api/v2/socket";
+
+		public SongInfoStream(TaskFactory factory)
 		{
-			factory = new TaskFactory(scheduler);
-			socket = new WebSocket("wss://listen.moe/api/v2/socket");
+			this.factory = factory;
+			Reconnect();
+		}
+
+		public void Reconnect()
+		{
+			socket = new WebSocket(SOCKET_ADDR);
 
 			socket.OnMessage += (sender, e) => ParseSongInfo(e.Data);
 			socket.OnError += (sender, e) => { throw e.Exception; };
@@ -73,19 +80,18 @@ namespace ListenMoeClient
 			try
 			{
 				socket.Connect();
-
-				string token = Settings.Get<string>("Token");
-				if (token != "")
-					Authenticate(token);
+				
+				if (User.LoggedIn)
+					Authenticate();
 			}
 			catch (Exception e) { }
 		}
 
-		public void Authenticate(string token)
+		public void Authenticate()
 		{
 			try
 			{
-				socket.Send("{ \"token\": \"" + token + "\" }");
+				socket.Send("{ \"token\": \"" + Settings.Get<string>("Token") + "\" }");
 			} catch (Exception e) { }
 		}
 

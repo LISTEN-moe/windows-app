@@ -12,82 +12,108 @@ namespace ListenMoeClient
 {
 	public partial class FormSettings : Form
 	{
-		Form1 parent;
+		MainForm mainForm;
 
-		//Empty constructor only so the designer can be used. Do not put anything in here, it won't be called.
-		public FormSettings()
+		public FormSettings(MainForm mainForm)
 		{
 			InitializeComponent();
-		}
-
-		public FormSettings(Form1 parent)
-		{
-			InitializeComponent();
-			var scale = Settings.Get<float>("Scale");
-			Scale(new SizeF(scale, scale));
 			this.Icon = Properties.Resources.icon;
-			this.parent = parent;
-			button1.Font = Meiryo.GetFont(11 * scale);
-			textBox1.Font = Meiryo.GetFont(9 * scale);
-			textBox2.Font = Meiryo.GetFont(9 * scale);
-            checkBox1.Font = Meiryo.GetFont(9 * scale);
-            checkBox2.Font = Meiryo.GetFont(9 * scale);
-            checkBox3.Font = Meiryo.GetFont(9 * scale);
-			checkBox4.Font = Meiryo.GetFont(9 * scale);
-            label1.Font = Meiryo.GetFont(8 * scale);
+			this.mainForm = mainForm;
 
-            checkBox1.Checked = Settings.Get<bool>("TopMost");
-            checkBox2.Checked = Settings.Get<bool>("IgnoreUpdates");
-            checkBox3.Checked = Settings.Get<bool>("CloseToTray");
-			checkBox4.Checked = Settings.Get<bool>("EnableVisualiser");
+			LoadAndBindCheckboxSetting(cbCloseToTray, "CloseToTray");
+			LoadAndBindCheckboxSetting(cbEnableVisualiser, "EnableVisualiser");
+			LoadAndBindCheckboxSetting(cbHideFromAltTab, "HideFromAltTab");
+			LoadAndBindCheckboxSetting(cbIgnoreUpdates, "IgnoreUpdates");
+			LoadAndBindCheckboxSetting(cbTopmost, "TopMost");
+			
+			tbResolutionScale.Value = (int)(Settings.Get<float>("Scale") * 10);
 
-			User.AddLoginCallback(RecheckLoginStatus);
-			RecheckLoginStatus();
+			panelVisualiserColor.BackColor = Settings.GetVisualiserColor();
+
+			panelNotLoggedIn.Visible = !User.LoggedIn;
+			panelLoggedIn.Visible = User.LoggedIn;
+			lblLoginStatus.Text = "Logged in as " + Settings.Get<string>("Username");
+			lblLoginStatus.Location = new Point((this.Width / 2) - (lblLoginStatus.Width / 2), lblLoginStatus.Location.Y);
+
+			User.OnLoginComplete += () =>
+			{
+				lblLoginStatus.Text = "Logged in as " + Settings.Get<string>("Username");
+				lblLoginStatus.Location = new Point((this.Width / 2) - (lblLoginStatus.Width / 2), lblLoginStatus.Location.Y);
+				txtUsername.Clear();
+				txtPassword.Clear();
+				panelNotLoggedIn.Visible = false;
+				panelLoggedIn.Visible = true;
+				panelLoggedIn.BringToFront();
+			};
+			User.OnLogout += () =>
+			{
+				panelLoggedIn.Visible = false;
+				panelNotLoggedIn.Visible = true;
+				panelNotLoggedIn.BringToFront();
+			};
 		}
 
-		public void RecheckLoginStatus()
+		private void LoadAndBindCheckboxSetting(CheckBox checkbox, string settingsKey)
 		{
-			if (User.LoggedIn)
+			checkbox.Checked = Settings.Get<bool>(settingsKey);
+			checkbox.CheckStateChanged += (sender, e) =>
 			{
-				var username = Settings.Get<string>("Username").Trim();
-				var loginString = "Logged in as " + username;
-				label1.Text = loginString;
+				Settings.Set(settingsKey, checkbox.Checked);
+				Settings.WriteSettings();
+				mainForm.ReloadSettings();
+			};
+		}
+
+		private void panelVisualiserColor_MouseClick(object sender, MouseEventArgs e)
+		{
+			ColorDialog dialog = new ColorDialog();
+			if (dialog.ShowDialog() == DialogResult.OK)
+			{
+				Color c = dialog.Color;
+				panelVisualiserColor.BackColor = c;
+
+				string hexColor = "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+				Settings.Set("VisualiserColor", hexColor);
+				Settings.WriteSettings();
+
+				mainForm.ReloadSettings();
 			}
 		}
 
-		private async void button1_Click(object sender, EventArgs e)
+		private void tbResolutionScale_Scroll(object sender, EventArgs e)
 		{
-			var response = await User.Login(textBox1.Text, textBox2.Text);
-			parent.AfterLogin(response.success, response.token, textBox1.Text, response.message ?? "");
-			this.Close();
+			//Set new scale
+			float newScale = tbResolutionScale.Value / 10f;
+			lblResolutionScale.Text = newScale.ToString("N1");
+			Settings.Set("Scale", newScale);
+			Settings.WriteSettings();
+
+			//Reload form scaling
+			mainForm.ReloadScale();
 		}
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-			parent.SetTopMost(checkBox1.Checked);
-        }
-
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Set("IgnoreUpdates", checkBox2.Checked);
-            Settings.WriteSettings();
-        }
-
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Set("CloseToTray", checkBox3.Checked);
-            Settings.WriteSettings();
-			parent.SetNotifyIconVisible(checkBox3.Checked);
-        }
-
-		private void checkBox4_CheckedChanged(object sender, EventArgs e)
+		private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			Settings.Set("EnableVisualiser", checkBox4.Checked);
-			Settings.WriteSettings();
-			if (checkBox4.Checked)
-				parent.StartVisualiser();
-			else
-				parent.StopVisualiser();
+			//Should probably use a mutex for this, but oh well
+			mainForm.SettingsForm = null;
+		}
+
+		private async void btnLogin_Click(object sender, EventArgs e)
+		{
+			btnLogin.Enabled = false;
+			await User.Login(txtUsername.Text, txtPassword.Text);
+			btnLogin.Enabled = true;
+		}
+
+		private void btnLogout_Click(object sender, EventArgs e)
+		{
+			User.Logout();
+		}
+
+		private void txtPassword_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+				btnLogin.PerformClick();
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 
 namespace ListenMoeClient
 {
-	class Visualiser
+	public class Visualiser
 	{
 		DateTime anchor;
 		Deque<short> sampleBuffer = new Deque<short>();
@@ -27,13 +28,26 @@ namespace ListenMoeClient
 		int resolutionFactor = Settings.Get<int>("VisualiserResolutionFactor"); //higher = lower resolution, number is the number of samples to skip
 		float barWidth = Settings.Get<float>("VisualiserBarWidth");
 
-		bool bars = true;
+		bool bars = Settings.Get<bool>("VisualiserBars");
 
 		bool stopped = false;
 
 		public Rectangle Bounds;
-		Brush barBrush = new SolidBrush(Color.FromArgb(128, 236, 26, 85));
-		Pen linePen = new Pen(Color.FromArgb(255, 236, 26, 85), 1);
+		Color visualiserColor;
+		Brush barBrush;
+		Pen linePen;
+
+		public Visualiser()
+		{
+			ReloadSettings();
+		}
+
+		public void ReloadSettings()
+		{
+			visualiserColor = Settings.GetVisualiserColor();
+			barBrush = new SolidBrush(visualiserColor);
+			linePen = new Pen(visualiserColor, 1);
+		}
 
 		public void AddSamples(short[] samples)
 		{

@@ -38,6 +38,8 @@ namespace ListenMoeClient
 			LatestReleaseResponse response = Json.Parse<LatestReleaseResponse>(rawResponse);
 
 			var version = response.tag_name;
+			if (version == null)
+				return false;
 
 			if (version.StartsWith("v"))
 				version = version.Substring(1);

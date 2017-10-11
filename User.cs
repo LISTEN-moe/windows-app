@@ -9,16 +9,12 @@ namespace ListenMoeClient
 	class User
 	{
 		static bool loggedIn = false;
-		static HashSet<Action> loginCallbacks = new HashSet<Action>();
+		public static event Action OnLoginComplete;
+		public static event Action OnLogout;
 
 		public static bool LoggedIn
 		{
 			get { return loggedIn; }
-		}
-
-		public static void AddLoginCallback(Action callback)
-		{
-			loginCallbacks.Add(callback);
 		}
 
 		/// <summary>
@@ -40,11 +36,12 @@ namespace ListenMoeClient
 			loggedIn = response.success;
 			if (loggedIn)
 			{
-				foreach (var callback in loginCallbacks)
-					callback();
 				//Save successful credentials
 				Settings.Set("Username", username);
 				Settings.Set("Token", response.token);
+				Settings.WriteSettings();
+
+				OnLoginComplete();
 			}
 
 			return response;
@@ -62,16 +59,25 @@ namespace ListenMoeClient
 			loggedIn = result.success;
 			if (loggedIn)
 			{
-				foreach (var callback in loginCallbacks)
-					callback();
+				OnLoginComplete();
 			}
 			else
 			{
 				//Clear saved credentials on failure
 				Settings.Set("Username", "");
 				Settings.Set("Token", "");
+				Settings.WriteSettings();
 			}
 			return loggedIn;
+		}
+
+		public static void Logout()
+		{
+			loggedIn = false;
+			Settings.Set("Username", "");
+			Settings.Set("Token", "");
+			Settings.WriteSettings();
+			OnLogout();
 		}
 	}
 }

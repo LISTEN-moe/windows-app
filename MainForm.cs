@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace ListenMoeClient
 {
-	public partial class Form1 : Form
+	public partial class MainForm : Form
 	{
 		#region Magical form stuff
 		[DllImport("user32.dll")]
@@ -81,20 +81,10 @@ namespace ListenMoeClient
 						finalY = this.Location.Y;
 
 					this.Location = new Point(finalX, finalY);
-
-					RecalculateMenuDirection();
-
+					
 					Settings.Set("LocationX", this.Location.X);
 					Settings.Set("LocationY", this.Location.Y);
 					Settings.WriteSettings();
-				}
-
-				if (loginForm != null)
-				{
-					if (openMenuUpwards)
-						loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
-					else
-						loginForm.Location = new Point(Location.X, Location.Y + this.Height);
 				}
 			}
 		}
@@ -113,15 +103,14 @@ namespace ListenMoeClient
 		Font titleFont;
 		Font albumFont;
 		Font volumeFont;
+		float currentScale = 1f;
 
 		float updatePercent = 0;
 		int updateState = 0; //0 = not updating, 1 = in progress, 2 = complete
-		FormSettings loginForm;
+		public FormSettings SettingsForm;
 
 		Sprite favSprite;
 		Sprite fadedFavSprite;
-
-		bool openMenuUpwards = true;
 
 		MarqueeLabel lblAlbum = new MarqueeLabel();
 		MarqueeLabel lblTitle = new MarqueeLabel();
@@ -129,7 +118,7 @@ namespace ListenMoeClient
 
 		Thread renderLoop;
 
-		public Form1()
+		public MainForm()
 		{
 			InitializeComponent();
 			Settings.LoadSettings();
@@ -146,9 +135,6 @@ namespace ListenMoeClient
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 
-			float scaleFactor = Settings.Get<float>("Scale");
-			Scale(new SizeF(scaleFactor, scaleFactor));
-
 			ApplyLoadedSettings();
 
 			if (!Settings.Get<bool>("IgnoreUpdates"))
@@ -158,25 +144,13 @@ namespace ListenMoeClient
 
 			this.MouseWheel += Form1_MouseWheel;
 			this.Icon = Properties.Resources.icon;
-
-			LoadFonts();
-
-			lblTitle.Font = titleFont;
-			lblTitle.Subfont = albumFont;
-			lblAlbum.Font = albumFont;
-			lblVol.Font = volumeFont;
-
+			
 			lblAlbum.Bounds = new Rectangle(58, 26, 321, 22);
 			lblTitle.Bounds = new Rectangle(56, 5, 321, 43);
 			lblTitle.Text = "Connecting...";
 
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
-
-			if (Settings.Get<bool>("CloseToTray"))
-			{
-				notifyIcon1.Visible = true;
-			}
 
 			favSprite = SpriteLoader.LoadFavSprite();
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
@@ -186,18 +160,12 @@ namespace ListenMoeClient
 			{
 				await TogglePlayback();
 			});
-
+			
 			Connect();
-			RecalculateMenuDirection();
 
 			player = new WebStreamPlayer("https://listen.moe/stream");
 			player.SetVisualiser(visualiser);
 			player.Play();
-
-			if (Settings.Get<bool>("EnableVisualiser"))
-			{
-				StartVisualiser();
-			}
 
 			renderLoop = new Thread(() =>
 			{
@@ -208,6 +176,31 @@ namespace ListenMoeClient
 				}
 			});
 			renderLoop.Start();
+			
+			ReloadSettings();
+			ReloadScale();
+		}
+
+		public void ReloadSettings()
+		{
+			if (Settings.Get<bool>("EnableVisualiser"))
+				StartVisualiser();
+			else
+				StopVisualiser();
+			
+			if (visualiser != null)
+				visualiser.ReloadSettings();
+			this.TopMost = Settings.Get<bool>("TopMost");
+		}
+
+		public void ReloadScale()
+		{
+			float scaleFactor = Settings.Get<float>("Scale");
+			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
+			currentScale = scaleFactor;
+			
+			//Reload fonts to get newly scaled font sizes
+			LoadFonts();
 		}
 
 		public void StartVisualiser()
@@ -238,37 +231,43 @@ namespace ListenMoeClient
 			titleFont = new Font(family, 12 * scaleFactor);
 			albumFont = Meiryo.GetFont(8 * scaleFactor);
 			volumeFont = Meiryo.GetFont(8 * scaleFactor);
-		}
 
-		private void RecalculateMenuDirection()
-		{
-			var screen = Screen.FromPoint(this.Location);
-			bool previous = openMenuUpwards;
-			//FormSettings height
-			openMenuUpwards = Location.Y - screen.Bounds.Top > 365;
-			if (openMenuUpwards != previous)
-			{
-				picLogin.Image = openMenuUpwards ? Properties.Resources.up : Properties.Resources.down;
-			}
+			lblTitle.Font = titleFont;
+			lblTitle.Subfont = albumFont;
+			lblAlbum.Font = albumFont;
+			lblVol.Font = volumeFont;
+
+			lblTitle.OnTextChanged();
+			lblAlbum.OnTextChanged();
 		}
 
 		private async void Connect()
 		{
 			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-			var savedToken = Settings.Get<string>("Token");
-			if (savedToken.Trim() != "")
-			{
-				picFavourite.Visible = await User.Login(savedToken);
-			}
 			await LoadWebSocket(scheduler);
 		}
 
 		private async Task LoadWebSocket(TaskScheduler scheduler)
 		{
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
-				songInfoStream = new SongInfoStream(scheduler);
+				TaskFactory factory = new TaskFactory(scheduler);
+				songInfoStream = new SongInfoStream(factory);
 				songInfoStream.OnSongInfoReceived += ProcessSongInfo;
+
+				User.OnLoginComplete += () =>
+				{
+					factory.StartNew(() => picFavourite.Visible = true);
+					songInfoStream.Authenticate();
+				};
+				User.OnLogout += async () =>
+				{
+					await factory.StartNew(() => picFavourite.Visible = false);
+					await Task.Run(() => songInfoStream.Reconnect());
+				};
+				string savedToken = Settings.Get<string>("Token").Trim();
+				if (savedToken != "")
+					await User.Login(savedToken);
 			});
 		}
 
@@ -332,7 +331,6 @@ namespace ListenMoeClient
 		private void ApplyLoadedSettings()
 		{
 			this.Location = new Point(Settings.Get<int>("LocationX"), Settings.Get<int>("LocationY"));
-			SetTopMost(Settings.Get<bool>("TopMost"));
 			float vol = Settings.Get<float>("Volume");
 			SetVolumeLabel(vol);
 		}
@@ -400,15 +398,9 @@ namespace ListenMoeClient
 		private void picClose_Click(object sender, EventArgs e)
 		{
 			if (Settings.Get<bool>("CloseToTray"))
-			{
 				this.Hide();
-				if (loginForm != null)
-					loginForm.Hide();
-			}
 			else
-			{
 				this.Close();
-			}
 		}
 
 		void ProcessSongInfo(SongInfo songInfo)
@@ -438,6 +430,10 @@ namespace ListenMoeClient
 
 		private async Task Exit()
 		{
+			if (SettingsForm != null)
+			{
+				SettingsForm.Close();
+			}
 			this.Hide();
 			notifyIcon1.Visible = false;
 			await player.Dispose();
@@ -445,25 +441,16 @@ namespace ListenMoeClient
 			Environment.Exit(0);
 		}
 
-		public void SetTopMost(bool topMost)
-		{
-			this.TopMost = topMost;
-			if (loginForm != null)
-				loginForm.TopMost = topMost;
-			Settings.Set("TopMost", topMost);
-			Settings.WriteSettings();
-		}
-
-		private void panel1_MouseEnter(object sender, EventArgs e)
+		private void panelPlayBtn_MouseEnter(object sender, EventArgs e)
 		{
 			var scale = Settings.Get<float>("Scale");
 			picPlayPause.Size = new Size((int)(18 * scale), (int)(18 * scale));
 			picPlayPause.Location = new Point((int)(15 * scale), (int)(15 * scale));
 		}
 
-		private void panel1_MouseLeave(object sender, EventArgs e)
+		private void panelPlayBtn_MouseLeave(object sender, EventArgs e)
 		{
-			if (panel1.ClientRectangle.Contains(PointToClient(Control.MousePosition)))
+			if (panelPlayBtn.ClientRectangle.Contains(PointToClient(Control.MousePosition)))
 				return;
 			var scale = Settings.Get<float>("Scale");
 			picPlayPause.Size = new Size((int)(16 * scale), (int)(16 * scale));
@@ -476,45 +463,18 @@ namespace ListenMoeClient
 			Clipboard.SetText(info.song_name + " \n" + info.artist_name + " \n" + info.anime_name);
 		}
 
-		public void AfterLogin(bool success, string token, string username, string message)
+		private void picSettings_Click(object sender, EventArgs e)
 		{
-			picLogin.Image = Properties.Resources.up;
-			loginForm.Dispose();
-			loginForm = null;
-			if (success)
+			if (SettingsForm == null)
 			{
-				Settings.Set("Token", token);
-				Settings.Set("Username", username);
-				Settings.WriteSettings();
-				songInfoStream.Authenticate(token);
-				picFavourite.Visible = true;
-			}
-		}
-
-		private void picLogin_Click(object sender, EventArgs e)
-		{
-			if (loginForm == null)
-			{
-				picLogin.Image = openMenuUpwards ? Properties.Resources.down : Properties.Resources.up;
-				loginForm = new FormSettings(this);
-				loginForm.TopMost = this.TopMost;
-				loginForm.Show();
-				if (openMenuUpwards)
-					loginForm.Location = new Point(Location.X, Location.Y - loginForm.Height);
-				else
-					loginForm.Location = new Point(Location.X, Location.Y + this.Height);
+				SettingsForm = new FormSettings(this);
+				SettingsForm.Show();
 			}
 			else
 			{
-				loginForm.Close();
-				loginForm.Dispose();
-				loginForm = null;
-				picLogin.Image = openMenuUpwards ? Properties.Resources.up : Properties.Resources.down;
+				SettingsForm.Activate();
 			}
 		}
-
-		int currentFrame = 0;
-		bool isAnimating = false;
 
 		private async void menuItemExit_Click(object sender, EventArgs e)
 		{
@@ -537,18 +497,14 @@ namespace ListenMoeClient
 			WindowState = FormWindowState.Normal;
 			this.Show();
 			this.Activate();
-			if (loginForm != null)
-			{
-				loginForm.Show();
-				loginForm.Activate();
-			}
 		}
 
+		int currentFrame = 0;
+		bool isAnimating = false;
 		object animationLock = new object();
 
 		private async void SetFavouriteSprite(bool favourited)
 		{
-			picFavourite.Visible = true;
 			if (favourited)
 			{
 				lock (animationLock)
@@ -593,11 +549,6 @@ namespace ListenMoeClient
 
 			var response = Json.Parse<FavouritesResponse>(result);
 			SetFavouriteSprite(response.favorite);
-		}
-
-		public void SetNotifyIconVisible(bool visible)
-		{
-			notifyIcon1.Visible = visible;
 		}
 	}
 }

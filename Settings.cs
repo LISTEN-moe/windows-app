@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -85,6 +87,7 @@ namespace ListenMoeClient
 
 			Set("Volume", 1.0f);
 			Set("VisualiserBarWidth", 3.0f);
+			Set("VisualiserTransparency", 0.5f);
 			Set("Scale", 1.0f);
 
 			Set("TopMost", false);
@@ -92,9 +95,11 @@ namespace ListenMoeClient
 			Set("CloseToTray", false);
 			Set("HideFromAltTab", false);
 			Set("EnableVisualiser", true);
+			Set("VisualiserBars", true);
 
 			Set("Token", "");
 			Set("Username", "");
+			Set("VisualiserColor", "#ec1a55");
 		}
 
 		public static void LoadSettings()
@@ -150,6 +155,21 @@ namespace ListenMoeClient
 						streamWriter.Write(sb.ToString());
 				}
 			}
+		}
+
+		//Small helper method to convert the hex string + opacity float to a System.Drawing.Color
+		public static Color GetVisualiserColor()
+		{
+			string color = Get<string>("VisualiserColor");
+			float opacity = Get<float>("VisualiserTransparency");
+
+			Color baseColor;
+			if (int.TryParse(color.Replace("#", ""), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int argb))
+				baseColor = Color.FromArgb(argb);
+			else
+				baseColor = Color.Red;
+
+			return Color.FromArgb(Math.Max(0, Math.Min(255, (int)(opacity * 255))), baseColor);
 		}
 	}
 }

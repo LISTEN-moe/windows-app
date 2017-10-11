@@ -28,179 +28,293 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
-			this.button1 = new System.Windows.Forms.Button();
-			this.textBox2 = new ListenMoeClient.GhostTextbox();
-			this.textBox1 = new ListenMoeClient.GhostTextbox();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.label1 = new System.Windows.Forms.Label();
-			this.panel2 = new System.Windows.Forms.Panel();
-			this.checkBox3 = new System.Windows.Forms.CheckBox();
-			this.checkBox2 = new System.Windows.Forms.CheckBox();
-			this.checkBox1 = new System.Windows.Forms.CheckBox();
-			this.checkBox4 = new System.Windows.Forms.CheckBox();
-			this.panel1.SuspendLayout();
-			this.panel2.SuspendLayout();
+			this.btnLogin = new System.Windows.Forms.Button();
+			this.tabControl = new System.Windows.Forms.TabControl();
+			this.tpGeneral = new System.Windows.Forms.TabPage();
+			this.lblResolutionScaleDesc = new System.Windows.Forms.Label();
+			this.lblResolutionScale = new System.Windows.Forms.Label();
+			this.tbResolutionScale = new System.Windows.Forms.TrackBar();
+			this.cbHideFromAltTab = new System.Windows.Forms.CheckBox();
+			this.cbCloseToTray = new System.Windows.Forms.CheckBox();
+			this.cbIgnoreUpdates = new System.Windows.Forms.CheckBox();
+			this.cbTopmost = new System.Windows.Forms.CheckBox();
+			this.tpVisualiser = new System.Windows.Forms.TabPage();
+			this.panelVisualiserColor = new System.Windows.Forms.Panel();
+			this.cbEnableVisualiser = new System.Windows.Forms.CheckBox();
+			this.tpAccount = new System.Windows.Forms.TabPage();
+			this.panelNotLoggedIn = new System.Windows.Forms.Panel();
+			this.panelLoggedIn = new System.Windows.Forms.Panel();
+			this.lblLoginStatus = new System.Windows.Forms.Label();
+			this.btnLogout = new System.Windows.Forms.Button();
+			this.txtUsername = new ListenMoeClient.GhostTextbox();
+			this.txtPassword = new ListenMoeClient.GhostTextbox();
+			this.tabControl.SuspendLayout();
+			this.tpGeneral.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).BeginInit();
+			this.tpVisualiser.SuspendLayout();
+			this.tpAccount.SuspendLayout();
+			this.panelNotLoggedIn.SuspendLayout();
+			this.panelLoggedIn.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// button1
+			// btnLogin
 			// 
-			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(26)))), ((int)(((byte)(85)))));
-			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(26)))), ((int)(((byte)(85)))));
-			this.button1.Location = new System.Drawing.Point(108, 89);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(156, 33);
-			this.button1.TabIndex = 2;
-			this.button1.Text = "Login";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.btnLogin.Location = new System.Drawing.Point(147, 67);
+			this.btnLogin.Name = "btnLogin";
+			this.btnLogin.Size = new System.Drawing.Size(75, 23);
+			this.btnLogin.TabIndex = 0;
+			this.btnLogin.Text = "Login";
+			this.btnLogin.UseVisualStyleBackColor = true;
+			this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
 			// 
-			// textBox2
+			// tabControl
 			// 
-			this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBox2.BackColor = System.Drawing.Color.White;
-			this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.textBox2.ForeColor = System.Drawing.Color.DimGray;
-			this.textBox2.GhostText = "Password";
-			this.textBox2.Location = new System.Drawing.Point(61, 54);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(246, 20);
-			this.textBox2.TabIndex = 4;
-			this.textBox2.UseSystemPasswordChar = true;
+			this.tabControl.Controls.Add(this.tpGeneral);
+			this.tabControl.Controls.Add(this.tpVisualiser);
+			this.tabControl.Controls.Add(this.tpAccount);
+			this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabControl.Location = new System.Drawing.Point(0, 0);
+			this.tabControl.Name = "tabControl";
+			this.tabControl.SelectedIndex = 0;
+			this.tabControl.Size = new System.Drawing.Size(379, 134);
+			this.tabControl.TabIndex = 2;
 			// 
-			// textBox1
+			// tpGeneral
 			// 
-			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.textBox1.BackColor = System.Drawing.Color.White;
-			this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.textBox1.ForeColor = System.Drawing.Color.DimGray;
-			this.textBox1.GhostText = "Username";
-			this.textBox1.Location = new System.Drawing.Point(61, 20);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(246, 20);
-			this.textBox1.TabIndex = 3;
+			this.tpGeneral.Controls.Add(this.lblResolutionScaleDesc);
+			this.tpGeneral.Controls.Add(this.lblResolutionScale);
+			this.tpGeneral.Controls.Add(this.tbResolutionScale);
+			this.tpGeneral.Controls.Add(this.cbHideFromAltTab);
+			this.tpGeneral.Controls.Add(this.cbCloseToTray);
+			this.tpGeneral.Controls.Add(this.cbIgnoreUpdates);
+			this.tpGeneral.Controls.Add(this.cbTopmost);
+			this.tpGeneral.Location = new System.Drawing.Point(4, 22);
+			this.tpGeneral.Name = "tpGeneral";
+			this.tpGeneral.Padding = new System.Windows.Forms.Padding(3);
+			this.tpGeneral.Size = new System.Drawing.Size(371, 108);
+			this.tpGeneral.TabIndex = 2;
+			this.tpGeneral.Text = "General";
+			this.tpGeneral.UseVisualStyleBackColor = true;
 			// 
-			// panel1
+			// lblResolutionScaleDesc
 			// 
-			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(34)))), ((int)(((byte)(41)))));
-			this.panel1.Controls.Add(this.label1);
-			this.panel1.Controls.Add(this.button1);
-			this.panel1.Controls.Add(this.textBox2);
-			this.panel1.Controls.Add(this.textBox1);
-			this.panel1.Location = new System.Drawing.Point(44, 28);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(371, 153);
-			this.panel1.TabIndex = 6;
+			this.lblResolutionScaleDesc.AutoSize = true;
+			this.lblResolutionScaleDesc.Location = new System.Drawing.Point(278, 3);
+			this.lblResolutionScaleDesc.Name = "lblResolutionScaleDesc";
+			this.lblResolutionScaleDesc.Size = new System.Drawing.Size(85, 13);
+			this.lblResolutionScaleDesc.TabIndex = 6;
+			this.lblResolutionScaleDesc.Text = "Resolution scale";
 			// 
-			// label1
+			// lblResolutionScale
 			// 
-			this.label1.BackColor = System.Drawing.Color.Transparent;
-			this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-			this.label1.Location = new System.Drawing.Point(0, 126);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(371, 20);
-			this.label1.TabIndex = 5;
-			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.lblResolutionScale.AutoSize = true;
+			this.lblResolutionScale.Location = new System.Drawing.Point(240, 24);
+			this.lblResolutionScale.Name = "lblResolutionScale";
+			this.lblResolutionScale.Size = new System.Drawing.Size(13, 13);
+			this.lblResolutionScale.TabIndex = 5;
+			this.lblResolutionScale.Text = "1";
 			// 
-			// panel2
+			// tbResolutionScale
 			// 
-			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(34)))), ((int)(((byte)(41)))));
-			this.panel2.Controls.Add(this.checkBox4);
-			this.panel2.Controls.Add(this.checkBox3);
-			this.panel2.Controls.Add(this.checkBox2);
-			this.panel2.Controls.Add(this.checkBox1);
-			this.panel2.Location = new System.Drawing.Point(44, 204);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(371, 131);
-			this.panel2.TabIndex = 6;
+			this.tbResolutionScale.BackColor = System.Drawing.Color.White;
+			this.tbResolutionScale.Location = new System.Drawing.Point(259, 19);
+			this.tbResolutionScale.Maximum = 50;
+			this.tbResolutionScale.Minimum = 10;
+			this.tbResolutionScale.Name = "tbResolutionScale";
+			this.tbResolutionScale.Size = new System.Drawing.Size(104, 45);
+			this.tbResolutionScale.TabIndex = 4;
+			this.tbResolutionScale.TickStyle = System.Windows.Forms.TickStyle.None;
+			this.tbResolutionScale.Value = 10;
+			this.tbResolutionScale.Scroll += new System.EventHandler(this.tbResolutionScale_Scroll);
 			// 
-			// checkBox3
+			// cbHideFromAltTab
 			// 
-			this.checkBox3.AutoSize = true;
-			this.checkBox3.ForeColor = System.Drawing.Color.White;
-			this.checkBox3.Location = new System.Drawing.Point(126, 70);
-			this.checkBox3.Name = "checkBox3";
-			this.checkBox3.Size = new System.Drawing.Size(88, 17);
-			this.checkBox3.TabIndex = 0;
-			this.checkBox3.Text = "Close to Tray";
-			this.checkBox3.UseVisualStyleBackColor = true;
-			this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+			this.cbHideFromAltTab.AutoSize = true;
+			this.cbHideFromAltTab.Location = new System.Drawing.Point(9, 78);
+			this.cbHideFromAltTab.Name = "cbHideFromAltTab";
+			this.cbHideFromAltTab.Size = new System.Drawing.Size(236, 17);
+			this.cbHideFromAltTab.TabIndex = 3;
+			this.cbHideFromAltTab.Text = "Hide from Alt-Tab menu (requires app restart)";
+			this.cbHideFromAltTab.UseVisualStyleBackColor = true;
 			// 
-			// checkBox2
+			// cbCloseToTray
 			// 
-			this.checkBox2.AutoSize = true;
-			this.checkBox2.ForeColor = System.Drawing.Color.White;
-			this.checkBox2.Location = new System.Drawing.Point(126, 47);
-			this.checkBox2.Name = "checkBox2";
-			this.checkBox2.Size = new System.Drawing.Size(97, 17);
-			this.checkBox2.TabIndex = 0;
-			this.checkBox2.Text = "Ignore updates";
-			this.checkBox2.UseVisualStyleBackColor = true;
-			this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+			this.cbCloseToTray.AutoSize = true;
+			this.cbCloseToTray.Location = new System.Drawing.Point(9, 54);
+			this.cbCloseToTray.Name = "cbCloseToTray";
+			this.cbCloseToTray.Size = new System.Drawing.Size(84, 17);
+			this.cbCloseToTray.TabIndex = 2;
+			this.cbCloseToTray.Text = "Close to tray";
+			this.cbCloseToTray.UseVisualStyleBackColor = true;
 			// 
-			// checkBox1
+			// cbIgnoreUpdates
 			// 
-			this.checkBox1.AutoSize = true;
-			this.checkBox1.ForeColor = System.Drawing.Color.White;
-			this.checkBox1.Location = new System.Drawing.Point(126, 24);
-			this.checkBox1.Name = "checkBox1";
-			this.checkBox1.Size = new System.Drawing.Size(115, 17);
-			this.checkBox1.TabIndex = 0;
-			this.checkBox1.Text = "Keep player on top";
-			this.checkBox1.UseVisualStyleBackColor = true;
-			this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+			this.cbIgnoreUpdates.AutoSize = true;
+			this.cbIgnoreUpdates.Location = new System.Drawing.Point(9, 30);
+			this.cbIgnoreUpdates.Name = "cbIgnoreUpdates";
+			this.cbIgnoreUpdates.Size = new System.Drawing.Size(97, 17);
+			this.cbIgnoreUpdates.TabIndex = 1;
+			this.cbIgnoreUpdates.Text = "Ignore updates";
+			this.cbIgnoreUpdates.UseVisualStyleBackColor = true;
 			// 
-			// checkBox4
+			// cbTopmost
 			// 
-			this.checkBox4.AutoSize = true;
-			this.checkBox4.ForeColor = System.Drawing.Color.White;
-			this.checkBox4.Location = new System.Drawing.Point(126, 94);
-			this.checkBox4.Name = "checkBox4";
-			this.checkBox4.Size = new System.Drawing.Size(105, 17);
-			this.checkBox4.TabIndex = 1;
-			this.checkBox4.Text = "Enable visualiser";
-			this.checkBox4.UseVisualStyleBackColor = true;
-			this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
+			this.cbTopmost.AutoSize = true;
+			this.cbTopmost.Location = new System.Drawing.Point(9, 7);
+			this.cbTopmost.Name = "cbTopmost";
+			this.cbTopmost.Size = new System.Drawing.Size(117, 17);
+			this.cbTopmost.TabIndex = 0;
+			this.cbTopmost.Text = "Keep form top most";
+			this.cbTopmost.UseVisualStyleBackColor = true;
+			// 
+			// tpVisualiser
+			// 
+			this.tpVisualiser.Controls.Add(this.panelVisualiserColor);
+			this.tpVisualiser.Controls.Add(this.cbEnableVisualiser);
+			this.tpVisualiser.Location = new System.Drawing.Point(4, 22);
+			this.tpVisualiser.Name = "tpVisualiser";
+			this.tpVisualiser.Padding = new System.Windows.Forms.Padding(3);
+			this.tpVisualiser.Size = new System.Drawing.Size(371, 108);
+			this.tpVisualiser.TabIndex = 1;
+			this.tpVisualiser.Text = "Visualiser";
+			this.tpVisualiser.UseVisualStyleBackColor = true;
+			// 
+			// panelVisualiserColor
+			// 
+			this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
+			this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelVisualiserColor.Location = new System.Drawing.Point(8, 29);
+			this.panelVisualiserColor.Name = "panelVisualiserColor";
+			this.panelVisualiserColor.Size = new System.Drawing.Size(50, 33);
+			this.panelVisualiserColor.TabIndex = 1;
+			this.panelVisualiserColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelVisualiserColor_MouseClick);
+			// 
+			// cbEnableVisualiser
+			// 
+			this.cbEnableVisualiser.AutoSize = true;
+			this.cbEnableVisualiser.Location = new System.Drawing.Point(8, 6);
+			this.cbEnableVisualiser.Name = "cbEnableVisualiser";
+			this.cbEnableVisualiser.Size = new System.Drawing.Size(105, 17);
+			this.cbEnableVisualiser.TabIndex = 0;
+			this.cbEnableVisualiser.Text = "Enable visualiser";
+			this.cbEnableVisualiser.UseVisualStyleBackColor = true;
+			// 
+			// tpAccount
+			// 
+			this.tpAccount.Controls.Add(this.panelLoggedIn);
+			this.tpAccount.Controls.Add(this.panelNotLoggedIn);
+			this.tpAccount.Location = new System.Drawing.Point(4, 22);
+			this.tpAccount.Name = "tpAccount";
+			this.tpAccount.Padding = new System.Windows.Forms.Padding(3);
+			this.tpAccount.Size = new System.Drawing.Size(371, 108);
+			this.tpAccount.TabIndex = 0;
+			this.tpAccount.Text = "Account";
+			this.tpAccount.UseVisualStyleBackColor = true;
+			// 
+			// panelNotLoggedIn
+			// 
+			this.panelNotLoggedIn.Controls.Add(this.txtUsername);
+			this.panelNotLoggedIn.Controls.Add(this.txtPassword);
+			this.panelNotLoggedIn.Controls.Add(this.btnLogin);
+			this.panelNotLoggedIn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelNotLoggedIn.Location = new System.Drawing.Point(3, 3);
+			this.panelNotLoggedIn.Name = "panelNotLoggedIn";
+			this.panelNotLoggedIn.Size = new System.Drawing.Size(365, 102);
+			this.panelNotLoggedIn.TabIndex = 4;
+			// 
+			// panelLoggedIn
+			// 
+			this.panelLoggedIn.Controls.Add(this.lblLoginStatus);
+			this.panelLoggedIn.Controls.Add(this.btnLogout);
+			this.panelLoggedIn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelLoggedIn.Location = new System.Drawing.Point(3, 3);
+			this.panelLoggedIn.Name = "panelLoggedIn";
+			this.panelLoggedIn.Size = new System.Drawing.Size(365, 102);
+			this.panelLoggedIn.TabIndex = 4;
+			// 
+			// lblLoginStatus
+			// 
+			this.lblLoginStatus.AutoSize = true;
+			this.lblLoginStatus.Location = new System.Drawing.Point(94, 32);
+			this.lblLoginStatus.Name = "lblLoginStatus";
+			this.lblLoginStatus.Size = new System.Drawing.Size(68, 13);
+			this.lblLoginStatus.TabIndex = 1;
+			this.lblLoginStatus.Text = "Logged in as";
+			// 
+			// btnLogout
+			// 
+			this.btnLogout.Location = new System.Drawing.Point(149, 67);
+			this.btnLogout.Name = "btnLogout";
+			this.btnLogout.Size = new System.Drawing.Size(75, 23);
+			this.btnLogout.TabIndex = 0;
+			this.btnLogout.Text = "Logout";
+			this.btnLogout.UseVisualStyleBackColor = true;
+			this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+			// 
+			// txtUsername
+			// 
+			this.txtUsername.GhostText = "Username";
+			this.txtUsername.Location = new System.Drawing.Point(94, 15);
+			this.txtUsername.Name = "txtUsername";
+			this.txtUsername.Size = new System.Drawing.Size(181, 20);
+			this.txtUsername.TabIndex = 2;
+			// 
+			// txtPassword
+			// 
+			this.txtPassword.GhostText = "Password";
+			this.txtPassword.Location = new System.Drawing.Point(94, 41);
+			this.txtPassword.Name = "txtPassword";
+			this.txtPassword.PasswordChar = '⚫';
+			this.txtPassword.Size = new System.Drawing.Size(181, 20);
+			this.txtPassword.TabIndex = 3;
+			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
 			// 
 			// FormSettings
 			// 
-			this.AcceptButton = this.button1;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(46)))), ((int)(((byte)(59)))));
-			this.ClientSize = new System.Drawing.Size(460, 365);
-			this.Controls.Add(this.panel2);
-			this.Controls.Add(this.panel1);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(379, 134);
+			this.Controls.Add(this.tabControl);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Name = "FormSettings";
-			this.ShowInTaskbar = false;
-			this.Text = "Login";
-			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
-			this.panel2.ResumeLayout(false);
-			this.panel2.PerformLayout();
+			this.Text = "FormSettings";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
+			this.tabControl.ResumeLayout(false);
+			this.tpGeneral.ResumeLayout(false);
+			this.tpGeneral.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).EndInit();
+			this.tpVisualiser.ResumeLayout(false);
+			this.tpVisualiser.PerformLayout();
+			this.tpAccount.ResumeLayout(false);
+			this.panelNotLoggedIn.ResumeLayout(false);
+			this.panelNotLoggedIn.PerformLayout();
+			this.panelLoggedIn.ResumeLayout(false);
+			this.panelLoggedIn.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
-		private System.Windows.Forms.Button button1;
-		private GhostTextbox textBox1;
-		private GhostTextbox textBox2;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.CheckBox checkBox4;
+
+		private System.Windows.Forms.Button btnLogin;
+		private System.Windows.Forms.TabControl tabControl;
+		private System.Windows.Forms.TabPage tpAccount;
+		private System.Windows.Forms.TabPage tpVisualiser;
+		private System.Windows.Forms.TabPage tpGeneral;
+		private System.Windows.Forms.CheckBox cbTopmost;
+		private System.Windows.Forms.CheckBox cbIgnoreUpdates;
+		private System.Windows.Forms.CheckBox cbCloseToTray;
+		private System.Windows.Forms.CheckBox cbHideFromAltTab;
+		private System.Windows.Forms.CheckBox cbEnableVisualiser;
+		private System.Windows.Forms.Panel panelVisualiserColor;
+		private System.Windows.Forms.TrackBar tbResolutionScale;
+		private System.Windows.Forms.Label lblResolutionScaleDesc;
+		private System.Windows.Forms.Label lblResolutionScale;
+		private GhostTextbox txtUsername;
+		private GhostTextbox txtPassword;
+		private System.Windows.Forms.Panel panelNotLoggedIn;
+		private System.Windows.Forms.Panel panelLoggedIn;
+		private System.Windows.Forms.Label lblLoginStatus;
+		private System.Windows.Forms.Button btnLogout;
 	}
 }
