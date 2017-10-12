@@ -350,19 +350,19 @@ namespace ListenMoeClient
 		{
 			base.OnPaint(e);
 
-			if (updateState != 0)
-			{
-				Brush brush = new SolidBrush(updateState == 1 ? Color.Yellow : Color.LimeGreen);
-				//48px for pause/play button, 75 for the RHS area
-				e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48 - 75) * updatePercent, 3);
-			}
-
 			if (visualiser != null)
 			{
 				visualiser.Render(e.Graphics);
 			}
 			lblTitle.Render(e.Graphics);
 			lblAlbum.Render(e.Graphics);
+
+			if (updateState != 0)
+			{
+				Brush brush = new SolidBrush(updateState == 1 ? Color.Yellow : Color.LimeGreen);
+				//48px for pause/play button, 75 for the RHS area
+				e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48 - 75) * updatePercent, 3);
+			}
 		}
 
 		private void ApplyLoadedSettings()
