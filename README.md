@@ -1,7 +1,7 @@
 # ListenMoeClient
 A simple lightweight [Listen.moe](https://listen.moe) client for Windows.
 
-![](http://i.imgur.com/nQuZyh5.gif)
+![](https://i.imgur.com/vtEKxw2.gif)
 
 The window will snap to the edges of your screen, and you can mouse scroll on the window to increase/decrease the volume. You can also set it to be topmost by right clicking the window and selecting 'Always on top'. 
 
