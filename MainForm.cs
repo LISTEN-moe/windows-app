@@ -201,8 +201,7 @@ namespace ListenMoeClient
 		public void ReloadScale()
 		{
 			float scaleFactor = Settings.Get<float>("Scale");
-			SetBounds(Location.X, Location.Y, 480, 48);
-			this.Scale(new SizeF(scaleFactor, scaleFactor));
+			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
 			currentScale = scaleFactor;
 			
 			//Reload fonts to get newly scaled font sizes
@@ -215,7 +214,7 @@ namespace ListenMoeClient
 			if (visualiser == null)
 			{
 				visualiser = new Visualiser();
-				visualiser.Bounds = new Rectangle(48, 48, 357, 48);
+				visualiser.Bounds = new Rectangle(48, 48, 337, 48);
 				visualiser.Start();
 				player.SetVisualiser(visualiser);
 			}

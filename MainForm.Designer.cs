@@ -57,7 +57,7 @@
 			this.lblVol.AutoSize = true;
 			this.lblVol.BackColor = System.Drawing.Color.Transparent;
 			this.lblVol.ForeColor = System.Drawing.Color.White;
-			this.lblVol.Location = new System.Drawing.Point(40, 31);
+			this.lblVol.Location = new System.Drawing.Point(35, 31);
 			this.lblVol.Name = "lblVol";
 			this.lblVol.Size = new System.Drawing.Size(33, 13);
 			this.lblVol.TabIndex = 4;

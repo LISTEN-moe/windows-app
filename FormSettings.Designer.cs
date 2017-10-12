@@ -31,6 +31,8 @@
 			this.btnLogin = new System.Windows.Forms.Button();
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tpGeneral = new System.Windows.Forms.TabPage();
+			this.lblMinutes = new System.Windows.Forms.Label();
+			this.numericUpdateInterval = new System.Windows.Forms.NumericUpDown();
 			this.lblResolutionScaleDesc = new System.Windows.Forms.Label();
 			this.lblResolutionScale = new System.Windows.Forms.Label();
 			this.tbResolutionScale = new System.Windows.Forms.TrackBar();
@@ -51,17 +53,15 @@
 			this.panelNotLoggedIn = new System.Windows.Forms.Panel();
 			this.txtUsername = new ListenMoeClient.GhostTextbox();
 			this.txtPassword = new ListenMoeClient.GhostTextbox();
-			this.numericUpdateInterval = new System.Windows.Forms.NumericUpDown();
-			this.lblMinutes = new System.Windows.Forms.Label();
 			this.tabControl.SuspendLayout();
 			this.tpGeneral.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).BeginInit();
 			this.tpVisualiser.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.tbVisualiserOpacity)).BeginInit();
 			this.tpAccount.SuspendLayout();
 			this.panelLoggedIn.SuspendLayout();
 			this.panelNotLoggedIn.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLogin
@@ -105,6 +105,27 @@
 			this.tpGeneral.Text = "General";
 			this.tpGeneral.UseVisualStyleBackColor = true;
 			// 
+			// lblMinutes
+			// 
+			this.lblMinutes.AutoSize = true;
+			this.lblMinutes.Location = new System.Drawing.Point(205, 91);
+			this.lblMinutes.Name = "lblMinutes";
+			this.lblMinutes.Size = new System.Drawing.Size(28, 13);
+			this.lblMinutes.TabIndex = 8;
+			this.lblMinutes.Text = "mins";
+			// 
+			// numericUpdateInterval
+			// 
+			this.numericUpdateInterval.Location = new System.Drawing.Point(150, 87);
+			this.numericUpdateInterval.Name = "numericUpdateInterval";
+			this.numericUpdateInterval.Size = new System.Drawing.Size(49, 20);
+			this.numericUpdateInterval.TabIndex = 7;
+			this.numericUpdateInterval.Value = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+			// 
 			// lblResolutionScaleDesc
 			// 
 			this.lblResolutionScaleDesc.AutoSize = true;
@@ -117,11 +138,11 @@
 			// lblResolutionScale
 			// 
 			this.lblResolutionScale.AutoSize = true;
-			this.lblResolutionScale.Location = new System.Drawing.Point(247, 9);
+			this.lblResolutionScale.Location = new System.Drawing.Point(233, 24);
 			this.lblResolutionScale.Name = "lblResolutionScale";
-			this.lblResolutionScale.Size = new System.Drawing.Size(13, 13);
+			this.lblResolutionScale.Size = new System.Drawing.Size(22, 13);
 			this.lblResolutionScale.TabIndex = 5;
-			this.lblResolutionScale.Text = "1";
+			this.lblResolutionScale.Text = "1.0";
 			// 
 			// tbResolutionScale
 			// 
@@ -312,27 +333,6 @@
 			this.txtPassword.TabIndex = 3;
 			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
 			// 
-			// numericUpdateInterval
-			// 
-			this.numericUpdateInterval.Location = new System.Drawing.Point(150, 87);
-			this.numericUpdateInterval.Name = "numericUpdateInterval";
-			this.numericUpdateInterval.Size = new System.Drawing.Size(49, 20);
-			this.numericUpdateInterval.TabIndex = 7;
-			this.numericUpdateInterval.Value = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-			// 
-			// lblMinutes
-			// 
-			this.lblMinutes.AutoSize = true;
-			this.lblMinutes.Location = new System.Drawing.Point(205, 91);
-			this.lblMinutes.Name = "lblMinutes";
-			this.lblMinutes.Size = new System.Drawing.Size(28, 13);
-			this.lblMinutes.TabIndex = 8;
-			this.lblMinutes.Text = "mins";
-			// 
 			// FormSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -346,6 +346,7 @@
 			this.tabControl.ResumeLayout(false);
 			this.tpGeneral.ResumeLayout(false);
 			this.tpGeneral.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).EndInit();
 			this.tpVisualiser.ResumeLayout(false);
 			this.tpVisualiser.PerformLayout();
@@ -355,7 +356,6 @@
 			this.panelLoggedIn.PerformLayout();
 			this.panelNotLoggedIn.ResumeLayout(false);
 			this.panelNotLoggedIn.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).EndInit();
 			this.ResumeLayout(false);
 
 		}

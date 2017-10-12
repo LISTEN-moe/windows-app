@@ -54,8 +54,8 @@ namespace ListenMoeClient
 
 		private bool textChanged = true;
 		
-        private void UpdateTextPosition()
-        {
+        private void UpdateTextPosition(float scale)
+		{
 			DateTime current = DateTime.Now;
 			double ms = (current - last).TotalMilliseconds;
 
@@ -64,7 +64,7 @@ namespace ListenMoeClient
                 float distance = (float)(ScrollSpeed * (ms / 1000));
                 currentPosition -= distance;
                 if (currentPosition < -totalStringWidth)
-                    currentPosition = Bounds.Width * spacing;
+                    currentPosition = Bounds.Width * spacing * scale;
 			}
 
 			last = current;
@@ -76,7 +76,8 @@ namespace ListenMoeClient
         }
 
 		public void Render(Graphics g)
-        {
+		{
+			var scale = Settings.Get<float>("Scale");
 			if (textChanged)
 			{
 				mainTextSize = g.MeasureString(text, Font);
@@ -90,7 +91,7 @@ namespace ListenMoeClient
 				}
 				totalStringWidth += 2; //Padding
 
-				if (totalStringWidth > Bounds.Width)
+				if (totalStringWidth > Bounds.Width * scale)
 					scrolling = true;
 				else
 				{
@@ -102,12 +103,10 @@ namespace ListenMoeClient
 
 			g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-			UpdateTextPosition();
-
-			var scale = Settings.Get<float>("Scale");
+			UpdateTextPosition(scale);
 
 			g.TranslateTransform((int)currentPosition, 0);
-            RectangleF rect = new RectangleF(new PointF(Bounds.Location.X * scale, Bounds.Location.Y * scale), new SizeF(totalStringWidth, Bounds.Height));
+            RectangleF rect = new RectangleF(new PointF(Bounds.Location.X * scale, Bounds.Location.Y * scale), new SizeF(totalStringWidth, Bounds.Height * scale));
 			g.DrawString(text, Font, Brushes.White, rect.Location);
 			if (subtext.Trim() != "")
 			{
@@ -117,7 +116,7 @@ namespace ListenMoeClient
             if (scrolling)
             {
 				//Draw it on the other side for seamless looping
-				float secondPosition = totalStringWidth + Bounds.Width * spacing;
+				float secondPosition = totalStringWidth + Bounds.Width * spacing * scale;
 				g.TranslateTransform(secondPosition, 0);
                 g.DrawString(text, Font, Brushes.White, rect.Location);
 				if (subtext.Trim() != "")
