@@ -341,7 +341,7 @@
 			this.Controls.Add(this.tabControl);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Name = "FormSettings";
-			this.Text = "FormSettings";
+			this.Text = "Settings";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
 			this.tabControl.ResumeLayout(false);
 			this.tpGeneral.ResumeLayout(false);
