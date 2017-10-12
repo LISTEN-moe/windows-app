@@ -551,6 +551,7 @@ namespace ListenMoeClient
 
 		private async void SetFavouriteSprite(bool favourited)
 		{
+			picFavourite.Visible = true;
 			if (favourited)
 			{
 				lock (animationLock)
