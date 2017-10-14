@@ -139,7 +139,6 @@ namespace ListenMoeClient
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 
-			ApplyLoadedSettings();
 
 			cts = new CancellationTokenSource();
 			ct = cts.Token;
@@ -182,8 +181,8 @@ namespace ListenMoeClient
 				}
 			});
 			
-			ReloadSettings();
 			ReloadScale();
+			ReloadSettings();
 		}
 
 		public void ReloadSettings()
@@ -196,6 +195,15 @@ namespace ListenMoeClient
 			if (visualiser != null)
 				visualiser.ReloadSettings();
 			this.TopMost = Settings.Get<bool>("TopMost");
+
+			this.Location = new Point(Settings.Get<int>("LocationX"), Settings.Get<int>("LocationY"));
+			float vol = Settings.Get<float>("Volume");
+			panelPlayBtn.BackColor = Settings.Get<Color>("AccentColor");
+			this.BackColor = Settings.Get<Color>("BaseColor");
+			panelRight.BackColor = Color.FromArgb((int)((BackColor.R * 1.1f).Bound(0, 255)),
+												  (int)((BackColor.G * 1.1f).Bound(0, 255)),
+												  (int)((BackColor.B * 1.1f).Bound(0, 255)));
+			SetVolumeLabel(vol);
 		}
 
 		public void ReloadScale()
@@ -349,6 +357,7 @@ namespace ListenMoeClient
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
+			this.SuspendLayout();
 
 			if (visualiser != null)
 			{
@@ -363,13 +372,8 @@ namespace ListenMoeClient
 				//48px for pause/play button, 75 for the RHS area
 				e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48 - 75) * updatePercent, 3);
 			}
-		}
 
-		private void ApplyLoadedSettings()
-		{
-			this.Location = new Point(Settings.Get<int>("LocationX"), Settings.Get<int>("LocationY"));
-			float vol = Settings.Get<float>("Volume");
-			SetVolumeLabel(vol);
+			this.ResumeLayout();
 		}
 
 		private void Form1_MouseWheel(object sender, MouseEventArgs e)

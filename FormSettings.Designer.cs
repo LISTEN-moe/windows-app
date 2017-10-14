@@ -40,7 +40,7 @@
 			this.cbCloseToTray = new System.Windows.Forms.CheckBox();
 			this.cbUpdateAutocheck = new System.Windows.Forms.CheckBox();
 			this.cbTopmost = new System.Windows.Forms.CheckBox();
-			this.tpVisualiser = new System.Windows.Forms.TabPage();
+			this.tpTheme = new System.Windows.Forms.TabPage();
 			this.lblVisualiserOpacity = new System.Windows.Forms.Label();
 			this.tbVisualiserOpacity = new System.Windows.Forms.TrackBar();
 			this.cbVisualiserBars = new System.Windows.Forms.CheckBox();
@@ -53,15 +53,23 @@
 			this.panelNotLoggedIn = new System.Windows.Forms.Panel();
 			this.txtUsername = new ListenMoeClient.GhostTextbox();
 			this.txtPassword = new ListenMoeClient.GhostTextbox();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.panelBaseColor = new System.Windows.Forms.Panel();
+			this.lblBaseColor = new System.Windows.Forms.Label();
+			this.lblAccentColor = new System.Windows.Forms.Label();
+			this.panelAccentColor = new System.Windows.Forms.Panel();
 			this.tabControl.SuspendLayout();
 			this.tpGeneral.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).BeginInit();
-			this.tpVisualiser.SuspendLayout();
+			this.tpTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.tbVisualiserOpacity)).BeginInit();
 			this.tpAccount.SuspendLayout();
 			this.panelLoggedIn.SuspendLayout();
 			this.panelNotLoggedIn.SuspendLayout();
+			this.groupBox1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnLogin
@@ -77,7 +85,7 @@
 			// tabControl
 			// 
 			this.tabControl.Controls.Add(this.tpGeneral);
-			this.tabControl.Controls.Add(this.tpVisualiser);
+			this.tabControl.Controls.Add(this.tpTheme);
 			this.tabControl.Controls.Add(this.tpAccount);
 			this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl.Location = new System.Drawing.Point(0, 0);
@@ -197,25 +205,22 @@
 			this.cbTopmost.Text = "Keep form top most";
 			this.cbTopmost.UseVisualStyleBackColor = true;
 			// 
-			// tpVisualiser
+			// tpTheme
 			// 
-			this.tpVisualiser.Controls.Add(this.lblVisualiserOpacity);
-			this.tpVisualiser.Controls.Add(this.tbVisualiserOpacity);
-			this.tpVisualiser.Controls.Add(this.cbVisualiserBars);
-			this.tpVisualiser.Controls.Add(this.panelVisualiserColor);
-			this.tpVisualiser.Controls.Add(this.cbEnableVisualiser);
-			this.tpVisualiser.Location = new System.Drawing.Point(4, 22);
-			this.tpVisualiser.Name = "tpVisualiser";
-			this.tpVisualiser.Padding = new System.Windows.Forms.Padding(3);
-			this.tpVisualiser.Size = new System.Drawing.Size(371, 122);
-			this.tpVisualiser.TabIndex = 1;
-			this.tpVisualiser.Text = "Visualiser";
-			this.tpVisualiser.UseVisualStyleBackColor = true;
+			this.tpTheme.Controls.Add(this.groupBox2);
+			this.tpTheme.Controls.Add(this.groupBox1);
+			this.tpTheme.Location = new System.Drawing.Point(4, 22);
+			this.tpTheme.Name = "tpTheme";
+			this.tpTheme.Padding = new System.Windows.Forms.Padding(3);
+			this.tpTheme.Size = new System.Drawing.Size(371, 122);
+			this.tpTheme.TabIndex = 1;
+			this.tpTheme.Text = "Theme";
+			this.tpTheme.UseVisualStyleBackColor = true;
 			// 
 			// lblVisualiserOpacity
 			// 
 			this.lblVisualiserOpacity.AutoSize = true;
-			this.lblVisualiserOpacity.Location = new System.Drawing.Point(294, 33);
+			this.lblVisualiserOpacity.Location = new System.Drawing.Point(76, 87);
 			this.lblVisualiserOpacity.Name = "lblVisualiserOpacity";
 			this.lblVisualiserOpacity.Size = new System.Drawing.Size(43, 13);
 			this.lblVisualiserOpacity.TabIndex = 4;
@@ -224,7 +229,7 @@
 			// tbVisualiserOpacity
 			// 
 			this.tbVisualiserOpacity.BackColor = System.Drawing.Color.White;
-			this.tbVisualiserOpacity.Location = new System.Drawing.Point(261, 6);
+			this.tbVisualiserOpacity.Location = new System.Drawing.Point(43, 62);
 			this.tbVisualiserOpacity.Maximum = 255;
 			this.tbVisualiserOpacity.Name = "tbVisualiserOpacity";
 			this.tbVisualiserOpacity.Size = new System.Drawing.Size(104, 45);
@@ -236,7 +241,7 @@
 			// cbVisualiserBars
 			// 
 			this.cbVisualiserBars.AutoSize = true;
-			this.cbVisualiserBars.Location = new System.Drawing.Point(8, 29);
+			this.cbVisualiserBars.Location = new System.Drawing.Point(6, 42);
 			this.cbVisualiserBars.Name = "cbVisualiserBars";
 			this.cbVisualiserBars.Size = new System.Drawing.Size(68, 17);
 			this.cbVisualiserBars.TabIndex = 2;
@@ -247,20 +252,19 @@
 			// 
 			this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
 			this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelVisualiserColor.Location = new System.Drawing.Point(204, 6);
+			this.panelVisualiserColor.Location = new System.Drawing.Point(6, 65);
 			this.panelVisualiserColor.Name = "panelVisualiserColor";
-			this.panelVisualiserColor.Size = new System.Drawing.Size(50, 33);
+			this.panelVisualiserColor.Size = new System.Drawing.Size(32, 32);
 			this.panelVisualiserColor.TabIndex = 1;
-			this.panelVisualiserColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelVisualiserColor_MouseClick);
 			// 
 			// cbEnableVisualiser
 			// 
 			this.cbEnableVisualiser.AutoSize = true;
-			this.cbEnableVisualiser.Location = new System.Drawing.Point(8, 6);
+			this.cbEnableVisualiser.Location = new System.Drawing.Point(6, 19);
 			this.cbEnableVisualiser.Name = "cbEnableVisualiser";
-			this.cbEnableVisualiser.Size = new System.Drawing.Size(105, 17);
+			this.cbEnableVisualiser.Size = new System.Drawing.Size(59, 17);
 			this.cbEnableVisualiser.TabIndex = 0;
-			this.cbEnableVisualiser.Text = "Enable visualiser";
+			this.cbEnableVisualiser.Text = "Enable";
 			this.cbEnableVisualiser.UseVisualStyleBackColor = true;
 			// 
 			// tpAccount
@@ -333,6 +337,69 @@
 			this.txtPassword.TabIndex = 3;
 			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
 			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.cbEnableVisualiser);
+			this.groupBox1.Controls.Add(this.lblVisualiserOpacity);
+			this.groupBox1.Controls.Add(this.panelVisualiserColor);
+			this.groupBox1.Controls.Add(this.tbVisualiserOpacity);
+			this.groupBox1.Controls.Add(this.cbVisualiserBars);
+			this.groupBox1.Location = new System.Drawing.Point(8, 6);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(153, 110);
+			this.groupBox1.TabIndex = 5;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Visualiser";
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.lblAccentColor);
+			this.groupBox2.Controls.Add(this.panelAccentColor);
+			this.groupBox2.Controls.Add(this.lblBaseColor);
+			this.groupBox2.Controls.Add(this.panelBaseColor);
+			this.groupBox2.Location = new System.Drawing.Point(167, 6);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(196, 110);
+			this.groupBox2.TabIndex = 6;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "Colors";
+			// 
+			// panelBaseColor
+			// 
+			this.panelBaseColor.BackColor = System.Drawing.Color.Black;
+			this.panelBaseColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelBaseColor.Location = new System.Drawing.Point(6, 19);
+			this.panelBaseColor.Name = "panelBaseColor";
+			this.panelBaseColor.Size = new System.Drawing.Size(32, 32);
+			this.panelBaseColor.TabIndex = 2;
+			// 
+			// lblBaseColor
+			// 
+			this.lblBaseColor.AutoSize = true;
+			this.lblBaseColor.Location = new System.Drawing.Point(44, 28);
+			this.lblBaseColor.Name = "lblBaseColor";
+			this.lblBaseColor.Size = new System.Drawing.Size(57, 13);
+			this.lblBaseColor.TabIndex = 3;
+			this.lblBaseColor.Text = "Base color";
+			// 
+			// lblAccentColor
+			// 
+			this.lblAccentColor.AutoSize = true;
+			this.lblAccentColor.Location = new System.Drawing.Point(44, 73);
+			this.lblAccentColor.Name = "lblAccentColor";
+			this.lblAccentColor.Size = new System.Drawing.Size(67, 13);
+			this.lblAccentColor.TabIndex = 5;
+			this.lblAccentColor.Text = "Accent color";
+			// 
+			// panelAccentColor
+			// 
+			this.panelAccentColor.BackColor = System.Drawing.Color.Black;
+			this.panelAccentColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelAccentColor.Location = new System.Drawing.Point(6, 65);
+			this.panelAccentColor.Name = "panelAccentColor";
+			this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
+			this.panelAccentColor.TabIndex = 4;
+			// 
 			// FormSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -348,14 +415,17 @@
 			this.tpGeneral.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).EndInit();
-			this.tpVisualiser.ResumeLayout(false);
-			this.tpVisualiser.PerformLayout();
+			this.tpTheme.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.tbVisualiserOpacity)).EndInit();
 			this.tpAccount.ResumeLayout(false);
 			this.panelLoggedIn.ResumeLayout(false);
 			this.panelLoggedIn.PerformLayout();
 			this.panelNotLoggedIn.ResumeLayout(false);
 			this.panelNotLoggedIn.PerformLayout();
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -365,7 +435,7 @@
 		private System.Windows.Forms.Button btnLogin;
 		private System.Windows.Forms.TabControl tabControl;
 		private System.Windows.Forms.TabPage tpAccount;
-		private System.Windows.Forms.TabPage tpVisualiser;
+		private System.Windows.Forms.TabPage tpTheme;
 		private System.Windows.Forms.TabPage tpGeneral;
 		private System.Windows.Forms.CheckBox cbTopmost;
 		private System.Windows.Forms.CheckBox cbUpdateAutocheck;
@@ -387,5 +457,11 @@
 		private System.Windows.Forms.Label lblVisualiserOpacity;
 		private System.Windows.Forms.Label lblMinutes;
 		private System.Windows.Forms.NumericUpDown numericUpdateInterval;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.Label lblBaseColor;
+		private System.Windows.Forms.Panel panelBaseColor;
+		private System.Windows.Forms.Label lblAccentColor;
+		private System.Windows.Forms.Panel panelAccentColor;
 	}
 }

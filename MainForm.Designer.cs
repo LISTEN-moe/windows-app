@@ -33,22 +33,22 @@
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuItemCopySongInfo = new System.Windows.Forms.MenuItem();
 			this.panelPlayBtn = new System.Windows.Forms.Panel();
-			this.picPlayPause = new ListenMoeClient.BetterPictureBox();
-			this.panel2 = new System.Windows.Forms.Panel();
-			this.picFavourite = new ListenMoeClient.BetterPictureBox();
-			this.picClose = new ListenMoeClient.BetterPictureBox();
-			this.picSettings = new ListenMoeClient.BetterPictureBox();
+			this.panelRight = new System.Windows.Forms.Panel();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemPlayPause = new System.Windows.Forms.MenuItem();
 			this.menuItemShow = new System.Windows.Forms.MenuItem();
 			this.menuItemExit = new System.Windows.Forms.MenuItem();
+			this.picFavourite = new ListenMoeClient.BetterPictureBox();
+			this.picClose = new ListenMoeClient.BetterPictureBox();
+			this.picSettings = new ListenMoeClient.BetterPictureBox();
+			this.picPlayPause = new ListenMoeClient.BetterPictureBox();
 			this.panelPlayBtn.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
-			this.panel2.SuspendLayout();
+			this.panelRight.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picFavourite)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSettings)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// lblVol
@@ -89,35 +89,50 @@
 			this.panelPlayBtn.MouseEnter += new System.EventHandler(this.panelPlayBtn_MouseEnter);
 			this.panelPlayBtn.MouseLeave += new System.EventHandler(this.panelPlayBtn_MouseLeave);
 			// 
-			// picPlayPause
+			// panelRight
 			// 
-			this.picPlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+			this.panelRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.picPlayPause.BackColor = System.Drawing.Color.Transparent;
-			this.picPlayPause.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picPlayPause.Image = global::ListenMoeClient.Properties.Resources.pause;
-			this.picPlayPause.Location = new System.Drawing.Point(16, 16);
-			this.picPlayPause.Name = "picPlayPause";
-			this.picPlayPause.Size = new System.Drawing.Size(16, 16);
-			this.picPlayPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.picPlayPause.TabIndex = 0;
-			this.picPlayPause.TabStop = false;
-			this.picPlayPause.Click += new System.EventHandler(this.playPause_Click);
+			this.panelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
+			this.panelRight.Controls.Add(this.picFavourite);
+			this.panelRight.Controls.Add(this.picClose);
+			this.panelRight.Controls.Add(this.picSettings);
+			this.panelRight.Controls.Add(this.lblVol);
+			this.panelRight.Location = new System.Drawing.Point(385, 0);
+			this.panelRight.Name = "panelRight";
+			this.panelRight.Size = new System.Drawing.Size(75, 48);
+			this.panelRight.TabIndex = 8;
 			// 
-			// panel2
+			// notifyIcon1
 			// 
-			this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
-			this.panel2.Controls.Add(this.picFavourite);
-			this.panel2.Controls.Add(this.picClose);
-			this.panel2.Controls.Add(this.picSettings);
-			this.panel2.Controls.Add(this.lblVol);
-			this.panel2.Location = new System.Drawing.Point(385, 0);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(75, 48);
-			this.panel2.TabIndex = 8;
+			this.notifyIcon1.Text = "Listen.moe";
+			this.notifyIcon1.Visible = true;
+			this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+			// 
+			// contextMenu2
+			// 
+			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItemPlayPause,
+            this.menuItemShow,
+            this.menuItemExit});
+			// 
+			// menuItemPlayPause
+			// 
+			this.menuItemPlayPause.Index = 0;
+			this.menuItemPlayPause.Text = "Pause";
+			this.menuItemPlayPause.Click += new System.EventHandler(this.playPause_Click);
+			// 
+			// menuItemShow
+			// 
+			this.menuItemShow.Index = 1;
+			this.menuItemShow.Text = "Show";
+			this.menuItemShow.Click += new System.EventHandler(this.menuItemShow_Click);
+			// 
+			// menuItemExit
+			// 
+			this.menuItemExit.Index = 2;
+			this.menuItemExit.Text = "Exit";
+			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 			// 
 			// picFavourite
 			// 
@@ -163,36 +178,21 @@
 			this.picSettings.TabStop = false;
 			this.picSettings.Click += new System.EventHandler(this.picSettings_Click);
 			// 
-			// notifyIcon1
+			// picPlayPause
 			// 
-			this.notifyIcon1.Text = "Listen.moe";
-			this.notifyIcon1.Visible = true;
-			this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
-			// 
-			// contextMenu2
-			// 
-			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItemPlayPause,
-            this.menuItemShow,
-            this.menuItemExit});
-			// 
-			// menuItemPlayPause
-			// 
-			this.menuItemPlayPause.Index = 0;
-			this.menuItemPlayPause.Text = "Pause";
-			this.menuItemPlayPause.Click += new System.EventHandler(this.playPause_Click);
-			// 
-			// menuItemShow
-			// 
-			this.menuItemShow.Index = 1;
-			this.menuItemShow.Text = "Show";
-			this.menuItemShow.Click += new System.EventHandler(this.menuItemShow_Click);
-			// 
-			// menuItemExit
-			// 
-			this.menuItemExit.Index = 2;
-			this.menuItemExit.Text = "Exit";
-			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
+			this.picPlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.picPlayPause.BackColor = System.Drawing.Color.Transparent;
+			this.picPlayPause.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.picPlayPause.Image = global::ListenMoeClient.Properties.Resources.pause;
+			this.picPlayPause.Location = new System.Drawing.Point(16, 16);
+			this.picPlayPause.Name = "picPlayPause";
+			this.picPlayPause.Size = new System.Drawing.Size(16, 16);
+			this.picPlayPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.picPlayPause.TabIndex = 0;
+			this.picPlayPause.TabStop = false;
+			this.picPlayPause.Click += new System.EventHandler(this.playPause_Click);
 			// 
 			// MainForm
 			// 
@@ -200,7 +200,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(46)))), ((int)(((byte)(59)))));
 			this.ClientSize = new System.Drawing.Size(460, 48);
-			this.Controls.Add(this.panel2);
+			this.Controls.Add(this.panelRight);
 			this.Controls.Add(this.panelPlayBtn);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "MainForm";
@@ -211,12 +211,12 @@
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
 			this.panelPlayBtn.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).EndInit();
-			this.panel2.ResumeLayout(false);
-			this.panel2.PerformLayout();
+			this.panelRight.ResumeLayout(false);
+			this.panelRight.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picFavourite)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSettings)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -231,7 +231,7 @@
 		private System.Windows.Forms.MenuItem menuItemCopySongInfo;
 		private BetterPictureBox picSettings;
 		private BetterPictureBox picFavourite;
-		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.Panel panelRight;
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu2;
 		private System.Windows.Forms.MenuItem menuItemExit;

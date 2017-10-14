@@ -27,6 +27,10 @@ namespace ListenMoeClient
 			LoadAndBindCheckboxSetting(cbTopmost, "TopMost");
 			LoadAndBindCheckboxSetting(cbVisualiserBars, "VisualiserBars");
 
+			LoadAndBindColorSetting(panelVisualiserColor, "VisualiserColor");
+			LoadAndBindColorSetting(panelBaseColor, "BaseColor");
+			LoadAndBindColorSetting(panelAccentColor, "AccentColor");
+
 			numericUpdateInterval.Value = Settings.Get<int>("UpdateInterval") / 60;
 			numericUpdateInterval.ValueChanged += NumericUpdateInterval_ValueChanged;
 
@@ -35,7 +39,6 @@ namespace ListenMoeClient
 			lblResolutionScale.Text = scale.ToString("N1");
 
 			tbVisualiserOpacity.Value = (int)(Settings.Get<float>("VisualiserTransparency") * 255);
-			panelVisualiserColor.BackColor = Settings.GetVisualiserColor();
 
 			panelNotLoggedIn.Visible = !User.LoggedIn;
 			panelLoggedIn.Visible = User.LoggedIn;
@@ -77,20 +80,23 @@ namespace ListenMoeClient
 			};
 		}
 
-		private void panelVisualiserColor_MouseClick(object sender, MouseEventArgs e)
+		private void LoadAndBindColorSetting(Panel panel, string settingsKey)
 		{
-			ColorDialog dialog = new ColorDialog();
-			if (dialog.ShowDialog() == DialogResult.OK)
+			panel.BackColor = Settings.Get<Color>(settingsKey);
+			panel.MouseClick += (sender, e) =>
 			{
-				Color c = dialog.Color;
-				panelVisualiserColor.BackColor = c;
+				ColorDialog dialog = new ColorDialog();
+				if (dialog.ShowDialog() == DialogResult.OK)
+				{
+					Color c = dialog.Color;
+					panel.BackColor = c;
 
-				string hexColor = "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
-				Settings.Set("VisualiserColor", hexColor);
-				Settings.WriteSettings();
+					Settings.Set(settingsKey, c);
+					Settings.WriteSettings();
 
-				mainForm.ReloadSettings();
-			}
+					mainForm.ReloadSettings();
+				}
+			};
 		}
 
 		private void tbResolutionScale_Scroll(object sender, EventArgs e)

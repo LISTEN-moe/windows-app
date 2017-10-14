@@ -18,5 +18,10 @@ namespace ListenMoeClient
 		{
 			return new Point(a.X - b.X, a.Y - b.Y);
 		}
+
+		public static float Bound(this float f, float min, float max)
+		{
+			return Math.Max(Math.Min(f, max), min);
+		}
 	}
 }

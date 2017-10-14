@@ -21,14 +21,16 @@ namespace ListenMoeClient
 			{ 'i', typeof(int) },
 			{ 'f', typeof(float) },
 			{ 'b', typeof(bool) },
-			{ 's', typeof(string) }
+			{ 's', typeof(string) },
+			{ 'c', typeof(Color) }
 		};
 		static Dictionary<Type, char> reverseTypePrefixes = new Dictionary<Type, char>()
 		{
 			{ typeof(int), 'i'},
 			{ typeof(float), 'f'},
 			{ typeof(bool), 'b'},
-			{ typeof(string), 's'}
+			{ typeof(string), 's'},
+			{ typeof(Color), 'c' }
 		};
 
 		static Dictionary<Type, Func<string, (bool Success, object Result)>> parseActions = new Dictionary<Type, Func<string, (bool, object)>>()
@@ -51,6 +53,22 @@ namespace ListenMoeClient
 			{ typeof(string), s => {
 				return (true, s);
 			}},
+			{ typeof(Color), s => {
+				int argb;
+				if (int.TryParse(s.Replace("#", ""), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out argb))
+					return (true, Color.FromArgb(255, Color.FromArgb(argb)));
+				else
+					throw new Exception("Could not parse color '" + s + "'. Check your settings file for any errors.");
+			}}
+		};
+
+		static Dictionary<Type, Func<dynamic, string>> saveActions = new Dictionary<Type, Func<dynamic, string>>()
+		{
+			{ typeof(int), i => i.ToString() },
+			{ typeof(float), f => f.ToString() },
+			{ typeof(bool), b => b.ToString() },
+			{ typeof(string), s => s },
+			{ typeof(Color), c => ("#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLowerInvariant() }
 		};
 
 		static Settings()
@@ -100,7 +118,10 @@ namespace ListenMoeClient
 
 			Set("Token", "");
 			Set("Username", "");
-			Set("VisualiserColor", "#ec1a55");
+
+			Set("VisualiserColor", Color.FromArgb(236, 26, 85));
+			Set("BaseColor", Color.FromArgb(44, 46, 59));
+			Set("AccentColor", Color.FromArgb(236, 26, 85));
 		}
 
 		public static void LoadSettings()
@@ -140,10 +161,11 @@ namespace ListenMoeClient
 				{
 					Type t = dict.Key;
 					var typedDict = (System.Collections.IDictionary)dict.Value;
+					var saveAction = saveActions[t];
 
 					foreach (dynamic setting in typedDict)
 					{
-						sb.AppendLine(reverseTypePrefixes[t] + setting.Key + "=" + setting.Value.ToString());
+						sb.AppendLine(reverseTypePrefixes[t] + setting.Key + "=" + saveAction(setting.Value));
 					}
 				}
 			}
@@ -156,21 +178,6 @@ namespace ListenMoeClient
 						streamWriter.Write(sb.ToString());
 				}
 			}
-		}
-
-		//Small helper method to convert the hex string + opacity float to a System.Drawing.Color
-		public static Color GetVisualiserColor()
-		{
-			string color = Get<string>("VisualiserColor");
-			float opacity = Get<float>("VisualiserTransparency");
-
-			Color baseColor;
-			if (int.TryParse(color.Replace("#", ""), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int argb))
-				baseColor = Color.FromArgb(argb);
-			else
-				baseColor = Color.Red;
-
-			return Color.FromArgb(Math.Max(0, Math.Min(255, (int)(opacity * 255))), baseColor);
 		}
 	}
 }

@@ -44,7 +44,8 @@ namespace ListenMoeClient
 		public void ReloadSettings()
 		{
 			bars = Settings.Get<bool>("VisualiserBars");
-			visualiserColor = Settings.GetVisualiserColor();
+			var opacity = (int)Math.Min(Math.Max(Settings.Get<float>("VisualiserTransparency") * 255, 0), 255);
+			visualiserColor = Color.FromArgb(opacity, Settings.Get<Color>("VisualiserColor"));
 			barBrush = new SolidBrush(visualiserColor);
 			linePen = new Pen(visualiserColor, 1);
 		}
