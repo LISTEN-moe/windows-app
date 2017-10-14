@@ -59,6 +59,7 @@
 			this.lblBaseColor = new System.Windows.Forms.Label();
 			this.lblAccentColor = new System.Windows.Forms.Label();
 			this.panelAccentColor = new System.Windows.Forms.Panel();
+			this.cbVisualiserFadeEdges = new System.Windows.Forms.CheckBox();
 			this.tabControl.SuspendLayout();
 			this.tpGeneral.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).BeginInit();
@@ -339,6 +340,7 @@
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.cbVisualiserFadeEdges);
 			this.groupBox1.Controls.Add(this.cbEnableVisualiser);
 			this.groupBox1.Controls.Add(this.lblVisualiserOpacity);
 			this.groupBox1.Controls.Add(this.panelVisualiserColor);
@@ -346,7 +348,7 @@
 			this.groupBox1.Controls.Add(this.cbVisualiserBars);
 			this.groupBox1.Location = new System.Drawing.Point(8, 6);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(153, 110);
+			this.groupBox1.Size = new System.Drawing.Size(180, 110);
 			this.groupBox1.TabIndex = 5;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Visualiser";
@@ -357,9 +359,9 @@
 			this.groupBox2.Controls.Add(this.panelAccentColor);
 			this.groupBox2.Controls.Add(this.lblBaseColor);
 			this.groupBox2.Controls.Add(this.panelBaseColor);
-			this.groupBox2.Location = new System.Drawing.Point(167, 6);
+			this.groupBox2.Location = new System.Drawing.Point(194, 6);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(196, 110);
+			this.groupBox2.Size = new System.Drawing.Size(169, 110);
 			this.groupBox2.TabIndex = 6;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Colors";
@@ -399,6 +401,16 @@
 			this.panelAccentColor.Name = "panelAccentColor";
 			this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
 			this.panelAccentColor.TabIndex = 4;
+			// 
+			// cbVisualiserFadeEdges
+			// 
+			this.cbVisualiserFadeEdges.AutoSize = true;
+			this.cbVisualiserFadeEdges.Location = new System.Drawing.Point(87, 19);
+			this.cbVisualiserFadeEdges.Name = "cbVisualiserFadeEdges";
+			this.cbVisualiserFadeEdges.Size = new System.Drawing.Size(82, 17);
+			this.cbVisualiserFadeEdges.TabIndex = 5;
+			this.cbVisualiserFadeEdges.Text = "Fade edges";
+			this.cbVisualiserFadeEdges.UseVisualStyleBackColor = true;
 			// 
 			// FormSettings
 			// 
@@ -463,5 +475,6 @@
 		private System.Windows.Forms.Panel panelBaseColor;
 		private System.Windows.Forms.Label lblAccentColor;
 		private System.Windows.Forms.Panel panelAccentColor;
+		private System.Windows.Forms.CheckBox cbVisualiserFadeEdges;
 	}
 }

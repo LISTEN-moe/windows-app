@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,8 @@ namespace ListenMoeClient
 		bool bars = true;
 		bool stopped = false;
 
-		public Rectangle Bounds;
+		//TODO: remove this hardcode
+		Rectangle Bounds = new Rectangle(48, 48, 337, 48);
 		Color visualiserColor;
 		Brush barBrush;
 		Pen linePen;
@@ -46,8 +48,22 @@ namespace ListenMoeClient
 			bars = Settings.Get<bool>("VisualiserBars");
 			var opacity = (int)Math.Min(Math.Max(Settings.Get<float>("VisualiserTransparency") * 255, 0), 255);
 			visualiserColor = Color.FromArgb(opacity, Settings.Get<Color>("VisualiserColor"));
-			barBrush = new SolidBrush(visualiserColor);
-			linePen = new Pen(visualiserColor, 1);
+			
+			if (Settings.Get<bool>("VisualiserFadeEdges"))
+			{
+				Color baseColor = Settings.Get<Color>("BaseColor");
+				barBrush = new LinearGradientBrush(new Rectangle(new Point(0, 0), Bounds.Size), baseColor, visualiserColor, LinearGradientMode.Horizontal);
+				ColorBlend blend = new ColorBlend();
+				blend.Colors = new Color[] { baseColor, baseColor, visualiserColor, visualiserColor, visualiserColor, baseColor, baseColor };
+				blend.Positions = new float[] { 0.0f, 0.05f, 0.2f, 0.5f, 0.8f, 0.95f, 1.0f };
+				((LinearGradientBrush)barBrush).InterpolationColors = blend;
+				linePen = new Pen(barBrush, 1);
+			}
+			else
+			{
+				barBrush = new SolidBrush(visualiserColor);
+				linePen = new Pen(visualiserColor, 1);
+			}
 		}
 
 		public void AddSamples(short[] samples)

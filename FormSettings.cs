@@ -26,6 +26,7 @@ namespace ListenMoeClient
 			LoadAndBindCheckboxSetting(cbUpdateAutocheck, "UpdateAutocheck");
 			LoadAndBindCheckboxSetting(cbTopmost, "TopMost");
 			LoadAndBindCheckboxSetting(cbVisualiserBars, "VisualiserBars");
+			LoadAndBindCheckboxSetting(cbVisualiserFadeEdges, "VisualiserFadeEdges");
 
 			LoadAndBindColorSetting(panelVisualiserColor, "VisualiserColor");
 			LoadAndBindColorSetting(panelBaseColor, "BaseColor");

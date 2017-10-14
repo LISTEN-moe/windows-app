@@ -222,7 +222,6 @@ namespace ListenMoeClient
 			if (visualiser == null)
 			{
 				visualiser = new Visualiser();
-				visualiser.Bounds = new Rectangle(48, 48, 337, 48);
 				visualiser.Start();
 				player.SetVisualiser(visualiser);
 			}

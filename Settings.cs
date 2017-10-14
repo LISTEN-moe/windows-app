@@ -115,6 +115,7 @@ namespace ListenMoeClient
 			Set("HideFromAltTab", false);
 			Set("EnableVisualiser", true);
 			Set("VisualiserBars", true);
+			Set("VisualiserFadeEdges", false);
 
 			Set("Token", "");
 			Set("Username", "");
