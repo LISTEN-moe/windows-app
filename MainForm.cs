@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Taskbar;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -122,6 +123,8 @@ namespace ListenMoeClient
 		Task updaterTask;
 		Task renderLoop;
 
+        ThumbnailToolBarButton button;
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -166,8 +169,12 @@ namespace ListenMoeClient
 			{
 				await TogglePlayback();
 			});
-			
-			Connect();
+            
+            button = new ThumbnailToolBarButton(Properties.Resources.pause_ico, "Pause");
+            button.Click += async (s, e) => { await TogglePlayback(); };
+            TaskbarManager.Instance.ThumbnailToolBars.AddButtons(this.Handle, button);
+
+            Connect();
 
 			player = new WebStreamPlayer("https://listen.moe/stream");
 			player.SetVisualiser(visualiser);
@@ -415,15 +422,19 @@ namespace ListenMoeClient
 		private async Task TogglePlayback()
 		{
 			if (player.IsPlaying())
-			{
-				picPlayPause.Image = Properties.Resources.play;
+            {
+                button.Icon = Properties.Resources.play_ico;
+                button.Tooltip = "Play";
+                picPlayPause.Image = Properties.Resources.play;
 				menuItemPlayPause.Text = "Play";
 				visualiser.Stop();
 				await player.Stop();
 			}
 			else
-			{
-				picPlayPause.Image = Properties.Resources.pause;
+            {
+                button.Icon = Properties.Resources.pause_ico;
+                button.Tooltip = "Pause";
+                picPlayPause.Image = Properties.Resources.pause;
 				menuItemPlayPause.Text = "Pause";
 				visualiser.Start();
 				player.Play();
