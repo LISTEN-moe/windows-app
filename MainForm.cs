@@ -550,6 +550,7 @@ namespace ListenMoeClient
 
 		int currentFrame = 0;
 		bool isAnimating = false;
+
 		object animationLock = new object();
 
 		private async void SetFavouriteSprite(bool favourited)
@@ -599,6 +600,14 @@ namespace ListenMoeClient
 
 			var response = Json.Parse<FavouritesResponse>(result);
 			SetFavouriteSprite(response.favorite);
+		}
+
+		private void menuItemResetLocation_Click(object sender, EventArgs e)
+		{
+			Settings.Set("LocationX", 0);
+			Settings.Set("LocationY", 0);
+			Settings.WriteSettings();
+			this.Location = new Point(0, 0);
 		}
 	}
 }
