@@ -101,6 +101,9 @@
     <Compile Include="Controls\BetterPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\BorderedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
