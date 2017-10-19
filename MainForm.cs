@@ -125,6 +125,7 @@ namespace ListenMoeClient
 		public MainForm()
 		{
 			InitializeComponent();
+			contextMenu1.MenuItems.Add(new MenuItem("LISTEN.moe Desktop Client v" + Globals.VERSION.ToString()) { Enabled = false });
 			Settings.LoadSettings();
 			//Write immediately after loading to flush any new default settings
 			Settings.WriteSettings();
