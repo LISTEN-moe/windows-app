@@ -69,10 +69,9 @@ namespace ListenMoeClient
 
 					bool hSnapped = false;
 					bool vSnapped = false;
-					if ((hSnapped = CloseToEdge(s.WorkingArea.Left, newLocation.X))) this.Left = s.WorkingArea.Left;
-					if ((vSnapped = CloseToEdge(s.WorkingArea.Top, newLocation.Y))) this.Top = s.WorkingArea.Top;
-					if (!hSnapped && (hSnapped = CloseToEdge(s.WorkingArea.Right, newLocation.X + Width))) this.Left = s.WorkingArea.Right - this.Width;
-					if (!vSnapped && (vSnapped = CloseToEdge(s.WorkingArea.Bottom, newLocation.Y + Height))) this.Top = s.WorkingArea.Bottom - this.Height;
+
+					SnapToRectangle(s.WorkingArea, ref hSnapped, ref vSnapped, newLocation);
+					SnapToRectangle(s.Bounds, ref hSnapped, ref vSnapped, newLocation);
 
 					int finalX = newLocation.X;
 					int finalY = newLocation.Y;
@@ -88,6 +87,18 @@ namespace ListenMoeClient
 					Settings.WriteSettings();
 				}
 			}
+		}
+
+		private void SnapToRectangle(Rectangle rect, ref bool hSnappedRef, ref bool vSnappedRef, Point newLocation)
+		{
+			bool hSnapped, vSnapped;
+			if ((hSnapped = CloseToEdge(rect.Left, newLocation.X))) this.Left = rect.Left;
+			if ((vSnapped = CloseToEdge(rect.Top, newLocation.Y))) this.Top = rect.Top;
+			if (!hSnapped && (hSnapped = CloseToEdge(rect.Right, newLocation.X + Width))) this.Left = rect.Right - this.Width;
+			if (!vSnapped && (vSnapped = CloseToEdge(rect.Bottom, newLocation.Y + Height))) this.Top = rect.Bottom - this.Height;
+
+			hSnappedRef |= hSnapped;
+			vSnappedRef |= vSnapped;
 		}
 
 		private void Form1_MouseUp(object sender, MouseEventArgs e)
