@@ -40,7 +40,9 @@ namespace ListenMoeClient
 			lblResolutionScale.Text = scale.ToString("N1");
 
 			tbVisualiserOpacity.Value = (int)(Settings.Get<float>("VisualiserTransparency") * 255);
-			tbOpacity.Value = (int)(Settings.Get<float>("FormOpacity") * 255);
+			float opacity = Settings.Get<float>("FormOpacity");
+			tbOpacity.Value = (int)(opacity * 255);
+			lblOpacity.Text = opacity.ToString("N1");
 
 			panelNotLoggedIn.Visible = !User.LoggedIn;
 			panelLoggedIn.Visible = User.LoggedIn;

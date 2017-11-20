@@ -31,6 +31,9 @@
 			this.btnLogin = new System.Windows.Forms.Button();
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tpGeneral = new System.Windows.Forms.TabPage();
+			this.lblOpacityDesc = new System.Windows.Forms.Label();
+			this.lblOpacity = new System.Windows.Forms.Label();
+			this.tbOpacity = new System.Windows.Forms.TrackBar();
 			this.lblMinutes = new System.Windows.Forms.Label();
 			this.numericUpdateInterval = new System.Windows.Forms.NumericUpDown();
 			this.lblResolutionScaleDesc = new System.Windows.Forms.Label();
@@ -60,11 +63,9 @@
 			this.panelNotLoggedIn = new System.Windows.Forms.Panel();
 			this.txtUsername = new ListenMoeClient.GhostTextbox();
 			this.txtPassword = new ListenMoeClient.GhostTextbox();
-			this.lblOpacityDesc = new System.Windows.Forms.Label();
-			this.lblOpacity = new System.Windows.Forms.Label();
-			this.tbOpacity = new System.Windows.Forms.TrackBar();
 			this.tabControl.SuspendLayout();
 			this.tpGeneral.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).BeginInit();
 			this.tpTheme.SuspendLayout();
@@ -74,7 +75,6 @@
 			this.tpAccount.SuspendLayout();
 			this.panelLoggedIn.SuspendLayout();
 			this.panelNotLoggedIn.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLogin
@@ -120,6 +120,35 @@
 			this.tpGeneral.TabIndex = 2;
 			this.tpGeneral.Text = "General";
 			this.tpGeneral.UseVisualStyleBackColor = true;
+			// 
+			// lblOpacityDesc
+			// 
+			this.lblOpacityDesc.AutoSize = true;
+			this.lblOpacityDesc.Location = new System.Drawing.Point(290, 51);
+			this.lblOpacityDesc.Name = "lblOpacityDesc";
+			this.lblOpacityDesc.Size = new System.Drawing.Size(43, 13);
+			this.lblOpacityDesc.TabIndex = 11;
+			this.lblOpacityDesc.Text = "Opacity";
+			// 
+			// lblOpacity
+			// 
+			this.lblOpacity.AutoSize = true;
+			this.lblOpacity.Location = new System.Drawing.Point(233, 72);
+			this.lblOpacity.Name = "lblOpacity";
+			this.lblOpacity.Size = new System.Drawing.Size(22, 13);
+			this.lblOpacity.TabIndex = 10;
+			this.lblOpacity.Text = "1.0";
+			// 
+			// tbOpacity
+			// 
+			this.tbOpacity.BackColor = System.Drawing.Color.White;
+			this.tbOpacity.Location = new System.Drawing.Point(259, 67);
+			this.tbOpacity.Maximum = 255;
+			this.tbOpacity.Name = "tbOpacity";
+			this.tbOpacity.Size = new System.Drawing.Size(104, 45);
+			this.tbOpacity.TabIndex = 9;
+			this.tbOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
+			this.tbOpacity.Scroll += new System.EventHandler(this.tbOpacity_Scroll);
 			// 
 			// lblMinutes
 			// 
@@ -180,7 +209,7 @@
 			this.cbHideFromAltTab.Name = "cbHideFromAltTab";
 			this.cbHideFromAltTab.Size = new System.Drawing.Size(137, 30);
 			this.cbHideFromAltTab.TabIndex = 3;
-			this.cbHideFromAltTab.Text = "Hide from Alt-Tab menu\r\n(requires app restart)";
+			this.cbHideFromAltTab.Text = "Hide from Alt-Tab menu\r\nand taskbar (tray only)";
 			this.cbHideFromAltTab.UseVisualStyleBackColor = true;
 			// 
 			// cbCloseToTray
@@ -425,35 +454,6 @@
 			this.txtPassword.TabIndex = 3;
 			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
 			// 
-			// lblOpacityDesc
-			// 
-			this.lblOpacityDesc.AutoSize = true;
-			this.lblOpacityDesc.Location = new System.Drawing.Point(290, 51);
-			this.lblOpacityDesc.Name = "lblOpacityDesc";
-			this.lblOpacityDesc.Size = new System.Drawing.Size(43, 13);
-			this.lblOpacityDesc.TabIndex = 11;
-			this.lblOpacityDesc.Text = "Opacity";
-			// 
-			// lblOpacity
-			// 
-			this.lblOpacity.AutoSize = true;
-			this.lblOpacity.Location = new System.Drawing.Point(233, 72);
-			this.lblOpacity.Name = "lblOpacity";
-			this.lblOpacity.Size = new System.Drawing.Size(22, 13);
-			this.lblOpacity.TabIndex = 10;
-			this.lblOpacity.Text = "1.0";
-			// 
-			// tbOpacity
-			// 
-			this.tbOpacity.BackColor = System.Drawing.Color.White;
-			this.tbOpacity.Location = new System.Drawing.Point(259, 67);
-			this.tbOpacity.Maximum = 255;
-			this.tbOpacity.Name = "tbOpacity";
-			this.tbOpacity.Size = new System.Drawing.Size(104, 45);
-			this.tbOpacity.TabIndex = 9;
-			this.tbOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
-			this.tbOpacity.Scroll += new System.EventHandler(this.tbOpacity_Scroll);
-			// 
 			// FormSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -467,6 +467,7 @@
 			this.tabControl.ResumeLayout(false);
 			this.tpGeneral.ResumeLayout(false);
 			this.tpGeneral.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).EndInit();
 			this.tpTheme.ResumeLayout(false);
@@ -480,7 +481,6 @@
 			this.panelLoggedIn.PerformLayout();
 			this.panelNotLoggedIn.ResumeLayout(false);
 			this.panelNotLoggedIn.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).EndInit();
 			this.ResumeLayout(false);
 
 		}

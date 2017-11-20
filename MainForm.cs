@@ -129,18 +129,10 @@ namespace ListenMoeClient
 			Settings.LoadSettings();
 			//Write immediately after loading to flush any new default settings
 			Settings.WriteSettings();
-			if (Settings.Get<bool>("HideFromAltTab"))
-			{
-				this.ShowInTaskbar = false;
-				int windowStyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
-				SetWindowLong(this.Handle, GWL_EXSTYLE, windowStyle | WS_EX_TOOLWINDOW);
-				notifyIcon1.Visible = true;
-			}
 
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
-
-
+			
 			cts = new CancellationTokenSource();
 			ct = cts.Token;
 #pragma warning disable CS4014
@@ -206,6 +198,21 @@ namespace ListenMoeClient
 												  (int)((BackColor.B * 1.1f).Bound(0, 255)));
 			SetVolumeLabel(vol);
 			this.Opacity = Settings.Get<float>("FormOpacity");
+
+			if (Settings.Get<bool>("HideFromAltTab"))
+			{
+				this.ShowInTaskbar = false;
+				int windowStyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
+				SetWindowLong(this.Handle, GWL_EXSTYLE, windowStyle | WS_EX_TOOLWINDOW);
+				notifyIcon1.Visible = true;
+			}
+			else
+			{
+				this.ShowInTaskbar = true;
+				int windowStyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
+				SetWindowLong(this.Handle, GWL_EXSTYLE, windowStyle & ~WS_EX_TOOLWINDOW);
+				notifyIcon1.Visible = false;
+			}
 		}
 
 		public void ReloadScale()
