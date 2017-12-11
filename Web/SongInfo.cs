@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
 
@@ -23,7 +17,7 @@ namespace ListenMoeClient
 		public PreviousSongInfo second_last { get; set; }
 
 		public ExtendedSongInfo extended { get; set; }
-    }
+	}
 
 	public class PreviousSongInfo
 	{

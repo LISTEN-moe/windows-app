@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ListenMoeClient
 {
@@ -21,8 +16,10 @@ namespace ListenMoeClient
 		{
 			Bitmap sheet = Properties.Resources.fav_sprite;
 
-			Sprite result = new Sprite();
-			result.Frames = new Image[sheet.Width / 64];
+			Sprite result = new Sprite
+			{
+				Frames = new Image[sheet.Width / 64]
+			};
 			//Split into 64x64
 			for (int i = 0; i < sheet.Width / 64; i++)
 			{
@@ -58,8 +55,10 @@ namespace ListenMoeClient
 		{
 			Bitmap sheet = Properties.Resources.fav_sprite;
 
-			Sprite result = new Sprite();
-			result.Frames = new Image[2];
+			Sprite result = new Sprite
+			{
+				Frames = new Image[2]
+			};
 
 			int n = sheet.Width / 64;
 

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ListenMoeClient
@@ -26,9 +24,11 @@ namespace ListenMoeClient
 		/// <returns></returns>
 		public static async Task<AuthenticateResponse> Login(string username, string password)
 		{
-			var postData = new Dictionary<string, string>();
-			postData.Add("username", username);
-			postData.Add("password", password);
+			var postData = new Dictionary<string, string>
+			{
+				{ "username", username },
+				{ "password", password }
+			};
 
 			string resp = await WebHelper.Post("https://listen.moe/api/authenticate", postData);
 			var response = Json.Parse<AuthenticateResponse>(resp);

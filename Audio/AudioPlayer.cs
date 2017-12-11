@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using NAudio;
 using NAudio.Wave;
 
 namespace ListenMoeClient
@@ -19,9 +14,11 @@ namespace ListenMoeClient
 		public AudioPlayer()
 		{
 			WaveFormat format = new WaveFormat(Globals.SAMPLE_RATE, 2);
-			provider = new BufferedWaveProvider(format);
-			provider.BufferDuration = TimeSpan.FromSeconds(5);
-			provider.DiscardOnBufferOverflow = true;
+			provider = new BufferedWaveProvider(format)
+			{
+				BufferDuration = TimeSpan.FromSeconds(5),
+				DiscardOnBufferOverflow = true
+			};
 			waveOut.Init(provider);
 			waveOut.Volume = Settings.Get<float>("Volume");
 		}
@@ -50,7 +47,7 @@ namespace ListenMoeClient
 			Buffer.BlockCopy(samples, 0, bytes, 0, bytes.Length);
 			provider.AddSamples(bytes, 0, bytes.Length);
 		}
-		
+
 		private float BoundVolume(float vol)
 		{
 			//Cap between 0 and 1
