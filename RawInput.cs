@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ListenMoeClient
 {
@@ -2009,12 +2006,6 @@ namespace ListenMoeClient
 		public RAWINPUTHID Hid;
 	}
 
-	class KeyPressEventArgs
-	{
-		public VirtualKeys Key;
-		public bool Pressed;
-	}
-
 	class RawInput
 	{
 		/// <summary>Function to register a raw input device.</summary>
@@ -2063,8 +2054,7 @@ namespace ListenMoeClient
 
 			GetRawInputData(lParam, RawInputCommand.Input, IntPtr.Zero, ref dwSize, Marshal.SizeOf(typeof(RAWINPUTHEADER)));
 
-			RAWINPUT buffer;
-			if (dwSize != GetRawInputData(lParam, RawInputCommand.Input, out buffer, ref dwSize, Marshal.SizeOf(typeof(RAWINPUTHEADER))))
+			if (dwSize != GetRawInputData(lParam, RawInputCommand.Input, out RAWINPUT buffer, ref dwSize, Marshal.SizeOf(typeof(RAWINPUTHEADER))))
 				return;
 
 			VirtualKeys key = buffer.Keyboard.VirtualKey;

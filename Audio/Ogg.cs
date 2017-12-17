@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ListenMoeClient
 {
-    class Ogg
+	class Ogg
 	{
 		byte[] magic = { 0x4F, 0x67, 0x67, 0x53 }; //OggS
 
@@ -184,5 +181,5 @@ namespace ListenMoeClient
 
 			return packets.ToArray();
 		}
-    }
+	}
 }

@@ -67,7 +67,7 @@
 			// contextMenu1
 			// 
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItemCopySongInfo});
+			this.menuItemCopySongInfo});
 			// 
 			// menuItemCopySongInfo
 			// 
@@ -78,7 +78,7 @@
 			// panelPlayBtn
 			// 
 			this.panelPlayBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.panelPlayBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(26)))), ((int)(((byte)(85)))));
 			this.panelPlayBtn.Controls.Add(this.picPlayPause);
 			this.panelPlayBtn.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -93,8 +93,8 @@
 			// picPlayPause
 			// 
 			this.picPlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.picPlayPause.BackColor = System.Drawing.Color.Transparent;
 			this.picPlayPause.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picPlayPause.Image = global::ListenMoeClient.Properties.Resources.pause;
@@ -109,7 +109,7 @@
 			// panelRight
 			// 
 			this.panelRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
 			this.panelRight.Controls.Add(this.picFavourite);
 			this.panelRight.Controls.Add(this.picClose);
@@ -123,8 +123,8 @@
 			// picFavourite
 			// 
 			this.picFavourite.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.picFavourite.BackColor = System.Drawing.Color.Transparent;
 			this.picFavourite.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picFavourite.Location = new System.Drawing.Point(4, 8);
@@ -173,10 +173,10 @@
 			// contextMenu2
 			// 
 			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItemPlayPause,
-            this.menuItemShow,
-            this.menuItemResetLocation,
-            this.menuItemExit});
+			this.menuItemPlayPause,
+			this.menuItemShow,
+			this.menuItemResetLocation,
+			this.menuItemExit});
 			// 
 			// menuItemPlayPause
 			// 
@@ -233,8 +233,8 @@
 
 		private BetterPictureBox picPlayPause;
 		private BetterPictureBox picClose;
-        private System.Windows.Forms.Label lblVol;
-        private System.Windows.Forms.ContextMenu contextMenu1;
+		private System.Windows.Forms.Label lblVol;
+		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.Panel panelPlayBtn;
 		private System.Windows.Forms.MenuItem menuItemCopySongInfo;
 		private BetterPictureBox picSettings;

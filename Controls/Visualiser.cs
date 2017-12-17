@@ -1,14 +1,8 @@
 ﻿using DequeNet;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ListenMoeClient
 {
@@ -53,9 +47,11 @@ namespace ListenMoeClient
 			{
 				Color baseColor = Settings.Get<Color>("BaseColor");
 				barBrush = new LinearGradientBrush(new Rectangle(new Point(0, 0), Bounds.Size), baseColor, visualiserColor, LinearGradientMode.Horizontal);
-				ColorBlend blend = new ColorBlend();
-				blend.Colors = new Color[] { baseColor, baseColor, visualiserColor, visualiserColor, visualiserColor, baseColor, baseColor };
-				blend.Positions = new float[] { 0.0f, 0.05f, 0.2f, 0.5f, 0.8f, 0.95f, 1.0f };
+				ColorBlend blend = new ColorBlend
+				{
+					Colors = new Color[] { baseColor, baseColor, visualiserColor, visualiserColor, visualiserColor, baseColor, baseColor },
+					Positions = new float[] { 0.0f, 0.05f, 0.2f, 0.5f, 0.8f, 0.95f, 1.0f }
+				};
 				((LinearGradientBrush)barBrush).InterpolationColors = blend;
 				linePen = new Pen(barBrush, 1);
 			}

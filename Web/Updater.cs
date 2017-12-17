@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -63,11 +59,9 @@ namespace ListenMoeClient
 			//Compare sub version numbers
 			for (int i = 0; i < latestParts.Length; i++)
 			{
-				int latestVers;
-				int ourVers;
-				if (!int.TryParse(latestParts[i], out latestVers))
+				if (!int.TryParse(latestParts[i], out int latestVers))
 					return true;
-				if (!int.TryParse(ourParts[i], out ourVers))
+				if (!int.TryParse(ourParts[i], out int ourVers))
 					return true;
 
 				if (latestVers == ourVers)
