@@ -1,10 +1,9 @@
 <div align="center">
 	<img src="https://lolisafe.moe/DJwzPbWD.png" />
- <h1 align="center">Official Desktop Client<h1>
 </div>
-
-A simple lightweight [Listen.moe](https://listen.moe) client for Windows.
-
+<h2 align="center">Official Windows Client<h2>
+<h4 align="center">Simple lightweight <a href="https://listen.moe">LISTEN.moe</a> client for Windows.</h4> 
+      
 ![](https://i.imgur.com/vtEKxw2.gif)
 
 The window will snap to the edges of your screen, and you can mouse scroll on the window to increase/decrease the volume. You can also set it to be topmost by right clicking the window and selecting 'Always on top'. 
