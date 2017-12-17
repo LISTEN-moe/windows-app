@@ -1,4 +1,8 @@
-# ListenMoeClient
+<div align="center">
+	<img src="https://lolisafe.moe/DJwzPbWD.png" />
+ <h1 align="center">Official Desktop Client<h1>
+</div>
+
 A simple lightweight [Listen.moe](https://listen.moe) client for Windows.
 
 ![](https://i.imgur.com/vtEKxw2.gif)
