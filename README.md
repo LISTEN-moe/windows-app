@@ -1,7 +1,7 @@
 <div align="center">
 	<img src="https://lolisafe.moe/DJwzPbWD.png" />
 </div>
-<h2 align="center">Official Windows Client<h2>
+<h2 align="center">Official Windows Client</h2>
 <h4 align="center">Simple lightweight <a href="https://listen.moe">LISTEN.moe</a> client for Windows.</h4> 
       
 ![](https://i.imgur.com/vtEKxw2.gif)
