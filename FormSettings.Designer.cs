@@ -34,6 +34,7 @@
 			this.lblOpacityDesc = new System.Windows.Forms.Label();
 			this.lblOpacity = new System.Windows.Forms.Label();
 			this.tbOpacity = new System.Windows.Forms.TrackBar();
+			this.cbThumbnailButton = new System.Windows.Forms.CheckBox();
 			this.lblMinutes = new System.Windows.Forms.Label();
 			this.numericUpdateInterval = new System.Windows.Forms.NumericUpDown();
 			this.lblResolutionScaleDesc = new System.Windows.Forms.Label();
@@ -104,6 +105,7 @@
 			this.tpGeneral.Controls.Add(this.lblOpacityDesc);
 			this.tpGeneral.Controls.Add(this.lblOpacity);
 			this.tpGeneral.Controls.Add(this.tbOpacity);
+			this.tpGeneral.Controls.Add(this.cbThumbnailButton);
 			this.tpGeneral.Controls.Add(this.lblMinutes);
 			this.tpGeneral.Controls.Add(this.numericUpdateInterval);
 			this.tpGeneral.Controls.Add(this.lblResolutionScaleDesc);
@@ -150,10 +152,22 @@
 			this.tbOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
 			this.tbOpacity.Scroll += new System.EventHandler(this.tbOpacity_Scroll);
 			// 
+			// cbThumbnailButton
+			// 
+			this.cbThumbnailButton.AutoSize = true;
+			this.cbThumbnailButton.Checked = true;
+			this.cbThumbnailButton.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbThumbnailButton.Location = new System.Drawing.Point(150, 7);
+			this.cbThumbnailButton.Name = "cbThumbnailButton";
+			this.cbThumbnailButton.Size = new System.Drawing.Size(109, 30);
+			this.cbThumbnailButton.TabIndex = 9;
+			this.cbThumbnailButton.Text = "Thumbnail Button\r\n(requires restart)";
+			this.cbThumbnailButton.UseVisualStyleBackColor = true;
+			// 
 			// lblMinutes
 			// 
 			this.lblMinutes.AutoSize = true;
-			this.lblMinutes.Location = new System.Drawing.Point(200, 91);
+			this.lblMinutes.Location = new System.Drawing.Point(205, 94);
 			this.lblMinutes.Name = "lblMinutes";
 			this.lblMinutes.Size = new System.Drawing.Size(28, 13);
 			this.lblMinutes.TabIndex = 8;
@@ -161,7 +175,7 @@
 			// 
 			// numericUpdateInterval
 			// 
-			this.numericUpdateInterval.Location = new System.Drawing.Point(150, 87);
+			this.numericUpdateInterval.Location = new System.Drawing.Point(150, 90);
 			this.numericUpdateInterval.Name = "numericUpdateInterval";
 			this.numericUpdateInterval.Size = new System.Drawing.Size(49, 20);
 			this.numericUpdateInterval.TabIndex = 7;
@@ -183,7 +197,7 @@
 			// lblResolutionScale
 			// 
 			this.lblResolutionScale.AutoSize = true;
-			this.lblResolutionScale.Location = new System.Drawing.Point(233, 24);
+			this.lblResolutionScale.Location = new System.Drawing.Point(299, 51);
 			this.lblResolutionScale.Name = "lblResolutionScale";
 			this.lblResolutionScale.Size = new System.Drawing.Size(22, 13);
 			this.lblResolutionScale.TabIndex = 5;
@@ -522,5 +536,6 @@
 		private System.Windows.Forms.Label lblOpacityDesc;
 		private System.Windows.Forms.Label lblOpacity;
 		private System.Windows.Forms.TrackBar tbOpacity;
+		private System.Windows.Forms.CheckBox cbThumbnailButton;
 	}
 }

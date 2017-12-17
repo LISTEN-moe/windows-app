@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Taskbar;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -128,6 +129,8 @@ namespace ListenMoeClient
 		MarqueeLabel lblTitle = new MarqueeLabel();
 		Visualiser visualiser;
 
+		private ThumbnailToolBarButton button;
+
 		CancellationTokenSource cts;
 		CancellationToken ct;
 		Task updaterTask;
@@ -169,7 +172,14 @@ namespace ListenMoeClient
 			{
 				await TogglePlayback();
 			});
-			
+
+			if (Settings.Get<bool>("ThumbnailButton"))
+			{
+				button = new ThumbnailToolBarButton(Properties.Resources.pause_ico, "Pause");
+				button.Click += async (_, __) => await TogglePlayback();
+				TaskbarManager.Instance.ThumbnailToolBars.AddButtons(this.Handle, button);
+			}
+
 			Connect();
 
 			player = new WebStreamPlayer("https://listen.moe/stream");
@@ -205,8 +215,8 @@ namespace ListenMoeClient
 			panelPlayBtn.BackColor = Settings.Get<Color>("AccentColor");
 			this.BackColor = Settings.Get<Color>("BaseColor");
 			panelRight.BackColor = Color.FromArgb((int)((BackColor.R * 1.1f).Bound(0, 255)),
-												  (int)((BackColor.G * 1.1f).Bound(0, 255)),
-												  (int)((BackColor.B * 1.1f).Bound(0, 255)));
+				(int)((BackColor.G * 1.1f).Bound(0, 255)),
+				(int)((BackColor.B * 1.1f).Bound(0, 255)));
 			SetVolumeLabel(vol);
 			this.Opacity = Settings.Get<float>("FormOpacity");
 
@@ -322,7 +332,7 @@ namespace ListenMoeClient
 			{
 				System.Media.SystemSounds.Beep.Play(); //DING
 				DialogResult result = await factory.StartNew(() => MessageBox.Show(this, "An update is available for the Listen.moe player. Do you want to update and restart the application now?",
-						"Listen.moe client - Update available - current version " + Globals.VERSION, MessageBoxButtons.YesNo));
+					"Listen.moe client - Update available - current version " + Globals.VERSION, MessageBoxButtons.YesNo));
 				if (result == DialogResult.Yes)
 				{
 					updateState = 1;
@@ -441,6 +451,11 @@ namespace ListenMoeClient
 			{
 				picPlayPause.Image = Properties.Resources.play;
 				menuItemPlayPause.Text = "Play";
+				if (Settings.Get<bool>("ThumbnailButton"))
+				{
+					button.Icon = Properties.Resources.play_ico;
+					button.Tooltip = "Play";
+				}
 				visualiser.Stop();
 				await player.Stop();
 			}
@@ -448,6 +463,11 @@ namespace ListenMoeClient
 			{
 				picPlayPause.Image = Properties.Resources.pause;
 				menuItemPlayPause.Text = "Pause";
+				if (Settings.Get<bool>("ThumbnailButton"))
+				{
+					button.Icon = Properties.Resources.pause_ico;
+					button.Tooltip = "Pause";
+				}
 				visualiser.Start();
 				player.Play();
 			}

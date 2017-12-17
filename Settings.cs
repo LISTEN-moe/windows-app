@@ -110,6 +110,7 @@ namespace ListenMoeClient
 			Set("UpdateAutocheck", true);
 			Set("CloseToTray", false);
 			Set("HideFromAltTab", false);
+			Set("ThumbnailButton", true);
 			Set("EnableVisualiser", true);
 			Set("VisualiserBars", true);
 			Set("VisualiserFadeEdges", false);
