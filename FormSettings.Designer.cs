@@ -77,9 +77,9 @@
 			this.panelLoggedIn.SuspendLayout();
 			this.panelNotLoggedIn.SuspendLayout();
 			this.SuspendLayout();
-			// 
+			//
 			// btnLogin
-			// 
+			//
 			this.btnLogin.Location = new System.Drawing.Point(147, 67);
 			this.btnLogin.Name = "btnLogin";
 			this.btnLogin.Size = new System.Drawing.Size(75, 23);
@@ -87,9 +87,9 @@
 			this.btnLogin.Text = "Login";
 			this.btnLogin.UseVisualStyleBackColor = true;
 			this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
-			// 
+			//
 			// tabControl
-			// 
+			//
 			this.tabControl.Controls.Add(this.tpGeneral);
 			this.tabControl.Controls.Add(this.tpTheme);
 			this.tabControl.Controls.Add(this.tpAccount);
@@ -99,9 +99,9 @@
 			this.tabControl.SelectedIndex = 0;
 			this.tabControl.Size = new System.Drawing.Size(379, 148);
 			this.tabControl.TabIndex = 2;
-			// 
+			//
 			// tpGeneral
-			// 
+			//
 			this.tpGeneral.Controls.Add(this.lblOpacityDesc);
 			this.tpGeneral.Controls.Add(this.lblOpacity);
 			this.tpGeneral.Controls.Add(this.tbOpacity);
@@ -122,27 +122,27 @@
 			this.tpGeneral.TabIndex = 2;
 			this.tpGeneral.Text = "General";
 			this.tpGeneral.UseVisualStyleBackColor = true;
-			// 
+			//
 			// lblOpacityDesc
-			// 
+			//
 			this.lblOpacityDesc.AutoSize = true;
 			this.lblOpacityDesc.Location = new System.Drawing.Point(290, 51);
 			this.lblOpacityDesc.Name = "lblOpacityDesc";
 			this.lblOpacityDesc.Size = new System.Drawing.Size(43, 13);
 			this.lblOpacityDesc.TabIndex = 11;
 			this.lblOpacityDesc.Text = "Opacity";
-			// 
+			//
 			// lblOpacity
-			// 
+			//
 			this.lblOpacity.AutoSize = true;
 			this.lblOpacity.Location = new System.Drawing.Point(233, 72);
 			this.lblOpacity.Name = "lblOpacity";
 			this.lblOpacity.Size = new System.Drawing.Size(22, 13);
 			this.lblOpacity.TabIndex = 10;
 			this.lblOpacity.Text = "1.0";
-			// 
+			//
 			// tbOpacity
-			// 
+			//
 			this.tbOpacity.BackColor = System.Drawing.Color.White;
 			this.tbOpacity.Location = new System.Drawing.Point(259, 67);
 			this.tbOpacity.Maximum = 255;
@@ -151,9 +151,9 @@
 			this.tbOpacity.TabIndex = 9;
 			this.tbOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
 			this.tbOpacity.Scroll += new System.EventHandler(this.tbOpacity_Scroll);
-			// 
+			//
 			// cbThumbnailButton
-			// 
+			//
 			this.cbThumbnailButton.AutoSize = true;
 			this.cbThumbnailButton.Checked = true;
 			this.cbThumbnailButton.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -163,18 +163,18 @@
 			this.cbThumbnailButton.TabIndex = 9;
 			this.cbThumbnailButton.Text = "Thumbnail Button\r\n(requires restart)";
 			this.cbThumbnailButton.UseVisualStyleBackColor = true;
-			// 
+			//
 			// lblMinutes
-			// 
+			//
 			this.lblMinutes.AutoSize = true;
 			this.lblMinutes.Location = new System.Drawing.Point(205, 94);
 			this.lblMinutes.Name = "lblMinutes";
 			this.lblMinutes.Size = new System.Drawing.Size(28, 13);
 			this.lblMinutes.TabIndex = 8;
 			this.lblMinutes.Text = "mins";
-			// 
+			//
 			// numericUpdateInterval
-			// 
+			//
 			this.numericUpdateInterval.Location = new System.Drawing.Point(150, 90);
 			this.numericUpdateInterval.Name = "numericUpdateInterval";
 			this.numericUpdateInterval.Size = new System.Drawing.Size(49, 20);
@@ -184,27 +184,27 @@
             0,
             0,
             0});
-			// 
+			//
 			// lblResolutionScaleDesc
-			// 
+			//
 			this.lblResolutionScaleDesc.AutoSize = true;
 			this.lblResolutionScaleDesc.Location = new System.Drawing.Point(269, 3);
 			this.lblResolutionScaleDesc.Name = "lblResolutionScaleDesc";
 			this.lblResolutionScaleDesc.Size = new System.Drawing.Size(85, 13);
 			this.lblResolutionScaleDesc.TabIndex = 6;
 			this.lblResolutionScaleDesc.Text = "Resolution scale";
-			// 
+			//
 			// lblResolutionScale
-			// 
+			//
 			this.lblResolutionScale.AutoSize = true;
 			this.lblResolutionScale.Location = new System.Drawing.Point(299, 51);
 			this.lblResolutionScale.Name = "lblResolutionScale";
 			this.lblResolutionScale.Size = new System.Drawing.Size(22, 13);
 			this.lblResolutionScale.TabIndex = 5;
 			this.lblResolutionScale.Text = "1.0";
-			// 
+			//
 			// tbResolutionScale
-			// 
+			//
 			this.tbResolutionScale.BackColor = System.Drawing.Color.White;
 			this.tbResolutionScale.Location = new System.Drawing.Point(259, 19);
 			this.tbResolutionScale.Maximum = 40;
@@ -215,9 +215,9 @@
 			this.tbResolutionScale.TickStyle = System.Windows.Forms.TickStyle.None;
 			this.tbResolutionScale.Value = 10;
 			this.tbResolutionScale.Scroll += new System.EventHandler(this.tbResolutionScale_Scroll);
-			// 
+			//
 			// cbHideFromAltTab
-			// 
+			//
 			this.cbHideFromAltTab.AutoSize = true;
 			this.cbHideFromAltTab.Location = new System.Drawing.Point(9, 51);
 			this.cbHideFromAltTab.Name = "cbHideFromAltTab";
@@ -225,9 +225,9 @@
 			this.cbHideFromAltTab.TabIndex = 3;
 			this.cbHideFromAltTab.Text = "Hide from Alt-Tab menu\r\nand taskbar (tray only)";
 			this.cbHideFromAltTab.UseVisualStyleBackColor = true;
-			// 
+			//
 			// cbCloseToTray
-			// 
+			//
 			this.cbCloseToTray.AutoSize = true;
 			this.cbCloseToTray.Location = new System.Drawing.Point(9, 30);
 			this.cbCloseToTray.Name = "cbCloseToTray";
@@ -235,9 +235,9 @@
 			this.cbCloseToTray.TabIndex = 2;
 			this.cbCloseToTray.Text = "Close to tray";
 			this.cbCloseToTray.UseVisualStyleBackColor = true;
-			// 
+			//
 			// cbUpdateAutocheck
-			// 
+			//
 			this.cbUpdateAutocheck.AutoSize = true;
 			this.cbUpdateAutocheck.Location = new System.Drawing.Point(9, 90);
 			this.cbUpdateAutocheck.Name = "cbUpdateAutocheck";
@@ -245,9 +245,9 @@
 			this.cbUpdateAutocheck.TabIndex = 1;
 			this.cbUpdateAutocheck.Text = "Check for updates every";
 			this.cbUpdateAutocheck.UseVisualStyleBackColor = true;
-			// 
+			//
 			// cbTopmost
-			// 
+			//
 			this.cbTopmost.AutoSize = true;
 			this.cbTopmost.Location = new System.Drawing.Point(9, 7);
 			this.cbTopmost.Name = "cbTopmost";
@@ -255,9 +255,9 @@
 			this.cbTopmost.TabIndex = 0;
 			this.cbTopmost.Text = "Keep form top most";
 			this.cbTopmost.UseVisualStyleBackColor = true;
-			// 
+			//
 			// tpTheme
-			// 
+			//
 			this.tpTheme.Controls.Add(this.groupBox2);
 			this.tpTheme.Controls.Add(this.groupBox1);
 			this.tpTheme.Location = new System.Drawing.Point(4, 22);
@@ -267,9 +267,9 @@
 			this.tpTheme.TabIndex = 1;
 			this.tpTheme.Text = "Theme";
 			this.tpTheme.UseVisualStyleBackColor = true;
-			// 
+			//
 			// groupBox2
-			// 
+			//
 			this.groupBox2.Controls.Add(this.lblAccentColor);
 			this.groupBox2.Controls.Add(this.panelAccentColor);
 			this.groupBox2.Controls.Add(this.lblBaseColor);
@@ -280,18 +280,18 @@
 			this.groupBox2.TabIndex = 6;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Colors";
-			// 
+			//
 			// lblAccentColor
-			// 
+			//
 			this.lblAccentColor.AutoSize = true;
 			this.lblAccentColor.Location = new System.Drawing.Point(44, 73);
 			this.lblAccentColor.Name = "lblAccentColor";
 			this.lblAccentColor.Size = new System.Drawing.Size(67, 13);
 			this.lblAccentColor.TabIndex = 5;
 			this.lblAccentColor.Text = "Accent color";
-			// 
+			//
 			// panelAccentColor
-			// 
+			//
 			this.panelAccentColor.BackColor = System.Drawing.Color.Black;
 			this.panelAccentColor.BorderColor = System.Drawing.Color.Black;
 			this.panelAccentColor.BorderWidth = 2;
@@ -300,18 +300,18 @@
 			this.panelAccentColor.Name = "panelAccentColor";
 			this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
 			this.panelAccentColor.TabIndex = 4;
-			// 
+			//
 			// lblBaseColor
-			// 
+			//
 			this.lblBaseColor.AutoSize = true;
 			this.lblBaseColor.Location = new System.Drawing.Point(44, 28);
 			this.lblBaseColor.Name = "lblBaseColor";
 			this.lblBaseColor.Size = new System.Drawing.Size(57, 13);
 			this.lblBaseColor.TabIndex = 3;
 			this.lblBaseColor.Text = "Base color";
-			// 
+			//
 			// panelBaseColor
-			// 
+			//
 			this.panelBaseColor.BackColor = System.Drawing.Color.Black;
 			this.panelBaseColor.BorderColor = System.Drawing.Color.Black;
 			this.panelBaseColor.BorderWidth = 2;
@@ -320,9 +320,9 @@
 			this.panelBaseColor.Name = "panelBaseColor";
 			this.panelBaseColor.Size = new System.Drawing.Size(32, 32);
 			this.panelBaseColor.TabIndex = 2;
-			// 
+			//
 			// groupBox1
-			// 
+			//
 			this.groupBox1.Controls.Add(this.cbVisualiserFadeEdges);
 			this.groupBox1.Controls.Add(this.cbEnableVisualiser);
 			this.groupBox1.Controls.Add(this.lblVisualiserOpacity);
@@ -335,9 +335,9 @@
 			this.groupBox1.TabIndex = 5;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Visualiser";
-			// 
+			//
 			// cbVisualiserFadeEdges
-			// 
+			//
 			this.cbVisualiserFadeEdges.AutoSize = true;
 			this.cbVisualiserFadeEdges.Location = new System.Drawing.Point(87, 19);
 			this.cbVisualiserFadeEdges.Name = "cbVisualiserFadeEdges";
@@ -345,9 +345,9 @@
 			this.cbVisualiserFadeEdges.TabIndex = 5;
 			this.cbVisualiserFadeEdges.Text = "Fade edges";
 			this.cbVisualiserFadeEdges.UseVisualStyleBackColor = true;
-			// 
+			//
 			// cbEnableVisualiser
-			// 
+			//
 			this.cbEnableVisualiser.AutoSize = true;
 			this.cbEnableVisualiser.Location = new System.Drawing.Point(6, 19);
 			this.cbEnableVisualiser.Name = "cbEnableVisualiser";
@@ -355,18 +355,18 @@
 			this.cbEnableVisualiser.TabIndex = 0;
 			this.cbEnableVisualiser.Text = "Enable";
 			this.cbEnableVisualiser.UseVisualStyleBackColor = true;
-			// 
+			//
 			// lblVisualiserOpacity
-			// 
+			//
 			this.lblVisualiserOpacity.AutoSize = true;
 			this.lblVisualiserOpacity.Location = new System.Drawing.Point(76, 87);
 			this.lblVisualiserOpacity.Name = "lblVisualiserOpacity";
 			this.lblVisualiserOpacity.Size = new System.Drawing.Size(43, 13);
 			this.lblVisualiserOpacity.TabIndex = 4;
 			this.lblVisualiserOpacity.Text = "Opacity";
-			// 
+			//
 			// panelVisualiserColor
-			// 
+			//
 			this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
 			this.panelVisualiserColor.BorderColor = System.Drawing.Color.Black;
 			this.panelVisualiserColor.BorderWidth = 2;
@@ -375,9 +375,9 @@
 			this.panelVisualiserColor.Name = "panelVisualiserColor";
 			this.panelVisualiserColor.Size = new System.Drawing.Size(32, 32);
 			this.panelVisualiserColor.TabIndex = 1;
-			// 
+			//
 			// tbVisualiserOpacity
-			// 
+			//
 			this.tbVisualiserOpacity.BackColor = System.Drawing.Color.White;
 			this.tbVisualiserOpacity.Location = new System.Drawing.Point(43, 62);
 			this.tbVisualiserOpacity.Maximum = 255;
@@ -387,9 +387,9 @@
 			this.tbVisualiserOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
 			this.tbVisualiserOpacity.Value = 1;
 			this.tbVisualiserOpacity.Scroll += new System.EventHandler(this.tbVisualiserOpacity_Scroll);
-			// 
+			//
 			// cbVisualiserBars
-			// 
+			//
 			this.cbVisualiserBars.AutoSize = true;
 			this.cbVisualiserBars.Location = new System.Drawing.Point(6, 42);
 			this.cbVisualiserBars.Name = "cbVisualiserBars";
@@ -397,9 +397,9 @@
 			this.cbVisualiserBars.TabIndex = 2;
 			this.cbVisualiserBars.Text = "Use bars";
 			this.cbVisualiserBars.UseVisualStyleBackColor = true;
-			// 
+			//
 			// tpAccount
-			// 
+			//
 			this.tpAccount.Controls.Add(this.panelLoggedIn);
 			this.tpAccount.Controls.Add(this.panelNotLoggedIn);
 			this.tpAccount.Location = new System.Drawing.Point(4, 22);
@@ -409,9 +409,9 @@
 			this.tpAccount.TabIndex = 0;
 			this.tpAccount.Text = "Account";
 			this.tpAccount.UseVisualStyleBackColor = true;
-			// 
+			//
 			// panelLoggedIn
-			// 
+			//
 			this.panelLoggedIn.Controls.Add(this.lblLoginStatus);
 			this.panelLoggedIn.Controls.Add(this.btnLogout);
 			this.panelLoggedIn.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -419,18 +419,18 @@
 			this.panelLoggedIn.Name = "panelLoggedIn";
 			this.panelLoggedIn.Size = new System.Drawing.Size(365, 116);
 			this.panelLoggedIn.TabIndex = 4;
-			// 
+			//
 			// lblLoginStatus
-			// 
+			//
 			this.lblLoginStatus.AutoSize = true;
 			this.lblLoginStatus.Location = new System.Drawing.Point(94, 32);
 			this.lblLoginStatus.Name = "lblLoginStatus";
 			this.lblLoginStatus.Size = new System.Drawing.Size(68, 13);
 			this.lblLoginStatus.TabIndex = 1;
 			this.lblLoginStatus.Text = "Logged in as";
-			// 
+			//
 			// btnLogout
-			// 
+			//
 			this.btnLogout.Location = new System.Drawing.Point(149, 67);
 			this.btnLogout.Name = "btnLogout";
 			this.btnLogout.Size = new System.Drawing.Size(75, 23);
@@ -438,9 +438,9 @@
 			this.btnLogout.Text = "Logout";
 			this.btnLogout.UseVisualStyleBackColor = true;
 			this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
-			// 
+			//
 			// panelNotLoggedIn
-			// 
+			//
 			this.panelNotLoggedIn.Controls.Add(this.txtUsername);
 			this.panelNotLoggedIn.Controls.Add(this.txtPassword);
 			this.panelNotLoggedIn.Controls.Add(this.btnLogin);
@@ -449,17 +449,17 @@
 			this.panelNotLoggedIn.Name = "panelNotLoggedIn";
 			this.panelNotLoggedIn.Size = new System.Drawing.Size(365, 116);
 			this.panelNotLoggedIn.TabIndex = 4;
-			// 
+			//
 			// txtUsername
-			// 
+			//
 			this.txtUsername.GhostText = "Username";
 			this.txtUsername.Location = new System.Drawing.Point(94, 15);
 			this.txtUsername.Name = "txtUsername";
 			this.txtUsername.Size = new System.Drawing.Size(181, 20);
 			this.txtUsername.TabIndex = 2;
-			// 
+			//
 			// txtPassword
-			// 
+			//
 			this.txtPassword.GhostText = "Password";
 			this.txtPassword.Location = new System.Drawing.Point(94, 41);
 			this.txtPassword.Name = "txtPassword";
@@ -467,9 +467,9 @@
 			this.txtPassword.Size = new System.Drawing.Size(181, 20);
 			this.txtPassword.TabIndex = 3;
 			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
-			// 
+			//
 			// FormSettings
-			// 
+			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(379, 148);
