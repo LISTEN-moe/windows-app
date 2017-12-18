@@ -231,7 +231,6 @@
   <ItemGroup>
     <Content Include="ILMergeOrder.txt" />
     <None Include="Resources\play_ico.ico" />
-    <None Include="Resources\Icon1.ico" />
     <None Include="Resources\pause_ico.ico" />
   </ItemGroup>
   <ItemGroup>
