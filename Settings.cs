@@ -100,7 +100,7 @@ namespace ListenMoeClient
 			Set("VisualiserResolutionFactor", 3);
 			Set("UpdateInterval", 3600); //in seconds
 
-			Set("Volume", 1.0f);
+			Set("Volume", 0.3f);
 			Set("VisualiserBarWidth", 3.0f);
 			Set("VisualiserTransparency", 0.5f); //TODO: rename this to opacity
 			Set("FormOpacity", 1.0f);
