@@ -102,7 +102,8 @@ namespace ListenMoeClient
 
 			Set("Volume", 1.0f);
 			Set("VisualiserBarWidth", 3.0f);
-			Set("VisualiserTransparency", 0.5f);
+			Set("VisualiserTransparency", 0.5f); //TODO: rename this to opacity
+			Set("FormOpacity", 1.0f);
 			Set("Scale", 1.0f);
 
 			Set("TopMost", false);

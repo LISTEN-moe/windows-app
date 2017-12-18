@@ -42,8 +42,8 @@
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemPlayPause = new System.Windows.Forms.MenuItem();
 			this.menuItemShow = new System.Windows.Forms.MenuItem();
-			this.menuItemExit = new System.Windows.Forms.MenuItem();
 			this.menuItemResetLocation = new System.Windows.Forms.MenuItem();
+			this.menuItemExit = new System.Windows.Forms.MenuItem();
 			this.panelPlayBtn.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panelRight.SuspendLayout();
@@ -190,17 +190,17 @@
 			this.menuItemShow.Text = "Show";
 			this.menuItemShow.Click += new System.EventHandler(this.menuItemShow_Click);
 			// 
-			// menuItemExit
-			// 
-			this.menuItemExit.Index = 3;
-			this.menuItemExit.Text = "Exit";
-			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
-			// 
 			// menuItemResetLocation
 			// 
 			this.menuItemResetLocation.Index = 2;
 			this.menuItemResetLocation.Text = "Reset location";
 			this.menuItemResetLocation.Click += new System.EventHandler(this.menuItemResetLocation_Click);
+			// 
+			// menuItemExit
+			// 
+			this.menuItemExit.Index = 3;
+			this.menuItemExit.Text = "Exit";
+			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 			// 
 			// MainForm
 			// 

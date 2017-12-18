@@ -205,6 +205,7 @@ namespace ListenMoeClient
 												  (int)((BackColor.G * 1.1f).Bound(0, 255)),
 												  (int)((BackColor.B * 1.1f).Bound(0, 255)));
 			SetVolumeLabel(vol);
+			this.Opacity = Settings.Get<float>("FormOpacity");
 		}
 
 		public void ReloadScale()

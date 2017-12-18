@@ -43,11 +43,14 @@
 			this.tpTheme = new System.Windows.Forms.TabPage();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.lblAccentColor = new System.Windows.Forms.Label();
+			this.panelAccentColor = new ListenMoeClient.Controls.BorderedPanel();
 			this.lblBaseColor = new System.Windows.Forms.Label();
+			this.panelBaseColor = new ListenMoeClient.Controls.BorderedPanel();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.cbVisualiserFadeEdges = new System.Windows.Forms.CheckBox();
 			this.cbEnableVisualiser = new System.Windows.Forms.CheckBox();
 			this.lblVisualiserOpacity = new System.Windows.Forms.Label();
+			this.panelVisualiserColor = new ListenMoeClient.Controls.BorderedPanel();
 			this.tbVisualiserOpacity = new System.Windows.Forms.TrackBar();
 			this.cbVisualiserBars = new System.Windows.Forms.CheckBox();
 			this.tpAccount = new System.Windows.Forms.TabPage();
@@ -55,11 +58,11 @@
 			this.lblLoginStatus = new System.Windows.Forms.Label();
 			this.btnLogout = new System.Windows.Forms.Button();
 			this.panelNotLoggedIn = new System.Windows.Forms.Panel();
-			this.panelAccentColor = new ListenMoeClient.Controls.BorderedPanel();
-			this.panelBaseColor = new ListenMoeClient.Controls.BorderedPanel();
-			this.panelVisualiserColor = new ListenMoeClient.Controls.BorderedPanel();
 			this.txtUsername = new ListenMoeClient.GhostTextbox();
 			this.txtPassword = new ListenMoeClient.GhostTextbox();
+			this.lblOpacityDesc = new System.Windows.Forms.Label();
+			this.lblOpacity = new System.Windows.Forms.Label();
+			this.tbOpacity = new System.Windows.Forms.TrackBar();
 			this.tabControl.SuspendLayout();
 			this.tpGeneral.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).BeginInit();
@@ -71,6 +74,7 @@
 			this.tpAccount.SuspendLayout();
 			this.panelLoggedIn.SuspendLayout();
 			this.panelNotLoggedIn.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLogin
@@ -97,6 +101,9 @@
 			// 
 			// tpGeneral
 			// 
+			this.tpGeneral.Controls.Add(this.lblOpacityDesc);
+			this.tpGeneral.Controls.Add(this.lblOpacity);
+			this.tpGeneral.Controls.Add(this.tbOpacity);
 			this.tpGeneral.Controls.Add(this.lblMinutes);
 			this.tpGeneral.Controls.Add(this.numericUpdateInterval);
 			this.tpGeneral.Controls.Add(this.lblResolutionScaleDesc);
@@ -117,7 +124,7 @@
 			// lblMinutes
 			// 
 			this.lblMinutes.AutoSize = true;
-			this.lblMinutes.Location = new System.Drawing.Point(205, 91);
+			this.lblMinutes.Location = new System.Drawing.Point(200, 91);
 			this.lblMinutes.Name = "lblMinutes";
 			this.lblMinutes.Size = new System.Drawing.Size(28, 13);
 			this.lblMinutes.TabIndex = 8;
@@ -138,7 +145,7 @@
 			// lblResolutionScaleDesc
 			// 
 			this.lblResolutionScaleDesc.AutoSize = true;
-			this.lblResolutionScaleDesc.Location = new System.Drawing.Point(266, 3);
+			this.lblResolutionScaleDesc.Location = new System.Drawing.Point(269, 3);
 			this.lblResolutionScaleDesc.Name = "lblResolutionScaleDesc";
 			this.lblResolutionScaleDesc.Size = new System.Drawing.Size(85, 13);
 			this.lblResolutionScaleDesc.TabIndex = 6;
@@ -240,6 +247,17 @@
 			this.lblAccentColor.TabIndex = 5;
 			this.lblAccentColor.Text = "Accent color";
 			// 
+			// panelAccentColor
+			// 
+			this.panelAccentColor.BackColor = System.Drawing.Color.Black;
+			this.panelAccentColor.BorderColor = System.Drawing.Color.Black;
+			this.panelAccentColor.BorderWidth = 2;
+			this.panelAccentColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelAccentColor.Location = new System.Drawing.Point(6, 65);
+			this.panelAccentColor.Name = "panelAccentColor";
+			this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
+			this.panelAccentColor.TabIndex = 4;
+			// 
 			// lblBaseColor
 			// 
 			this.lblBaseColor.AutoSize = true;
@@ -248,6 +266,17 @@
 			this.lblBaseColor.Size = new System.Drawing.Size(57, 13);
 			this.lblBaseColor.TabIndex = 3;
 			this.lblBaseColor.Text = "Base color";
+			// 
+			// panelBaseColor
+			// 
+			this.panelBaseColor.BackColor = System.Drawing.Color.Black;
+			this.panelBaseColor.BorderColor = System.Drawing.Color.Black;
+			this.panelBaseColor.BorderWidth = 2;
+			this.panelBaseColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelBaseColor.Location = new System.Drawing.Point(6, 19);
+			this.panelBaseColor.Name = "panelBaseColor";
+			this.panelBaseColor.Size = new System.Drawing.Size(32, 32);
+			this.panelBaseColor.TabIndex = 2;
 			// 
 			// groupBox1
 			// 
@@ -292,6 +321,17 @@
 			this.lblVisualiserOpacity.Size = new System.Drawing.Size(43, 13);
 			this.lblVisualiserOpacity.TabIndex = 4;
 			this.lblVisualiserOpacity.Text = "Opacity";
+			// 
+			// panelVisualiserColor
+			// 
+			this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
+			this.panelVisualiserColor.BorderColor = System.Drawing.Color.Black;
+			this.panelVisualiserColor.BorderWidth = 2;
+			this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelVisualiserColor.Location = new System.Drawing.Point(6, 65);
+			this.panelVisualiserColor.Name = "panelVisualiserColor";
+			this.panelVisualiserColor.Size = new System.Drawing.Size(32, 32);
+			this.panelVisualiserColor.TabIndex = 1;
 			// 
 			// tbVisualiserOpacity
 			// 
@@ -367,39 +407,6 @@
 			this.panelNotLoggedIn.Size = new System.Drawing.Size(365, 116);
 			this.panelNotLoggedIn.TabIndex = 4;
 			// 
-			// panelAccentColor
-			// 
-			this.panelAccentColor.BackColor = System.Drawing.Color.Black;
-			this.panelAccentColor.BorderColor = System.Drawing.Color.Black;
-			this.panelAccentColor.BorderWidth = 2;
-			this.panelAccentColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelAccentColor.Location = new System.Drawing.Point(6, 65);
-			this.panelAccentColor.Name = "panelAccentColor";
-			this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
-			this.panelAccentColor.TabIndex = 4;
-			// 
-			// panelBaseColor
-			// 
-			this.panelBaseColor.BackColor = System.Drawing.Color.Black;
-			this.panelBaseColor.BorderColor = System.Drawing.Color.Black;
-			this.panelBaseColor.BorderWidth = 2;
-			this.panelBaseColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelBaseColor.Location = new System.Drawing.Point(6, 19);
-			this.panelBaseColor.Name = "panelBaseColor";
-			this.panelBaseColor.Size = new System.Drawing.Size(32, 32);
-			this.panelBaseColor.TabIndex = 2;
-			// 
-			// panelVisualiserColor
-			// 
-			this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
-			this.panelVisualiserColor.BorderColor = System.Drawing.Color.Black;
-			this.panelVisualiserColor.BorderWidth = 2;
-			this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelVisualiserColor.Location = new System.Drawing.Point(6, 65);
-			this.panelVisualiserColor.Name = "panelVisualiserColor";
-			this.panelVisualiserColor.Size = new System.Drawing.Size(32, 32);
-			this.panelVisualiserColor.TabIndex = 1;
-			// 
 			// txtUsername
 			// 
 			this.txtUsername.GhostText = "Username";
@@ -417,6 +424,35 @@
 			this.txtPassword.Size = new System.Drawing.Size(181, 20);
 			this.txtPassword.TabIndex = 3;
 			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
+			// 
+			// lblOpacityDesc
+			// 
+			this.lblOpacityDesc.AutoSize = true;
+			this.lblOpacityDesc.Location = new System.Drawing.Point(290, 51);
+			this.lblOpacityDesc.Name = "lblOpacityDesc";
+			this.lblOpacityDesc.Size = new System.Drawing.Size(43, 13);
+			this.lblOpacityDesc.TabIndex = 11;
+			this.lblOpacityDesc.Text = "Opacity";
+			// 
+			// lblOpacity
+			// 
+			this.lblOpacity.AutoSize = true;
+			this.lblOpacity.Location = new System.Drawing.Point(233, 72);
+			this.lblOpacity.Name = "lblOpacity";
+			this.lblOpacity.Size = new System.Drawing.Size(22, 13);
+			this.lblOpacity.TabIndex = 10;
+			this.lblOpacity.Text = "1.0";
+			// 
+			// tbOpacity
+			// 
+			this.tbOpacity.BackColor = System.Drawing.Color.White;
+			this.tbOpacity.Location = new System.Drawing.Point(259, 67);
+			this.tbOpacity.Maximum = 255;
+			this.tbOpacity.Name = "tbOpacity";
+			this.tbOpacity.Size = new System.Drawing.Size(104, 45);
+			this.tbOpacity.TabIndex = 9;
+			this.tbOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
+			this.tbOpacity.Scroll += new System.EventHandler(this.tbOpacity_Scroll);
 			// 
 			// FormSettings
 			// 
@@ -444,6 +480,7 @@
 			this.panelLoggedIn.PerformLayout();
 			this.panelNotLoggedIn.ResumeLayout(false);
 			this.panelNotLoggedIn.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -482,5 +519,8 @@
 		private System.Windows.Forms.Label lblAccentColor;
 		private ListenMoeClient.Controls.BorderedPanel panelAccentColor;
 		private System.Windows.Forms.CheckBox cbVisualiserFadeEdges;
+		private System.Windows.Forms.Label lblOpacityDesc;
+		private System.Windows.Forms.Label lblOpacity;
+		private System.Windows.Forms.TrackBar tbOpacity;
 	}
 }

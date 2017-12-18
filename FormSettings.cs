@@ -40,6 +40,7 @@ namespace ListenMoeClient
 			lblResolutionScale.Text = scale.ToString("N1");
 
 			tbVisualiserOpacity.Value = (int)(Settings.Get<float>("VisualiserTransparency") * 255);
+			tbOpacity.Value = (int)(Settings.Get<float>("FormOpacity") * 255);
 
 			panelNotLoggedIn.Visible = !User.LoggedIn;
 			panelLoggedIn.Visible = User.LoggedIn;
@@ -140,6 +141,16 @@ namespace ListenMoeClient
 		{
 			Settings.Set("VisualiserTransparency", tbVisualiserOpacity.Value / 255f);
 			Settings.WriteSettings();
+			mainForm.ReloadSettings();
+		}
+
+		private void tbOpacity_Scroll(object sender, EventArgs e)
+		{
+			float newVal = tbOpacity.Value / 255f;
+			lblOpacity.Text = newVal.ToString("N1");
+			Settings.Set("FormOpacity", newVal);
+			Settings.WriteSettings();
+
 			mainForm.ReloadSettings();
 		}
 	}
