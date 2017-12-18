@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ListenMoeClient
@@ -24,6 +18,7 @@ namespace ListenMoeClient
 			LoadAndBindCheckboxSetting(cbEnableVisualiser, "EnableVisualiser");
 			LoadAndBindCheckboxSetting(cbHideFromAltTab, "HideFromAltTab");
 			LoadAndBindCheckboxSetting(cbUpdateAutocheck, "UpdateAutocheck");
+			LoadAndBindCheckboxSetting(cbThumbnailButton, "ThumbnailButton");
 			LoadAndBindCheckboxSetting(cbTopmost, "TopMost");
 			LoadAndBindCheckboxSetting(cbVisualiserBars, "VisualiserBars");
 			LoadAndBindCheckboxSetting(cbVisualiserFadeEdges, "VisualiserFadeEdges");
