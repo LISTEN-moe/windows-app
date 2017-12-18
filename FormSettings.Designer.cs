@@ -135,7 +135,7 @@
 			// lblOpacity
 			//
 			this.lblOpacity.AutoSize = true;
-			this.lblOpacity.Location = new System.Drawing.Point(233, 72);
+			this.lblOpacity.Location = new System.Drawing.Point(299, 93);
 			this.lblOpacity.Name = "lblOpacity";
 			this.lblOpacity.Size = new System.Drawing.Size(22, 13);
 			this.lblOpacity.TabIndex = 10;
@@ -157,7 +157,7 @@
 			this.cbThumbnailButton.AutoSize = true;
 			this.cbThumbnailButton.Checked = true;
 			this.cbThumbnailButton.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbThumbnailButton.Location = new System.Drawing.Point(150, 7);
+			this.cbThumbnailButton.Location = new System.Drawing.Point(144, 6);
 			this.cbThumbnailButton.Name = "cbThumbnailButton";
 			this.cbThumbnailButton.Size = new System.Drawing.Size(109, 30);
 			this.cbThumbnailButton.TabIndex = 9;
@@ -167,7 +167,7 @@
 			// lblMinutes
 			//
 			this.lblMinutes.AutoSize = true;
-			this.lblMinutes.Location = new System.Drawing.Point(205, 94);
+			this.lblMinutes.Location = new System.Drawing.Point(205, 95);
 			this.lblMinutes.Name = "lblMinutes";
 			this.lblMinutes.Size = new System.Drawing.Size(28, 13);
 			this.lblMinutes.TabIndex = 8;
@@ -175,7 +175,7 @@
 			//
 			// numericUpdateInterval
 			//
-			this.numericUpdateInterval.Location = new System.Drawing.Point(150, 90);
+			this.numericUpdateInterval.Location = new System.Drawing.Point(150, 93);
 			this.numericUpdateInterval.Name = "numericUpdateInterval";
 			this.numericUpdateInterval.Size = new System.Drawing.Size(49, 20);
 			this.numericUpdateInterval.TabIndex = 7;
@@ -219,7 +219,7 @@
 			// cbHideFromAltTab
 			//
 			this.cbHideFromAltTab.AutoSize = true;
-			this.cbHideFromAltTab.Location = new System.Drawing.Point(9, 51);
+			this.cbHideFromAltTab.Location = new System.Drawing.Point(9, 55);
 			this.cbHideFromAltTab.Name = "cbHideFromAltTab";
 			this.cbHideFromAltTab.Size = new System.Drawing.Size(137, 30);
 			this.cbHideFromAltTab.TabIndex = 3;
@@ -229,7 +229,7 @@
 			// cbCloseToTray
 			//
 			this.cbCloseToTray.AutoSize = true;
-			this.cbCloseToTray.Location = new System.Drawing.Point(9, 30);
+			this.cbCloseToTray.Location = new System.Drawing.Point(9, 34);
 			this.cbCloseToTray.Name = "cbCloseToTray";
 			this.cbCloseToTray.Size = new System.Drawing.Size(84, 17);
 			this.cbCloseToTray.TabIndex = 2;
@@ -239,7 +239,7 @@
 			// cbUpdateAutocheck
 			//
 			this.cbUpdateAutocheck.AutoSize = true;
-			this.cbUpdateAutocheck.Location = new System.Drawing.Point(9, 90);
+			this.cbUpdateAutocheck.Location = new System.Drawing.Point(9, 94);
 			this.cbUpdateAutocheck.Name = "cbUpdateAutocheck";
 			this.cbUpdateAutocheck.Size = new System.Drawing.Size(142, 17);
 			this.cbUpdateAutocheck.TabIndex = 1;
@@ -249,7 +249,7 @@
 			// cbTopmost
 			//
 			this.cbTopmost.AutoSize = true;
-			this.cbTopmost.Location = new System.Drawing.Point(9, 7);
+			this.cbTopmost.Location = new System.Drawing.Point(9, 13);
 			this.cbTopmost.Name = "cbTopmost";
 			this.cbTopmost.Size = new System.Drawing.Size(117, 17);
 			this.cbTopmost.TabIndex = 0;
