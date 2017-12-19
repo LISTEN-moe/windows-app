@@ -82,7 +82,7 @@ namespace ListenMoeClient
 		{
 			return await Get(endpoint, "");
 		}
-		
+
 		public static async Task<string> Get(string url, string token)
 		{
 			HttpWebRequest hwr = WebRequest.CreateHttp(url);

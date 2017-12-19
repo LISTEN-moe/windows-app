@@ -9,7 +9,7 @@ namespace ListenMoeClient
 	class WebStreamPlayer
 	{
 		AudioPlayer audioPlayer = new AudioPlayer();
-		
+
 		Thread provideThread;
 
 		Ogg ogg = new Ogg();

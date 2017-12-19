@@ -42,7 +42,7 @@ namespace ListenMoeClient
 			bars = Settings.Get<bool>("VisualiserBars");
 			var opacity = (int)Math.Min(Math.Max(Settings.Get<float>("VisualiserTransparency") * 255, 0), 255);
 			visualiserColor = Color.FromArgb(opacity, Settings.Get<Color>("VisualiserColor"));
-			
+
 			if (Settings.Get<bool>("VisualiserFadeEdges"))
 			{
 				Color baseColor = Settings.Get<Color>("BaseColor");
@@ -130,14 +130,14 @@ namespace ListenMoeClient
 			short[] window = new short[fftSize];
 			for (int i = 0; i < fftSize; i++)
 				window[i] = sampleBuffer[currentPos + i];
-			
+
 			applyWindowFunction(window);
 			float[] bins = FFT.Fft(window, exponent);
 			bins = bins.Take(bins.Length / 4).ToArray();
 			bins = bins.Select(f => (float)Math.Log10(f * 10) * 2 + 1).Select(f => ((f - 0.3f) * 1.5f) + 1.5f).ToArray();
 			return bins;
 		}
-		
+
 		private void applyWindowFunction(short[] data)
 		{
 			for (int i = 0; i < data.Length; i++)
@@ -207,7 +207,7 @@ namespace ListenMoeClient
 				}
 				points[0] = new PointF(0, points[1].Y);
 			}
-				
+
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
 			var scale = Settings.Get<float>("Scale");

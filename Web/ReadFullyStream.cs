@@ -53,7 +53,7 @@ namespace ListenMoeClient
 				throw new InvalidOperationException();
 			}
 		}
-		
+
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			int bytesRead = 0;

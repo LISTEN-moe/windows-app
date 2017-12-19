@@ -46,7 +46,7 @@ namespace ListenMoeClient
 		public Font Subfont;
 
 		private bool textChanged = true;
-		
+
 		private void UpdateTextPosition(float scale)
 		{
 			DateTime current = DateTime.Now;

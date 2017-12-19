@@ -86,7 +86,7 @@ namespace ListenMoeClient
 
 			//First download link is fine for now... probably
 			var link = response.assets[0].browser_download_url;
-			
+
 			var downloadPath = Path.GetTempFileName();
 			WebClient wc = new WebClient();
 			wc.DownloadProgressChanged += dpceh;

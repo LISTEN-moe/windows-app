@@ -74,7 +74,7 @@ namespace ListenMoeClient
 			try
 			{
 				socket.Connect();
-				
+
 				if (User.LoggedIn)
 					Authenticate();
 			}

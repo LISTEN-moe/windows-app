@@ -82,7 +82,7 @@ namespace ListenMoeClient
 						finalY = this.Location.Y;
 
 					this.Location = new Point(finalX, finalY);
-					
+
 					Settings.Set("LocationX", this.Location.X);
 					Settings.Set("LocationY", this.Location.Y);
 					Settings.WriteSettings();
@@ -146,7 +146,7 @@ namespace ListenMoeClient
 
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
-			
+
 			cts = new CancellationTokenSource();
 			ct = cts.Token;
 #pragma warning disable CS4014
@@ -156,7 +156,7 @@ namespace ListenMoeClient
 
 			this.MouseWheel += Form1_MouseWheel;
 			this.Icon = Properties.Resources.icon;
-			
+
 			lblAlbum.Bounds = new Rectangle(58, 26, 321, 22);
 			lblTitle.Bounds = new Rectangle(56, 5, 321, 43);
 			lblTitle.Text = "Connecting...";
@@ -194,7 +194,7 @@ namespace ListenMoeClient
 					Thread.Sleep(33);
 				}
 			});
-			
+
 			ReloadScale();
 			ReloadSettings();
 		}
@@ -205,7 +205,7 @@ namespace ListenMoeClient
 				StartVisualiser();
 			else
 				StopVisualiser();
-			
+
 			if (visualiser != null)
 				visualiser.ReloadSettings();
 			this.TopMost = Settings.Get<bool>("TopMost");
@@ -241,7 +241,7 @@ namespace ListenMoeClient
 			float scaleFactor = Settings.Get<float>("Scale");
 			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
 			currentScale = scaleFactor;
-			
+
 			//Reload fonts to get newly scaled font sizes
 			LoadFonts();
 			SetPlayPauseSize(false);
@@ -381,7 +381,7 @@ namespace ListenMoeClient
 		{
 			updatePercent = e.BytesReceived / (float)e.TotalBytesToReceive;
 			this.Invalidate();
-		}		
+		}
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
@@ -451,7 +451,7 @@ namespace ListenMoeClient
 			{
 				picPlayPause.Image = Properties.Resources.play;
 				menuItemPlayPause.Text = "Play";
-				if (Settings.Get<bool>("ThumbnailButton"))
+				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
 				{
 					button.Icon = Properties.Resources.play_ico;
 					button.Tooltip = "Play";
@@ -463,7 +463,7 @@ namespace ListenMoeClient
 			{
 				picPlayPause.Image = Properties.Resources.pause;
 				menuItemPlayPause.Text = "Pause";
-				if (Settings.Get<bool>("ThumbnailButton"))
+				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
 				{
 					button.Icon = Properties.Resources.pause_ico;
 					button.Tooltip = "Pause";
