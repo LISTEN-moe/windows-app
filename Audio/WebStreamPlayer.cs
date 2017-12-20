@@ -18,7 +18,7 @@ namespace ListenMoeClient
 		bool playing = false;
 		string url;
 
-		Visualiser visualiser;
+		AudioVisualiser visualiser;
 
 		public WebStreamPlayer(string url)
 		{
@@ -30,7 +30,7 @@ namespace ListenMoeClient
 			await Stop();
 		}
 
-		public void SetVisualiser(Visualiser visualiser)
+		public void SetVisualiser(AudioVisualiser visualiser)
 		{
 			this.visualiser = visualiser;
 		}

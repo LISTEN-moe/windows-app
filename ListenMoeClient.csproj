@@ -129,6 +129,9 @@
   <ItemGroup>
     <Compile Include="Audio\AudioPlayer.cs" />
     <Compile Include="Audio\FFT.cs" />
+    <Compile Include="Controls\CenterPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\BetterPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -151,7 +154,7 @@
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
-    <Compile Include="Controls\Visualiser.cs" />
+    <Compile Include="Controls\AudioVisualiser.cs" />
     <Compile Include="Web\Json.cs" />
     <Compile Include="Controls\MarqueeLabel.cs" />
     <Compile Include="Audio\Ogg.cs" />
@@ -224,6 +227,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="CsGrid\CsGrid\CsGrid.csproj">
+      <Project>{B2BADD28-F832-4B85-AFEE-08AE5B3B784C}</Project>
+      <Name>CsGrid</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

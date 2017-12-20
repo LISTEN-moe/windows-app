@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace ListenMoeClient
 {
@@ -118,16 +119,11 @@ namespace ListenMoeClient
 		Font volumeFont;
 		float currentScale = 1f;
 
-		float updatePercent = 0;
-		int updateState = 0; //0 = not updating, 1 = in progress, 2 = complete
+		
 		public FormSettings SettingsForm;
 
 		Sprite favSprite;
 		Sprite fadedFavSprite;
-
-		MarqueeLabel lblAlbum = new MarqueeLabel();
-		MarqueeLabel lblTitle = new MarqueeLabel();
-		Visualiser visualiser;
 
 		private ThumbnailToolBarButton button;
 
@@ -136,9 +132,28 @@ namespace ListenMoeClient
 		Task updaterTask;
 		Task renderLoop;
 
+		int gripSize = 16;
+		Rectangle gripRect = new Rectangle();
+		Rectangle rightEdgeRect = new Rectangle();
+
+		bool playPauseColorInverted = false;
+
 		public MainForm()
 		{
 			InitializeComponent();
+			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+
+			gridPanel.SetRows("100%");
+			gridPanel.SetColumns("48px auto 75px");
+			gridPanel.DefineAreas("playPause centerPanel rightPanel");
+
+			centerPanel.MouseDown += Form1_MouseDown;
+			centerPanel.MouseMove += Form1_MouseMove;
+			centerPanel.MouseUp += Form1_MouseUp;
+			panelRight.MouseDown += Form1_MouseDown;
+			panelRight.MouseMove += Form1_MouseMove;
+			panelRight.MouseUp += Form1_MouseUp;
+
 			contextMenu1.MenuItems.Add(new MenuItem("LISTEN.moe Desktop Client v" + Globals.VERSION.ToString()) { Enabled = false });
 			Settings.LoadSettings();
 			//Write immediately after loading to flush any new default settings
@@ -153,10 +168,6 @@ namespace ListenMoeClient
 
 			this.MouseWheel += Form1_MouseWheel;
 			this.Icon = Properties.Resources.icon;
-
-			lblAlbum.Bounds = new Rectangle(58, 26, 321, 22);
-			lblTitle.Bounds = new Rectangle(56, 5, 321, 43);
-			lblTitle.Text = "Connecting...";
 
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
@@ -175,38 +186,104 @@ namespace ListenMoeClient
 			Connect();
 
 			player = new WebStreamPlayer("https://listen.moe/stream");
-			player.SetVisualiser(visualiser);
+			player.SetVisualiser(centerPanel.Visualiser);
 			player.Play();
 
 			renderLoop = Task.Run(() =>
 			{
 				while (!ct.IsCancellationRequested)
 				{
-					this.Invalidate();
+					centerPanel.Invalidate();
 					Thread.Sleep(33);
 				}
 			});
 
 			ReloadScale();
 			ReloadSettings();
+		}
 
-			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+		private Color ScaleColor(Color color, float multiplier)
+		{
+			byte BoundToByte(float f)
+			{
+				return (byte)(Math.Min(Math.Max(0, f), 255));
+			}
+
+			return Color.FromArgb(
+				BoundToByte(color.R * multiplier),
+				BoundToByte(color.G * multiplier),
+				BoundToByte(color.B * multiplier)
+			);
+		}
+
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			base.OnPaint(e);
+			if (VisualStyleRenderer.IsElementDefined(VisualStyleElement.Status.Gripper.Normal))
+			{
+				VisualStyleRenderer renderer = new VisualStyleRenderer(VisualStyleElement.Status.Gripper.Normal);
+				renderer.DrawBackground(e.Graphics, gripRect);
+			}
+		}
+
+		private void MainForm_SizeChanged(object sender, EventArgs e)
+		{
+			gripRect = new Rectangle(this.ClientRectangle.Width - gripSize, this.ClientRectangle.Height - gripSize, gripSize, gripSize);
+			rightEdgeRect = new Rectangle(this.ClientRectangle.Width - 2, 0, 2, this.ClientRectangle.Height);
+
+			var region = new Region(new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height));
+			region.Exclude(gripRect);
+			region.Exclude(rightEdgeRect);
+			gridPanel.Region = region;
+			panelRight.Region = region;
+			this.Invalidate();
+
+			//wow such performance
+			//TODO: don't make this write to disk on every resize event
+			//Settings buffering would be nice
+			Settings.Set("SizeX", Width);
+			Settings.Set("SizeY", Height);
+		}
+
+		protected override void WndProc(ref Message m)
+		{
+			WM message = (WM)m.Msg;
+			if (message == WM.INPUT)
+				RawInput.ProcessMessage(m.LParam);
+			else if (message == WM.NCHITTEST)
+			{
+				Point pos = new Point(m.LParam.ToInt32());
+				pos = this.PointToClient(pos);
+				if (gripRect.Contains(pos))
+					m.Result = (IntPtr)17;
+				else if (rightEdgeRect.Contains(pos))
+					m.Result = (IntPtr)11;
+				return;
+			}
+			if (m.Msg == Program.WM_SHOWME)
+			{
+				Restore();
+			}
+			base.WndProc(ref m);
 		}
 
 		public void ReloadSettings()
 		{
 			if (Settings.Get<bool>("EnableVisualiser"))
-				StartVisualiser();
+				centerPanel.StartVisualiser(player);
 			else
-				StopVisualiser();
+				centerPanel.StopVisualiser(player);
 
-			if (visualiser != null)
-				visualiser.ReloadSettings();
+			centerPanel.ReloadVisualiser();
 			this.TopMost = Settings.Get<bool>("TopMost");
 
 			this.Location = new Point(Settings.Get<int>("LocationX"), Settings.Get<int>("LocationY"));
+			this.Size = new Size(Settings.Get<int>("SizeX"), Settings.Get<int>("SizeY"));
+
 			float vol = Settings.Get<float>("Volume");
-			panelPlayBtn.BackColor = Settings.Get<Color>("AccentColor");
+			Color accentColor = Settings.Get<Color>("AccentColor");
+			panelPlayBtn.BackColor = accentColor;
+
 			this.BackColor = Settings.Get<Color>("BaseColor");
 			panelRight.BackColor = Color.FromArgb((int)((BackColor.R * 1.1f).Bound(0, 255)),
 				(int)((BackColor.G * 1.1f).Bound(0, 255)),
@@ -244,26 +321,6 @@ namespace ListenMoeClient
 			SetPlayPauseSize(false);
 		}
 
-		public void StartVisualiser()
-		{
-			if (visualiser == null)
-			{
-				visualiser = new Visualiser();
-				visualiser.Start();
-				player.SetVisualiser(visualiser);
-			}
-		}
-
-		public void StopVisualiser()
-		{
-			if (visualiser != null)
-			{
-				player.SetVisualiser(null);
-				visualiser.Stop();
-				visualiser = null;
-			}
-		}
-
 		private void LoadFonts()
 		{
 			var family = Meiryo.GetFontFamily();
@@ -272,13 +329,9 @@ namespace ListenMoeClient
 			albumFont = Meiryo.GetFont(8 * scaleFactor);
 			volumeFont = Meiryo.GetFont(8 * scaleFactor);
 
-			lblTitle.Font = titleFont;
-			lblTitle.Subfont = albumFont;
-			lblAlbum.Font = albumFont;
 			lblVol.Font = volumeFont;
 
-			lblTitle.OnTextChanged();
-			lblAlbum.OnTextChanged();
+			centerPanel.SetFonts(titleFont, albumFont);
 		}
 
 		private async void Connect()
@@ -311,18 +364,6 @@ namespace ListenMoeClient
 			});
 		}
 
-		protected override void WndProc(ref Message m)
-		{
-			WM message = (WM)m.Msg;
-			if (message == WM.INPUT)
-				RawInput.ProcessMessage(m.LParam);
-			if (m.Msg == Program.WM_SHOWME)
-			{
-				Restore();
-			}
-			base.WndProc(ref m);
-		}
-
 		private async Task CheckForUpdates(TaskFactory factory)
 		{
 			if (await Updater.CheckGithubVersion())
@@ -332,7 +373,7 @@ namespace ListenMoeClient
 					"Listen.moe client - Update available - current version " + Globals.VERSION, MessageBoxButtons.YesNo));
 				if (result == DialogResult.Yes)
 				{
-					updateState = 1;
+					centerPanel.SetUpdateState(UpdateState.InProgress);
 					await Updater.UpdateToNewVersion(Wc_DownloadProgressChanged, Wc_DownloadFileCompleted);
 				}
 			}
@@ -370,36 +411,12 @@ namespace ListenMoeClient
 
 		private void Wc_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
-			updateState = 2;
-			this.Invalidate();
+			centerPanel.SetUpdateState(UpdateState.Complete);
 		}
 
 		private void Wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
 		{
-			updatePercent = e.BytesReceived / (float)e.TotalBytesToReceive;
-			this.Invalidate();
-		}
-
-		protected override void OnPaint(PaintEventArgs e)
-		{
-			base.OnPaint(e);
-			this.SuspendLayout();
-
-			if (visualiser != null)
-			{
-				visualiser.Render(e.Graphics);
-			}
-			lblTitle.Render(e.Graphics);
-			lblAlbum.Render(e.Graphics);
-
-			if (updateState != 0)
-			{
-				Brush brush = new SolidBrush(updateState == 1 ? Color.Yellow : Color.LimeGreen);
-				//48px for pause/play button, 75 for the RHS area
-				e.Graphics.FillRectangle(brush, 48, this.Height - 3, (this.Width - 48 - 75) * updatePercent, 3);
-			}
-
-			this.ResumeLayout();
+			centerPanel.SetUpdatePercent(e.BytesReceived / (float)e.TotalBytesToReceive);
 		}
 
 		private void Form1_MouseWheel(object sender, MouseEventArgs e)
@@ -408,11 +425,11 @@ namespace ListenMoeClient
 			{
 				if (RawInput.IsPressed(VirtualKeys.Control))
 				{
-					visualiser.IncreaseBarWidth(0.5f * e.Delta / (float)SystemInformation.MouseWheelScrollDelta);
+					centerPanel.Visualiser.IncreaseBarWidth(0.5f * e.Delta / (float)SystemInformation.MouseWheelScrollDelta);
 				}
 				else if (RawInput.IsPressed(VirtualKeys.Menu))
 				{
-					visualiser.IncreaseResolution(e.Delta / SystemInformation.MouseWheelScrollDelta);
+					centerPanel.Visualiser.IncreaseResolution(e.Delta / SystemInformation.MouseWheelScrollDelta);
 				}
 				else
 				{
@@ -453,7 +470,7 @@ namespace ListenMoeClient
 					button.Icon = Properties.Resources.play_ico;
 					button.Tooltip = "Play";
 				}
-				visualiser.Stop();
+				centerPanel.StopVisualiser(player);
 				await player.Stop();
 			}
 			else
@@ -465,7 +482,7 @@ namespace ListenMoeClient
 					button.Icon = Properties.Resources.pause_ico;
 					button.Tooltip = "Pause";
 				}
-				visualiser.Start();
+				centerPanel.StartVisualiser(player);
 				player.Play();
 			}
 		}
@@ -487,8 +504,6 @@ namespace ListenMoeClient
 
 		void ProcessSongInfo(SongInfo songInfo)
 		{
-			lblTitle.Text = songInfo.song_name;
-			lblTitle.Subtext = songInfo.artist_name.Trim();
 			string albumName = songInfo.anime_name;
 			string middle = "";
 			if (!string.IsNullOrEmpty(songInfo.requested_by))
@@ -497,7 +512,7 @@ namespace ListenMoeClient
 				if (!string.IsNullOrWhiteSpace(albumName))
 					middle = "; " + middle;
 			}
-			lblAlbum.Text = albumName + middle + songInfo.requested_by;
+			centerPanel.SetLabelText(songInfo.song_name, songInfo.artist_name.Trim(), albumName + middle + songInfo.requested_by);
 
 			if (songInfo.extended != null)
 				SetFavouriteSprite(songInfo.extended.favorite);
@@ -541,12 +556,14 @@ namespace ListenMoeClient
 			if (bigger)
 			{
 				picPlayPause.Size = new Size((int)(18 * scale), (int)(18 * scale));
-				picPlayPause.Location = new Point((int)(15 * scale), (int)(15 * scale));
+				int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
+				picPlayPause.Location = new Point((int)(15 * scale), (int)((y - 1) * scale));
 			}
 			else
 			{
 				picPlayPause.Size = new Size((int)(16 * scale), (int)(16 * scale));
-				picPlayPause.Location = new Point((int)(16 * scale), (int)(16 * scale));
+				int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
+				picPlayPause.Location = new Point((int)(16 * scale), (int)((y - 1) * scale));
 			}
 		}
 
@@ -599,6 +616,17 @@ namespace ListenMoeClient
 		bool isAnimating = false;
 
 		object animationLock = new object();
+
+		private void panelPlayBtn_Resize(object sender, EventArgs e)
+		{
+			SetPlayPauseSize(false);
+		}
+
+		private void panelRight_Resize(object sender, EventArgs e)
+		{
+			picFavourite.Location = new Point(0, (panelRight.Height / 2) - (picFavourite.Height / 2));
+			picFavourite.SendToBack();
+		}
 
 		private async void SetFavouriteSprite(bool favourited)
 		{

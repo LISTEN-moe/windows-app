@@ -14,7 +14,7 @@ namespace ListenMoeClient
 			set
 			{
 				text = value;
-				OnTextChanged();
+				RecalculateBounds();
 			}
 		}
 
@@ -25,7 +25,7 @@ namespace ListenMoeClient
 			set
 			{
 				subtext = value;
-				OnTextChanged();
+				RecalculateBounds();
 			}
 		}
 
@@ -41,9 +41,9 @@ namespace ListenMoeClient
 
 		bool scrolling = false;
 
-		public Rectangle Bounds;
-		public Font Font;
-		public Font Subfont;
+		public Rectangle Bounds = Rectangle.Empty;
+		public Font Font = new Font("Segoe UI", 9);
+		public Font Subfont = new Font("Segoe UI", 8);
 
 		private bool textChanged = true;
 
@@ -63,7 +63,7 @@ namespace ListenMoeClient
 			last = current;
 		}
 
-		public void OnTextChanged()
+		public void RecalculateBounds()
 		{
 			textChanged = true;
 		}
