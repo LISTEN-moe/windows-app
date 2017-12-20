@@ -4,15 +4,19 @@ using System.Windows.Forms;
 
 namespace ListenMoeClient
 {
+    
+
 	public partial class FormSettings : Form
 	{
 		MainForm mainForm;
+        WebStreamPlayer player;
 
-		public FormSettings(MainForm mainForm)
+		public FormSettings(MainForm mainForm, WebStreamPlayer player)
 		{
 			InitializeComponent();
 			this.Icon = Properties.Resources.icon;
 			this.mainForm = mainForm;
+            this.player = player;
 
 			LoadAndBindCheckboxSetting(cbCloseToTray, "CloseToTray");
 			LoadAndBindCheckboxSetting(cbEnableVisualiser, "EnableVisualiser");
@@ -60,7 +64,11 @@ namespace ListenMoeClient
 				panelNotLoggedIn.Visible = true;
 				panelNotLoggedIn.BringToFront();
 			};
-		}
+
+            #region AudioTab
+            reloadAudioDevices();
+            #endregion
+        }
 
 		private void NumericUpdateInterval_ValueChanged(object sender, EventArgs e)
 		{
@@ -150,5 +158,27 @@ namespace ListenMoeClient
 
 			mainForm.ReloadSettings();
 		}
-	}
+
+        #region Audio Tab
+        private void reloadAudioDevices()
+        {
+            cbAudioDevices.DataSource = player.GetAudioPlayer().GetAudioOutputDevices();
+            cbAudioDevices.SelectedIndex = player.GetAudioPlayer().GetCurrentAudioOutputDevice().ID+1;
+        }
+        
+
+        private void cbAudioDevices_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            AudioDevice selected = (AudioDevice)cbAudioDevices.SelectedItem;
+            player.GetAudioPlayer().SetAudioOutputDevice(selected, true);
+        }
+        
+
+        private void btnRefreshAudioDevices_Click(object sender, EventArgs e)
+        {
+            reloadAudioDevices();
+        }
+
+        #endregion
+    }
 }
