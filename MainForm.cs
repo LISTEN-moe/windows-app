@@ -243,6 +243,7 @@ namespace ListenMoeClient
 			//Settings buffering would be nice
 			Settings.Set("SizeX", Width);
 			Settings.Set("SizeY", Height);
+			Settings.WriteSettings();
 		}
 
 		protected override void WndProc(ref Message m)
