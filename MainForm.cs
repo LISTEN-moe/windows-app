@@ -473,9 +473,16 @@ namespace ListenMoeClient
 		private void picClose_Click(object sender, EventArgs e)
 		{
 			if (Settings.Get<bool>("CloseToTray"))
+			{
+				if (!Settings.Get<bool>("HideFromAltTab"))
+					notifyIcon1.Visible = true;
+
 				this.Hide();
+			}
 			else
+			{
 				this.Close();
+			}
 		}
 
 		void ProcessSongInfo(SongInfo songInfo)
@@ -583,6 +590,9 @@ namespace ListenMoeClient
 			WindowState = FormWindowState.Normal;
 			this.Show();
 			this.Activate();
+			
+			if (!Settings.Get<bool>("HideFromAltTab"))
+				notifyIcon1.Visible = false;
 		}
 
 		int currentFrame = 0;
