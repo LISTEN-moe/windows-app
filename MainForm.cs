@@ -123,6 +123,8 @@ namespace ListenMoeClient
 		public FormSettings SettingsForm;
 
 		Sprite favSprite;
+		Sprite lightFavSprite;
+		Sprite darkFavSprite;
 		Sprite fadedFavSprite;
 
 		private ThumbnailToolBarButton button;
@@ -136,7 +138,7 @@ namespace ListenMoeClient
 		Rectangle gripRect = new Rectangle();
 		Rectangle rightEdgeRect = new Rectangle();
 
-		bool playPauseColorInverted = false;
+		bool spriteColorInverted = false;
 
 		public MainForm()
 		{
@@ -172,8 +174,10 @@ namespace ListenMoeClient
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
 
-			favSprite = SpriteLoader.LoadFavSprite();
+			lightFavSprite = SpriteLoader.LoadFavSprite();
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
+			darkFavSprite = SpriteLoader.LoadDarkFavSprite();
+			favSprite = lightFavSprite;
 			picFavourite.Image = favSprite.Frames[0];
 
 			if (Settings.Get<bool>("ThumbnailButton"))
@@ -283,11 +287,16 @@ namespace ListenMoeClient
 			float vol = Settings.Get<float>("Volume");
 			Color accentColor = Settings.Get<Color>("AccentColor");
 			panelPlayBtn.BackColor = accentColor;
+			spriteColorInverted = accentColor.R + accentColor.G + accentColor.B > 128 * 3;
+			ReloadSprites();
 
-			this.BackColor = Settings.Get<Color>("BaseColor");
-			panelRight.BackColor = Color.FromArgb((int)((BackColor.R * 1.1f).Bound(0, 255)),
-				(int)((BackColor.G * 1.1f).Bound(0, 255)),
-				(int)((BackColor.B * 1.1f).Bound(0, 255)));
+			Color baseColor = Settings.Get<Color>("BaseColor");
+			centerPanel.BackColor = baseColor;
+			panelRight.BackColor = Color.FromArgb((int)((baseColor.R * 1.1f).Bound(0, 255)),
+				(int)((baseColor.G * 1.1f).Bound(0, 255)),
+				(int)((baseColor.B * 1.1f).Bound(0, 255)));
+			this.BackColor = panelRight.BackColor;
+
 			SetVolumeLabel(vol);
 			this.Opacity = Settings.Get<float>("FormOpacity");
 
@@ -459,11 +468,47 @@ namespace ListenMoeClient
 			await TogglePlayback();
 		}
 
+		private void ReloadSprites()
+		{
+			if (spriteColorInverted)
+			{
+				if (player.IsPlaying())
+					picPlayPause.Image = Properties.Resources.play_inverted;
+				else
+					picPlayPause.Image = Properties.Resources.pause_inverted;
+
+				picSettings.Image = Properties.Resources.up_inverted;
+				picClose.Image = Properties.Resources.close_inverted;
+				centerPanel.SetLabelBrush(Brushes.Black);
+				lblVol.ForeColor = Color.Black;
+
+				favSprite = darkFavSprite;
+			}
+			else
+			{
+				if (player.IsPlaying())
+					picPlayPause.Image = Properties.Resources.play;
+				else
+					picPlayPause.Image = Properties.Resources.pause;
+
+				picSettings.Image = Properties.Resources.up;
+				picClose.Image = Properties.Resources.close;
+				centerPanel.SetLabelBrush(Brushes.White);
+				lblVol.ForeColor = Color.White;
+				favSprite = lightFavSprite;
+			}
+
+			if (songInfoStream?.currentInfo.extended?.favorite ?? false)
+				picFavourite.Image = favSprite.Frames[favSprite.Frames.Length];
+			else
+				picFavourite.Image = favSprite.Frames[0];
+		}
+
 		private async Task TogglePlayback()
 		{
+			ReloadSprites();
 			if (player.IsPlaying())
 			{
-				picPlayPause.Image = Properties.Resources.play;
 				menuItemPlayPause.Text = "Play";
 				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
 				{
@@ -475,7 +520,6 @@ namespace ListenMoeClient
 			}
 			else
 			{
-				picPlayPause.Image = Properties.Resources.pause;
 				menuItemPlayPause.Text = "Pause";
 				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
 				{
