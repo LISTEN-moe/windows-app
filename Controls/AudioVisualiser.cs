@@ -218,9 +218,8 @@ namespace ListenMoeClient
 			var scale = Settings.Get<float>("Scale");
 
 			//Bins go from bottom to top
-			g.TranslateTransform(0, Bounds.Height * scale);
+			g.TranslateTransform(0, Bounds.Height);
 			g.ScaleTransform(1, -1);
-			g.ScaleTransform(scale, scale);
 
 			g.TranslateTransform(Bounds.X, 0);
 			if (bars)
@@ -231,8 +230,8 @@ namespace ListenMoeClient
 					var next = points[i + 1];
 					var current = points[i];
 
-					float pos = Math.Max(current.X, current.X + (next.X - current.X - barWidth) / 2);
-					float width = Math.Min(barWidth, next.X - current.X);
+					float pos = Math.Max(current.X, current.X + (next.X - current.X - barWidth * scale) / 2);
+					float width = Math.Min(barWidth * scale, next.X - current.X);
 					rectangles[i] = new RectangleF(pos, 0, width, current.Y);
 				}
 				g.FillRectangles(barBrush, rectangles);
@@ -242,10 +241,9 @@ namespace ListenMoeClient
 				g.DrawCurve(linePen, points);
 			}
 			g.TranslateTransform(-Bounds.X, 0);
-
-			g.ScaleTransform(1 / scale, 1 / scale);
+			
 			g.ScaleTransform(1, -1);
-			g.TranslateTransform(0, -(Bounds.Height * scale));
+			g.TranslateTransform(0, -(Bounds.Height));
 
 			lastFftPoints = fftPoints.Select(x => (float.IsInfinity(x) || float.IsNaN(x)) ? 0 : x).ToArray();
 		}

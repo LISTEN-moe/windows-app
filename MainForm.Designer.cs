@@ -192,7 +192,7 @@
 			this.picSettings.BackColor = System.Drawing.Color.Transparent;
 			this.picSettings.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picSettings.Image = global::ListenMoeClient.Properties.Resources.up;
-			this.picSettings.Location = new System.Drawing.Point(35, 5);
+			this.picSettings.Location = new System.Drawing.Point(36, 5);
 			this.picSettings.Name = "picSettings";
 			this.picSettings.Size = new System.Drawing.Size(12, 12);
 			this.picSettings.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -207,7 +207,7 @@
 			this.lblVol.BackColor = System.Drawing.Color.Transparent;
 			this.lblVol.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
 			this.lblVol.ForeColor = System.Drawing.Color.White;
-			this.lblVol.Location = new System.Drawing.Point(30, 35);
+			this.lblVol.Location = new System.Drawing.Point(31, 35);
 			this.lblVol.Name = "lblVol";
 			this.lblVol.Size = new System.Drawing.Size(34, 13);
 			this.lblVol.TabIndex = 4;
@@ -230,6 +230,7 @@
 			this.ClientSize = new System.Drawing.Size(512, 48);
 			this.Controls.Add(this.gridPanel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.MinimumSize = new System.Drawing.Size(96, 48);
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Listen.moe";

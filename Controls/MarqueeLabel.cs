@@ -95,7 +95,10 @@ namespace ListenMoeClient
 				textChanged = false;
 			}
 
-			g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+			if (scale < 2)
+				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+			else
+				g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
 			UpdateTextPosition(scale);
 

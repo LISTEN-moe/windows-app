@@ -145,10 +145,6 @@ namespace ListenMoeClient
 			InitializeComponent();
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 
-			gridPanel.SetRows("100%");
-			gridPanel.SetColumns("48px auto 75px");
-			gridPanel.DefineAreas("playPause centerPanel rightPanel");
-
 			centerPanel.MouseDown += Form1_MouseDown;
 			centerPanel.MouseMove += Form1_MouseMove;
 			centerPanel.MouseUp += Form1_MouseUp;
@@ -324,10 +320,17 @@ namespace ListenMoeClient
 			float scaleFactor = Settings.Get<float>("Scale");
 			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
 			currentScale = scaleFactor;
+			
+			gridPanel.SetRows("100%");
+			int playPauseWidth = (int)(48 * scaleFactor);
+			int rightPanelWidth = (int)(75 * scaleFactor);
+			gridPanel.SetColumns($"{playPauseWidth}px auto {rightPanelWidth}px");
+			gridPanel.DefineAreas("playPause centerPanel rightPanel");
 
 			//Reload fonts to get newly scaled font sizes
 			LoadFonts();
 			SetPlayPauseSize(false);
+			
 		}
 
 		private void LoadFonts()
@@ -597,18 +600,12 @@ namespace ListenMoeClient
 		private void SetPlayPauseSize(bool bigger)
 		{
 			var scale = Settings.Get<float>("Scale");
-			if (bigger)
-			{
-				picPlayPause.Size = new Size((int)(18 * scale), (int)(18 * scale));
-				int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
-				picPlayPause.Location = new Point((int)(15 * scale), (int)((y - 1) * scale));
-			}
-			else
-			{
-				picPlayPause.Size = new Size((int)(16 * scale), (int)(16 * scale));
-				int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
-				picPlayPause.Location = new Point((int)(16 * scale), (int)((y - 1) * scale));
-			}
+			int playPauseSize = bigger ? 18 : 16;
+			int picPlayPauseX = bigger ? 15 : 16;
+
+			picPlayPause.Size = new Size((int)(playPauseSize * scale), (int)(playPauseSize * scale));
+			int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
+			picPlayPause.Location = new Point((int)(picPlayPauseX * scale), y);
 		}
 
 		private void menuItemCopySongInfo_Click(object sender, EventArgs e)
