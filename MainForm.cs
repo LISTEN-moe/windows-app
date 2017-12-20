@@ -200,6 +200,9 @@ namespace ListenMoeClient
 
 			ReloadScale();
 			ReloadSettings();
+
+			this.SizeChanged += MainForm_SizeChanged;
+			UpdatePanelExcludedRegions();
 		}
 
 		private Color ScaleColor(Color color, float multiplier)
@@ -226,7 +229,7 @@ namespace ListenMoeClient
 			}
 		}
 
-		private void MainForm_SizeChanged(object sender, EventArgs e)
+		private void UpdatePanelExcludedRegions()
 		{
 			gripRect = new Rectangle(this.ClientRectangle.Width - gripSize, this.ClientRectangle.Height - gripSize, gripSize, gripSize);
 			rightEdgeRect = new Rectangle(this.ClientRectangle.Width - 2, 0, 2, this.ClientRectangle.Height);
@@ -236,6 +239,11 @@ namespace ListenMoeClient
 			region.Exclude(rightEdgeRect);
 			gridPanel.Region = region;
 			panelRight.Region = region;
+		}
+
+		private void MainForm_SizeChanged(object sender, EventArgs e)
+		{
+			UpdatePanelExcludedRegions();
 			this.Invalidate();
 
 			//wow such performance
