@@ -123,6 +123,8 @@ namespace ListenMoeClient
 		public FormSettings SettingsForm;
 
 		Sprite favSprite;
+		Sprite lightFavSprite;
+		Sprite darkFavSprite;
 		Sprite fadedFavSprite;
 
 		private ThumbnailToolBarButton button;
@@ -136,16 +138,12 @@ namespace ListenMoeClient
 		Rectangle gripRect = new Rectangle();
 		Rectangle rightEdgeRect = new Rectangle();
 
-		bool playPauseColorInverted = false;
+		bool spriteColorInverted = false;
 
 		public MainForm()
 		{
 			InitializeComponent();
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
-
-			gridPanel.SetRows("100%");
-			gridPanel.SetColumns("48px auto 75px");
-			gridPanel.DefineAreas("playPause centerPanel rightPanel");
 
 			centerPanel.MouseDown += Form1_MouseDown;
 			centerPanel.MouseMove += Form1_MouseMove;
@@ -172,8 +170,10 @@ namespace ListenMoeClient
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
 
-			favSprite = SpriteLoader.LoadFavSprite();
+			lightFavSprite = SpriteLoader.LoadFavSprite();
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
+			darkFavSprite = SpriteLoader.LoadDarkFavSprite();
+			favSprite = lightFavSprite;
 			picFavourite.Image = favSprite.Frames[0];
 
 			if (Settings.Get<bool>("ThumbnailButton"))
@@ -200,6 +200,9 @@ namespace ListenMoeClient
 
 			ReloadScale();
 			ReloadSettings();
+
+			this.SizeChanged += MainForm_SizeChanged;
+			UpdatePanelExcludedRegions();
 		}
 
 		private Color ScaleColor(Color color, float multiplier)
@@ -226,7 +229,7 @@ namespace ListenMoeClient
 			}
 		}
 
-		private void MainForm_SizeChanged(object sender, EventArgs e)
+		private void UpdatePanelExcludedRegions()
 		{
 			gripRect = new Rectangle(this.ClientRectangle.Width - gripSize, this.ClientRectangle.Height - gripSize, gripSize, gripSize);
 			rightEdgeRect = new Rectangle(this.ClientRectangle.Width - 2, 0, 2, this.ClientRectangle.Height);
@@ -236,6 +239,11 @@ namespace ListenMoeClient
 			region.Exclude(rightEdgeRect);
 			gridPanel.Region = region;
 			panelRight.Region = region;
+		}
+
+		private void MainForm_SizeChanged(object sender, EventArgs e)
+		{
+			UpdatePanelExcludedRegions();
 			this.Invalidate();
 
 			//wow such performance
@@ -243,6 +251,7 @@ namespace ListenMoeClient
 			//Settings buffering would be nice
 			Settings.Set("SizeX", Width);
 			Settings.Set("SizeY", Height);
+			Settings.WriteSettings();
 		}
 
 		protected override void WndProc(ref Message m)
@@ -283,11 +292,16 @@ namespace ListenMoeClient
 			float vol = Settings.Get<float>("Volume");
 			Color accentColor = Settings.Get<Color>("AccentColor");
 			panelPlayBtn.BackColor = accentColor;
+			spriteColorInverted = accentColor.R + accentColor.G + accentColor.B > 128 * 3;
+			ReloadSprites();
 
-			this.BackColor = Settings.Get<Color>("BaseColor");
-			panelRight.BackColor = Color.FromArgb((int)((BackColor.R * 1.1f).Bound(0, 255)),
-				(int)((BackColor.G * 1.1f).Bound(0, 255)),
-				(int)((BackColor.B * 1.1f).Bound(0, 255)));
+			Color baseColor = Settings.Get<Color>("BaseColor");
+			centerPanel.BackColor = baseColor;
+			panelRight.BackColor = Color.FromArgb((int)((baseColor.R * 1.1f).Bound(0, 255)),
+				(int)((baseColor.G * 1.1f).Bound(0, 255)),
+				(int)((baseColor.B * 1.1f).Bound(0, 255)));
+			this.BackColor = panelRight.BackColor;
+
 			SetVolumeLabel(vol);
 			this.Opacity = Settings.Get<float>("FormOpacity");
 
@@ -315,10 +329,17 @@ namespace ListenMoeClient
 			float scaleFactor = Settings.Get<float>("Scale");
 			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
 			currentScale = scaleFactor;
+			
+			gridPanel.SetRows("100%");
+			int playPauseWidth = (int)(48 * scaleFactor);
+			int rightPanelWidth = (int)(75 * scaleFactor);
+			gridPanel.SetColumns($"{playPauseWidth}px auto {rightPanelWidth}px");
+			gridPanel.DefineAreas("playPause centerPanel rightPanel");
 
 			//Reload fonts to get newly scaled font sizes
 			LoadFonts();
 			SetPlayPauseSize(false);
+			
 		}
 
 		private void LoadFonts()
@@ -459,11 +480,47 @@ namespace ListenMoeClient
 			await TogglePlayback();
 		}
 
+		private void ReloadSprites()
+		{
+			if (spriteColorInverted)
+			{
+				if (player.IsPlaying())
+					picPlayPause.Image = Properties.Resources.pause_inverted;
+				else
+					picPlayPause.Image = Properties.Resources.play;
+
+				picSettings.Image = Properties.Resources.up_inverted;
+				picClose.Image = Properties.Resources.close_inverted;
+				centerPanel.SetLabelBrush(Brushes.Black);
+				lblVol.ForeColor = Color.Black;
+
+				favSprite = darkFavSprite;
+			}
+			else
+			{
+				if (player.IsPlaying())
+					picPlayPause.Image = Properties.Resources.pause;
+				else
+					picPlayPause.Image = Properties.Resources.play;
+
+				picSettings.Image = Properties.Resources.up;
+				picClose.Image = Properties.Resources.close;
+				centerPanel.SetLabelBrush(Brushes.White);
+				lblVol.ForeColor = Color.White;
+				favSprite = lightFavSprite;
+			}
+
+			if (songInfoStream?.currentInfo.extended?.favorite ?? false)
+				picFavourite.Image = favSprite.Frames[favSprite.Frames.Length];
+			else
+				picFavourite.Image = favSprite.Frames[0];
+		}
+
 		private async Task TogglePlayback()
 		{
+			ReloadSprites();
 			if (player.IsPlaying())
 			{
-				picPlayPause.Image = Properties.Resources.play;
 				menuItemPlayPause.Text = "Play";
 				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
 				{
@@ -475,7 +532,6 @@ namespace ListenMoeClient
 			}
 			else
 			{
-				picPlayPause.Image = Properties.Resources.pause;
 				menuItemPlayPause.Text = "Pause";
 				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
 				{
@@ -553,18 +609,12 @@ namespace ListenMoeClient
 		private void SetPlayPauseSize(bool bigger)
 		{
 			var scale = Settings.Get<float>("Scale");
-			if (bigger)
-			{
-				picPlayPause.Size = new Size((int)(18 * scale), (int)(18 * scale));
-				int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
-				picPlayPause.Location = new Point((int)(15 * scale), (int)((y - 1) * scale));
-			}
-			else
-			{
-				picPlayPause.Size = new Size((int)(16 * scale), (int)(16 * scale));
-				int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
-				picPlayPause.Location = new Point((int)(16 * scale), (int)((y - 1) * scale));
-			}
+			int playPauseSize = bigger ? 18 : 16;
+			int picPlayPauseX = bigger ? 15 : 16;
+
+			picPlayPause.Size = new Size((int)(playPauseSize * scale), (int)(playPauseSize * scale));
+			int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
+			picPlayPause.Location = new Point((int)(picPlayPauseX * scale), y);
 		}
 
 		private void menuItemCopySongInfo_Click(object sender, EventArgs e)

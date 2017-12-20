@@ -213,6 +213,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILMergeOrder.txt" />
+    <None Include="Resources\up_inverted.png" />
+    <None Include="Resources\close_inverted.png" />
+    <None Include="Resources\play_inverted.png" />
+    <None Include="Resources\pause_inverted.png" />
     <None Include="Resources\play_ico.ico" />
     <None Include="Resources\pause_ico.ico" />
   </ItemGroup>

@@ -92,6 +92,12 @@ namespace ListenMoeClient
 			lblAlbum.Text = albumText;
 		}
 
+		public void SetLabelBrush(Brush brush)
+		{
+			lblTitle.FontBrush = brush;
+			lblAlbum.FontBrush = brush;
+		}
+
 		public void SetFonts(Font titleFont, Font albumFont)
 		{
 			lblTitle.Font = titleFont;

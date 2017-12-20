@@ -44,6 +44,7 @@ namespace ListenMoeClient
 		public Rectangle Bounds = Rectangle.Empty;
 		public Font Font = new Font("Segoe UI", 9);
 		public Font Subfont = new Font("Segoe UI", 8);
+		public Brush FontBrush = Brushes.White;
 
 		private bool textChanged = true;
 
@@ -94,16 +95,19 @@ namespace ListenMoeClient
 				textChanged = false;
 			}
 
-			g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+			if (scale < 2)
+				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+			else
+				g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
 			UpdateTextPosition(scale);
 
 			g.TranslateTransform((int)currentPosition, 0);
 			RectangleF rect = new RectangleF(new PointF(Bounds.Location.X * scale, Bounds.Location.Y * scale), new SizeF(totalStringWidth, Bounds.Height * scale));
-			g.DrawString(text, Font, Brushes.White, rect.Location);
+			g.DrawString(text, Font, FontBrush, rect.Location);
 			if (subtext.Trim() != "")
 			{
-				g.DrawString(subtext, Subfont, Brushes.White, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
+				g.DrawString(subtext, Subfont, FontBrush, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
 			}
 
 			if (scrolling)
@@ -111,10 +115,10 @@ namespace ListenMoeClient
 				//Draw it on the other side for seamless looping
 				float secondPosition = totalStringWidth + Bounds.Width * spacing * scale;
 				g.TranslateTransform(secondPosition, 0);
-				g.DrawString(text, Font, Brushes.White, rect.Location);
+				g.DrawString(text, Font, FontBrush, rect.Location);
 				if (subtext.Trim() != "")
 				{
-					g.DrawString(subtext, Subfont, Brushes.White, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
+					g.DrawString(subtext, Subfont, FontBrush, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
 				}
 
 				g.TranslateTransform(-secondPosition, 0);

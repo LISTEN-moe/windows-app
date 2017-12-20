@@ -78,5 +78,48 @@ namespace ListenMoeClient
 
 			return result;
 		}
+
+		private static Image DarkenBitmap(Image b)
+		{
+			Bitmap darkened = new Bitmap(b);
+
+			ColorMatrix mat = new ColorMatrix();
+			mat.Matrix00 = 0.8f;
+			mat.Matrix11 = 0.8f;
+			mat.Matrix22 = 0.8f;
+
+			ImageAttributes attr = new ImageAttributes();
+			attr.SetColorMatrix(mat);
+
+			using (Graphics g = Graphics.FromImage(darkened))
+			{
+				g.DrawImage(b, new Rectangle(Point.Empty, b.Size), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, attr);
+			}
+
+			return darkened;
+		}
+
+		public static Sprite LoadDarkFavSprite()
+		{
+			Bitmap sheet = Properties.Resources.fav_sprite;
+
+			Sprite result = new Sprite
+			{
+				Frames = new Image[sheet.Width / 64]
+			};
+			//Split into 64x64
+			for (int i = 0; i < sheet.Width / 64; i++)
+			{
+				Bitmap bitmap = new Bitmap(64, 64, PixelFormat.Format32bppArgb);
+				using (Graphics g = Graphics.FromImage(bitmap))
+					g.DrawImage(sheet, new Rectangle(0, 0, 64, 64), new Rectangle(64 * i, 0, 64, 64), GraphicsUnit.Pixel);
+
+				result.Frames[i] = bitmap;
+			}
+
+			result.Frames[0] = DarkenBitmap(result.Frames[0]);
+
+			return result;
+		}
 	}
 }
