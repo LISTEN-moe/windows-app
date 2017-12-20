@@ -577,7 +577,7 @@ namespace ListenMoeClient
 		{
 			if (SettingsForm == null)
 			{
-				SettingsForm = new FormSettings(this);
+				SettingsForm = new FormSettings(this, this.player);
 				SettingsForm.Show();
 			}
 			else
