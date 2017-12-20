@@ -473,9 +473,9 @@ namespace ListenMoeClient
 			if (spriteColorInverted)
 			{
 				if (player.IsPlaying())
-					picPlayPause.Image = Properties.Resources.play_inverted;
-				else
 					picPlayPause.Image = Properties.Resources.pause_inverted;
+				else
+					picPlayPause.Image = Properties.Resources.play;
 
 				picSettings.Image = Properties.Resources.up_inverted;
 				picClose.Image = Properties.Resources.close_inverted;
@@ -487,9 +487,9 @@ namespace ListenMoeClient
 			else
 			{
 				if (player.IsPlaying())
-					picPlayPause.Image = Properties.Resources.play;
-				else
 					picPlayPause.Image = Properties.Resources.pause;
+				else
+					picPlayPause.Image = Properties.Resources.play;
 
 				picSettings.Image = Properties.Resources.up;
 				picClose.Image = Properties.Resources.close;
