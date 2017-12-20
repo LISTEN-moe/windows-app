@@ -1987,23 +1987,35 @@ namespace ListenMoeClient
 	}
 
 	/// <summary>
-	/// Value type for raw input.
+	/// Contains the raw input from a device. 
 	/// </summary>
-	[StructLayout(LayoutKind.Explicit)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct RAWINPUT
 	{
-		/// <summary>Header for the data.</summary>
-		[FieldOffset(0)]
+		/// <summary>
+		/// Header for the data.
+		/// </summary>
 		public RAWINPUTHEADER Header;
-		/// <summary>Mouse raw input data.</summary>
-		[FieldOffset(16)]
-		public RawMouse Mouse;
-		/// <summary>Keyboard raw input data.</summary>
-		[FieldOffset(16)]
-		public RAWKEYBOARD Keyboard;
-		/// <summary>HID raw input data.</summary>
-		[FieldOffset(16)]
-		public RAWINPUTHID Hid;
+		public Union Data;
+		[StructLayout(LayoutKind.Explicit)]
+		public struct Union
+		{
+			/// <summary>
+			/// Mouse raw input data.
+			/// </summary>
+			[FieldOffset(0)]
+			public RawMouse Mouse;
+			/// <summary>
+			/// Keyboard raw input data.
+			/// </summary>
+			[FieldOffset(0)]
+			public RAWKEYBOARD Keyboard;
+			/// <summary>
+			/// HID raw input data.
+			/// </summary>
+			[FieldOffset(0)]
+			public RAWINPUTHID HID;
+		}
 	}
 
 	class RawInput
@@ -2057,8 +2069,8 @@ namespace ListenMoeClient
 			if (dwSize != GetRawInputData(lParam, RawInputCommand.Input, out RAWINPUT buffer, ref dwSize, Marshal.SizeOf(typeof(RAWINPUTHEADER))))
 				return;
 
-			VirtualKeys key = buffer.Keyboard.VirtualKey;
-			bool pressed = !buffer.Keyboard.Flags.HasFlag(RawKeyboardFlags.KeyBreak);
+			VirtualKeys key = buffer.Data.Keyboard.VirtualKey;
+			bool pressed = !buffer.Data.Keyboard.Flags.HasFlag(RawKeyboardFlags.KeyBreak);
 			lastStates[key] = pressed;
 			if (pressed)
 			{

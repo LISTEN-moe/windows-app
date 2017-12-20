@@ -144,9 +144,6 @@ namespace ListenMoeClient
 			//Write immediately after loading to flush any new default settings
 			Settings.WriteSettings();
 
-			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
-			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
-
 			cts = new CancellationTokenSource();
 			ct = cts.Token;
 #pragma warning disable CS4014
@@ -167,11 +164,6 @@ namespace ListenMoeClient
 			favSprite = SpriteLoader.LoadFavSprite();
 			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
 			picFavourite.Image = favSprite.Frames[0];
-
-			RawInput.RegisterCallback(VirtualKeys.MediaPlayPause, async () =>
-			{
-				await TogglePlayback();
-			});
 
 			if (Settings.Get<bool>("ThumbnailButton"))
 			{
@@ -197,6 +189,8 @@ namespace ListenMoeClient
 
 			ReloadScale();
 			ReloadSettings();
+
+			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 		}
 
 		public void ReloadSettings()
@@ -234,6 +228,9 @@ namespace ListenMoeClient
 				SetWindowLong(this.Handle, GWL_EXSTYLE, windowStyle & ~WS_EX_TOOLWINDOW);
 				notifyIcon1.Visible = false;
 			}
+
+			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
+			RawInput.RegisterCallback(VirtualKeys.MediaPlayPause, async () => await TogglePlayback());
 		}
 
 		public void ReloadScale()
