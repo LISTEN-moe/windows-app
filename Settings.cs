@@ -120,16 +120,12 @@ namespace ListenMoeClient
 
 			Set("Token", "");
 			Set("Username", "");
+			Set("OutputDeviceGuid", "");
 
 			Set("VisualiserColor", Color.FromArgb(236, 26, 85));
 			Set("BaseColor", Color.FromArgb(44, 46, 59));
 			Set("AccentColor", Color.FromArgb(236, 26, 85));
-
-
-            #region Audio
-            Set("OutputDeviceNumer", -1);
-            #endregion
-        }
+		}
 
 		public static void LoadSettings()
 		{

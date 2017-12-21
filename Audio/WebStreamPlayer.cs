@@ -6,9 +6,9 @@ using Concentus.Structs;
 
 namespace ListenMoeClient
 {
-	public class WebStreamPlayer
+	class WebStreamPlayer
 	{
-		AudioPlayer audioPlayer = new AudioPlayer();
+		public AudioPlayer BasePlayer { get; set; } = new AudioPlayer();
 
 		Thread provideThread;
 
@@ -37,7 +37,7 @@ namespace ListenMoeClient
 
 		public void Play()
 		{
-			audioPlayer.Play();
+			BasePlayer.Play();
 			playing = true;
 
 			provideThread = new Thread(() =>
@@ -63,7 +63,7 @@ namespace ListenMoeClient
 									int frameSize = OpusPacketInfo.GetNumSamplesPerFrame(streamBytes, 0, Globals.SAMPLE_RATE); //Get frame size from opus packet
 									short[] rawBuffer = new short[frameSize * 2]; //2 channels
 									var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
-									audioPlayer.QueueBuffer(rawBuffer);
+									BasePlayer.QueueBuffer(rawBuffer);
 
 									if (visualiser != null)
 										visualiser.AddSamples(rawBuffer);
@@ -76,7 +76,8 @@ namespace ListenMoeClient
 							}
 						}
 					}
-				} catch (Exception)
+				}
+				catch (Exception)
 				{
 
 				}
@@ -86,7 +87,7 @@ namespace ListenMoeClient
 
 		public float AddVolume(float vol)
 		{
-			return audioPlayer.AddVolume(vol);
+			return BasePlayer.AddVolume(vol);
 		}
 
 		public async Task Stop()
@@ -95,7 +96,7 @@ namespace ListenMoeClient
 			{
 				playing = false;
 
-				audioPlayer.Stop();
+				BasePlayer.Stop();
 
 				if (provideThread != null)
 				{
@@ -112,10 +113,5 @@ namespace ListenMoeClient
 		{
 			return playing;
 		}
-
-        public AudioPlayer GetAudioPlayer()
-        {
-            return audioPlayer;
-        }
-    }
+	}
 }

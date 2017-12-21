@@ -1,22 +1,24 @@
 ﻿using System;
+using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
+using NAudio.Wave;
 
 namespace ListenMoeClient
 {
-    
+
 
 	public partial class FormSettings : Form
 	{
 		MainForm mainForm;
-        WebStreamPlayer player;
+		AudioPlayer audioPlayer;
 
-		public FormSettings(MainForm mainForm, WebStreamPlayer player)
+		public FormSettings(MainForm mainForm, AudioPlayer audioPlayer)
 		{
 			InitializeComponent();
 			this.Icon = Properties.Resources.icon;
 			this.mainForm = mainForm;
-            this.player = player;
+			this.audioPlayer = audioPlayer;
 
 			LoadAndBindCheckboxSetting(cbCloseToTray, "CloseToTray");
 			LoadAndBindCheckboxSetting(cbEnableVisualiser, "EnableVisualiser");
@@ -64,11 +66,9 @@ namespace ListenMoeClient
 				panelNotLoggedIn.Visible = true;
 				panelNotLoggedIn.BringToFront();
 			};
-
-            #region AudioTab
-            reloadAudioDevices();
-            #endregion
-        }
+			
+			reloadAudioDevices();
+		}
 
 		private void NumericUpdateInterval_ValueChanged(object sender, EventArgs e)
 		{
@@ -159,26 +159,21 @@ namespace ListenMoeClient
 			mainForm.ReloadSettings();
 		}
 
-        #region Audio Tab
-        private void reloadAudioDevices()
-        {
-            cbAudioDevices.DataSource = player.GetAudioPlayer().GetAudioOutputDevices();
-            cbAudioDevices.SelectedIndex = player.GetAudioPlayer().GetCurrentAudioOutputDevice().ID+1;
-        }
-        
+		private void reloadAudioDevices()
+		{
+			dropdownAudioDevices.DataSource = audioPlayer.GetAudioOutputDevices();
+			dropdownAudioDevices.SelectedIndex = Array.IndexOf(audioPlayer.GetAudioOutputDevices().Select(a => a.DeviceInfo.Guid).ToArray(), audioPlayer.CurrentDeviceGuid);
+		}
 
-        private void cbAudioDevices_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            AudioDevice selected = (AudioDevice)cbAudioDevices.SelectedItem;
-            player.GetAudioPlayer().SetAudioOutputDevice(selected, true);
-        }
-        
+		private void cbAudioDevices_SelectionChangeCommitted(object sender, EventArgs e)
+		{
+			AudioDevice selected = (AudioDevice)dropdownAudioDevices.SelectedItem;
+			audioPlayer.SetAudioOutputDevice(selected.DeviceInfo.Guid);
+		}
 
-        private void btnRefreshAudioDevices_Click(object sender, EventArgs e)
-        {
-            reloadAudioDevices();
-        }
-
-        #endregion
-    }
+		private void btnRefreshAudioDevices_Click(object sender, EventArgs e)
+		{
+			reloadAudioDevices();
+		}
+	}
 }

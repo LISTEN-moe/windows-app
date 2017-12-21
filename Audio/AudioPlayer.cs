@@ -1,35 +1,35 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using NAudio.Wave;
 
 namespace ListenMoeClient
 {
+	/// <summary>
+	/// Audio Output Device Object
+	/// </summary>
+	public class AudioDevice
+	{
+		public DirectSoundDeviceInfo DeviceInfo;
+		public string Name;
 
-    /// <summary>
-    /// Audio Output Device Object
-    /// </summary>
-    public class AudioDevice
-    {
-        public int ID;
-        public string Name;
+		public AudioDevice(DirectSoundDeviceInfo deviceInfo, string name)
+		{
+			this.DeviceInfo = deviceInfo;
+			this.Name = name;
+		}
 
-        public AudioDevice(int _id, string _name)
-        {
-            this.ID = _id;
-            this.Name = _name;
-        }
-
-        public override string ToString()
-        {
-            return this.Name;
-        }
-
-    }
+		public override string ToString()
+		{
+			return this.Name;
+		}
+	}
 
 	public class AudioPlayer : IDisposable
 	{
 		BufferedWaveProvider provider;
-		WaveOut waveOut;
+		DirectSoundOut directOut;
+		public Guid CurrentDeviceGuid { get; private set; }
 
 		Queue<short[]> samplesToPlay = new Queue<short[]>();
 
@@ -42,53 +42,47 @@ namespace ListenMoeClient
 				DiscardOnBufferOverflow = true
 			};
 
-            Initialize();
-        }
+			bool success = Guid.TryParse(Settings.Get<string>("OutputDeviceGuid"), out Guid deviceGuid);
 
-        /// <summary>
-        /// Intialize the WaveOut Device and set Volume
-        /// </summary>
-        /// <param name="reinitialize">Whether to re-initialize the player.</param>
-        public void Initialize(bool reinitialize = false)
-        {
-            PlaybackState prevState = PlaybackState.Stopped;
+			SetAudioOutputDevice(success ? deviceGuid : DirectSoundOut.DSDEVID_DefaultPlayback);
+		}
 
-            if (reinitialize)
-            {
-                prevState = waveOut.PlaybackState;
-                Dispose();
-            }
-                
+		/// <summary>
+		/// Intialize the WaveOut Device and set Volume
+		/// </summary>
+		public void Initialize(Guid deviceGuid)
+		{
+			directOut = new DirectSoundOut(deviceGuid);
+			CurrentDeviceGuid = deviceGuid;
+			directOut.Init(provider);
+			directOut.Volume = Settings.Get<float>("Volume");
 
-            waveOut = new WaveOut();
-            SetAudioOutputDevice(Settings.Get<int>("OutputDeviceNumer"));
-            waveOut.Init(provider);
-            waveOut.Volume = Settings.Get<float>("Volume");
-            
-
-            if (reinitialize)
-                if(prevState == PlaybackState.Playing)
-                    Play();
-            
-        }
+			Settings.Set("OutputDeviceGuid", deviceGuid.ToString());
+			Settings.WriteSettings();
+		}
 
 		public void Play()
 		{
 			provider.ClearBuffer();
-			waveOut.Play();
+			directOut.Play();
 		}
 
 		public void Stop()
 		{
-			waveOut.Stop();
+			directOut.Stop();
 			provider.ClearBuffer();
 		}
 
 		public void Dispose()
 		{
-			waveOut.Stop();
-			provider.ClearBuffer();
-			waveOut.Dispose();
+			if (directOut != null)
+			{
+				directOut.Stop();
+				directOut.Dispose();
+			}
+
+			if (provider != null)
+				provider.ClearBuffer();
 		}
 
 		public void QueueBuffer(short[] samples)
@@ -108,100 +102,40 @@ namespace ListenMoeClient
 
 		public float AddVolume(float vol)
 		{
-			SetVolume(waveOut.Volume + vol);
-			return waveOut.Volume;
+			SetVolume(directOut.Volume + vol);
+			return directOut.Volume;
 		}
 
 		public void SetVolume(float vol)
 		{
-			waveOut.Volume = BoundVolume(vol);
+			directOut.Volume = BoundVolume(vol);
 		}
 
+		/// <summary>
+		/// Get an array of the available audio output devices.
+		/// <para>Because of a limitation of WaveOut, device's names will be cut if they are too long.</para>
+		/// </summary>
+		public AudioDevice[] GetAudioOutputDevices()
+		{
+			return DirectSoundOut.Devices.Select(d => new AudioDevice(d, d.Description)).ToArray();
+		}
 
-        /// <summary>
-        /// Get an array of the available audio output devices.
-        /// <para>Because of a limitation of WaveOut, device's names will be cut if they are too long.</para>
-        /// </summary>
-        public AudioDevice[] GetAudioOutputDevices()
-        {
-            AudioDevice[] devices = new AudioDevice[WaveOut.DeviceCount + 1];
+		/// <summary>
+		/// Set the audio output device (if available); Returns current audio device (desired if valid).
+		/// </summary>
+		/// <param name="deviceNumber">Device ID</param>
+		/// <returns></returns>
+		public void SetAudioOutputDevice(Guid deviceGuid)
+		{
+			if (deviceGuid == CurrentDeviceGuid)
+				return;
 
-            for (int n = -1; n < WaveOut.DeviceCount; n++)
-            {
-                var caps = WaveOut.GetCapabilities(n);
-                devices[n+1] = new AudioDevice(n, caps.ProductName);
-            }
+			PlaybackState prevState = directOut?.PlaybackState ?? PlaybackState.Playing;
+			Dispose();
+			Initialize(deviceGuid);
 
-            return devices;
-        }
-
-        /// <summary>
-        /// Get current audio output device.
-        /// </summary>
-        public AudioDevice GetCurrentAudioOutputDevice()
-        {
-            WaveOutCapabilities dev = WaveOut.GetCapabilities(waveOut.DeviceNumber);
-            return new AudioDevice(waveOut.DeviceNumber, dev.ProductName);
-        }
-
-        /// <summary>
-        /// Get the index of an Audio Device by providing the ID
-        /// </summary>
-        /// <param name="ID">Audio Device ID (From -1 to the amount of devices available)</param>
-        /// <returns></returns>
-        public int GetAudioDeviceIndex(int ID)
-        {
-            AudioDevice[] devices = GetAudioOutputDevices();
-
-            int desired = -1;
-
-            for (int i = 0; i < devices.Length; i++)
-            {
-                if (devices[i].ID == ID)
-                {
-                    desired = i;
-                    break;
-                }
-            }
-
-            return desired;
-        }
-
-        /// <summary>
-        /// Set the audio output device (if available); Returns current audio device (desired if valid).
-        /// <para><strong>Important:</strong> Requires re-initialization of WaveOut to apply changes.</para>
-        /// </summary>
-        /// <param name="device">Device ID</param>
-        /// <param name="reinitialize">Whether to re-initialize the player.</param>
-        /// <returns></returns>
-        public int SetAudioOutputDevice(int device, bool reinitialize = false)
-        {
-            int currentDevice = GetCurrentAudioOutputDevice().ID;
-
-            if (device == currentDevice)
-                return currentDevice;
-
-            int validDevice = (device < WaveOut.DeviceCount) ? device : -1; //If invalid set the default device(-1)
-            waveOut.DeviceNumber = validDevice;
-            Settings.Set<int>("OutputDeviceNumer", validDevice);
-            Settings.WriteSettings();
-
-            if (reinitialize)
-                Initialize(true);
-
-            return currentDevice;
-        }
-
-        /// <summary>
-        /// Set the audio output device (if available); Returns current audio device (desired if valid).
-        /// <para><strong>Important:</strong> Requires re-initialization of WaveOut to apply changes.</para>
-        /// </summary>
-        /// <param name="device">Audio Device Object</param>
-        /// <param name="reinitialize">Whether to re-initialize the player.</param>
-        /// <returns></returns>
-        public int SetAudioOutputDevice(AudioDevice device, bool reinitialize = false)
-        {
-            return SetAudioOutputDevice(device.ID, reinitialize);
-        }
-    }
+			if (prevState == PlaybackState.Playing)
+				Play();
+		}
+	}
 }

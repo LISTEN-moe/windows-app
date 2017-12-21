@@ -34,7 +34,6 @@ namespace ListenMoeClient
 		public AudioVisualiser()
 		{
 			lastFftPoints = new float[fftSize];
-			ReloadSettings();
 		}
 
 		public void SetBounds(Rectangle bounds)
@@ -47,6 +46,9 @@ namespace ListenMoeClient
 			bars = Settings.Get<bool>("VisualiserBars");
 			var opacity = (int)Math.Min(Math.Max(Settings.Get<float>("VisualiserTransparency") * 255, 0), 255);
 			visualiserColor = Color.FromArgb(opacity, Settings.Get<Color>("VisualiserColor"));
+
+			if (Bounds.Width == 0 || Bounds.Height == 0)
+				return;
 
 			if (Settings.Get<bool>("VisualiserFadeEdges"))
 			{
