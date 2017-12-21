@@ -44,6 +44,9 @@ namespace ListenMoeClient
 				DiscardOnBufferOverflow = true
 			};
 
+			volumeChannel = new SampleChannel(provider);
+			volumeChannel.Volume = Settings.Get<float>("Volume");
+
 			bool success = Guid.TryParse(Settings.Get<string>("OutputDeviceGuid"), out Guid deviceGuid);
 
 			SetAudioOutputDevice(success ? deviceGuid : DirectSoundOut.DSDEVID_DefaultPlayback);
@@ -56,8 +59,6 @@ namespace ListenMoeClient
 		{
 			directOut = new DirectSoundOut(deviceGuid);
 			CurrentDeviceGuid = deviceGuid;
-			volumeChannel = new SampleChannel(provider);
-			volumeChannel.Volume = Settings.Get<float>("Volume");
 			directOut.Init(volumeChannel);
 
 			Settings.Set("OutputDeviceGuid", deviceGuid.ToString());
@@ -134,11 +135,17 @@ namespace ListenMoeClient
 				return;
 
 			PlaybackState prevState = directOut?.PlaybackState ?? PlaybackState.Playing;
-			Dispose();
+
+			if (directOut != null)
+			{
+				directOut.Stop();
+				directOut.Dispose();
+			}
+
 			Initialize(deviceGuid);
 
 			if (prevState == PlaybackState.Playing)
-				Play();
+				directOut.Play();
 		}
 	}
 }
