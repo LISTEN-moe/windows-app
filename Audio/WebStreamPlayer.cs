@@ -6,7 +6,7 @@ using Concentus.Structs;
 
 namespace ListenMoeClient
 {
-	class WebStreamPlayer
+	public class WebStreamPlayer
 	{
 		AudioPlayer audioPlayer = new AudioPlayer();
 
@@ -112,5 +112,10 @@ namespace ListenMoeClient
 		{
 			return playing;
 		}
-	}
+
+        public AudioPlayer GetAudioPlayer()
+        {
+            return audioPlayer;
+        }
+    }
 }
