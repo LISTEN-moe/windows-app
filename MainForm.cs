@@ -288,6 +288,7 @@ namespace ListenMoeClient
 				centerPanel.StartVisualiser(player);
 			else
 				centerPanel.StopVisualiser(player);
+			centerPanel.ReloadVisualiser();
 
 			float vol = Settings.Get<float>("Volume");
 			Color accentColor = Settings.Get<Color>("AccentColor");
