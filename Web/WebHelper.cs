@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ListenMoeClient
 {
@@ -29,8 +30,8 @@ namespace ListenMoeClient
 			StringBuilder result = new StringBuilder("{");
 			foreach (var keyValuePair in postData)
 			{
-				result.Append("\"" + keyValuePair.Key + "\":");
-				result.Append("\"" + keyValuePair.Value + "\",");
+				result.Append("\"" + HttpUtility.JavaScriptStringEncode(keyValuePair.Key) + "\":");
+				result.Append("\"" + HttpUtility.JavaScriptStringEncode(keyValuePair.Value) + "\",");
 			}
 			result[result.Length - 1] = '}';
 
