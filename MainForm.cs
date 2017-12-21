@@ -630,6 +630,7 @@ namespace ListenMoeClient
 			if (SettingsForm == null)
 			{
 				SettingsForm = new FormSettings(this, player.BasePlayer);
+				SettingsForm.StartPosition = FormStartPosition.CenterScreen;
 				SettingsForm.Show();
 			}
 			else
