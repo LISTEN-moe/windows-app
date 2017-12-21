@@ -213,7 +213,7 @@ namespace ListenMoeClient
 				points[0] = new PointF(0, points[1].Y);
 			}
 
-			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			g.SmoothingMode = SmoothingMode.HighQuality;
 
 			var scale = Settings.Get<float>("Scale");
 

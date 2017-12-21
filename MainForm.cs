@@ -244,6 +244,7 @@ namespace ListenMoeClient
 		private void MainForm_SizeChanged(object sender, EventArgs e)
 		{
 			UpdatePanelExcludedRegions();
+			centerPanel.ReloadVisualiser();
 			this.Invalidate();
 
 			//wow such performance
