@@ -59,8 +59,8 @@ namespace ListenMoeClient
 					Colors = new Color[] { baseColor, baseColor, visualiserColor, visualiserColor, visualiserColor, baseColor, baseColor },
 					Positions = new float[] { 0.0f, 0.05f, 0.2f, 0.5f, 0.8f, 0.95f, 1.0f }
 				};
-				linePen = new Pen(barBrush, 1);
 				((LinearGradientBrush)barBrush).InterpolationColors = blend;
+				linePen = new Pen(barBrush, 1);
 			}
 			else
 			{
@@ -202,7 +202,7 @@ namespace ListenMoeClient
 			else
 			{
 				float spacing = Bounds.Width / ((float)noPoints - 1);
-				for (int i = 1; j < noPoints && i < fftPoints.Length; i += resolutionFactor)
+				for (int i = 0; j < noPoints && i < fftPoints.Length; i += resolutionFactor)
 				{
 					var yVal = fftPoints[i];
 					yVal *= Bounds.Height * ScaleFactor * 0.1f;
