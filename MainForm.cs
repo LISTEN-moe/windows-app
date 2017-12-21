@@ -279,16 +279,15 @@ namespace ListenMoeClient
 
 		public void ReloadSettings()
 		{
-			if (Settings.Get<bool>("EnableVisualiser"))
-				centerPanel.StartVisualiser(player);
-			else
-				centerPanel.StopVisualiser(player);
-
-			centerPanel.ReloadVisualiser();
 			this.TopMost = Settings.Get<bool>("TopMost");
 
 			this.Location = new Point(Settings.Get<int>("LocationX"), Settings.Get<int>("LocationY"));
 			this.Size = new Size(Settings.Get<int>("SizeX"), Settings.Get<int>("SizeY"));
+
+			if (Settings.Get<bool>("EnableVisualiser"))
+				centerPanel.StartVisualiser(player);
+			else
+				centerPanel.StopVisualiser(player);
 
 			float vol = Settings.Get<float>("Volume");
 			Color accentColor = Settings.Get<Color>("AccentColor");

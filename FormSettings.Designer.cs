@@ -47,14 +47,11 @@
 			this.tpTheme = new System.Windows.Forms.TabPage();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.lblAccentColor = new System.Windows.Forms.Label();
-			this.panelAccentColor = new ListenMoeClient.Controls.BorderedPanel();
 			this.lblBaseColor = new System.Windows.Forms.Label();
-			this.panelBaseColor = new ListenMoeClient.Controls.BorderedPanel();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.cbVisualiserFadeEdges = new System.Windows.Forms.CheckBox();
 			this.cbEnableVisualiser = new System.Windows.Forms.CheckBox();
 			this.lblVisualiserOpacity = new System.Windows.Forms.Label();
-			this.panelVisualiserColor = new ListenMoeClient.Controls.BorderedPanel();
 			this.tbVisualiserOpacity = new System.Windows.Forms.TrackBar();
 			this.cbVisualiserBars = new System.Windows.Forms.CheckBox();
 			this.tpAccount = new System.Windows.Forms.TabPage();
@@ -62,12 +59,15 @@
 			this.lblLoginStatus = new System.Windows.Forms.Label();
 			this.btnLogout = new System.Windows.Forms.Button();
 			this.panelNotLoggedIn = new System.Windows.Forms.Panel();
-			this.txtUsername = new ListenMoeClient.GhostTextbox();
-			this.txtPassword = new ListenMoeClient.GhostTextbox();
 			this.tpAudio = new System.Windows.Forms.TabPage();
 			this.btnRefreshAudioDevices = new System.Windows.Forms.Button();
 			this.lblAudioDevice = new System.Windows.Forms.Label();
 			this.dropdownAudioDevices = new System.Windows.Forms.ComboBox();
+			this.panelAccentColor = new ListenMoeClient.Controls.BorderedPanel();
+			this.panelBaseColor = new ListenMoeClient.Controls.BorderedPanel();
+			this.panelVisualiserColor = new ListenMoeClient.Controls.BorderedPanel();
+			this.txtUsername = new ListenMoeClient.GhostTextbox();
+			this.txtPassword = new ListenMoeClient.GhostTextbox();
 			this.tabControl.SuspendLayout();
 			this.tpGeneral.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).BeginInit();
@@ -296,17 +296,6 @@
 			this.lblAccentColor.TabIndex = 5;
 			this.lblAccentColor.Text = "Accent color";
 			// 
-			// panelAccentColor
-			// 
-			this.panelAccentColor.BackColor = System.Drawing.Color.Black;
-			this.panelAccentColor.BorderColor = System.Drawing.Color.Black;
-			this.panelAccentColor.BorderWidth = 2;
-			this.panelAccentColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelAccentColor.Location = new System.Drawing.Point(6, 65);
-			this.panelAccentColor.Name = "panelAccentColor";
-			this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
-			this.panelAccentColor.TabIndex = 4;
-			// 
 			// lblBaseColor
 			// 
 			this.lblBaseColor.AutoSize = true;
@@ -315,17 +304,6 @@
 			this.lblBaseColor.Size = new System.Drawing.Size(57, 13);
 			this.lblBaseColor.TabIndex = 3;
 			this.lblBaseColor.Text = "Base color";
-			// 
-			// panelBaseColor
-			// 
-			this.panelBaseColor.BackColor = System.Drawing.Color.Black;
-			this.panelBaseColor.BorderColor = System.Drawing.Color.Black;
-			this.panelBaseColor.BorderWidth = 2;
-			this.panelBaseColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelBaseColor.Location = new System.Drawing.Point(6, 19);
-			this.panelBaseColor.Name = "panelBaseColor";
-			this.panelBaseColor.Size = new System.Drawing.Size(32, 32);
-			this.panelBaseColor.TabIndex = 2;
 			// 
 			// groupBox1
 			// 
@@ -370,17 +348,6 @@
 			this.lblVisualiserOpacity.Size = new System.Drawing.Size(43, 13);
 			this.lblVisualiserOpacity.TabIndex = 4;
 			this.lblVisualiserOpacity.Text = "Opacity";
-			// 
-			// panelVisualiserColor
-			// 
-			this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
-			this.panelVisualiserColor.BorderColor = System.Drawing.Color.Black;
-			this.panelVisualiserColor.BorderWidth = 2;
-			this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelVisualiserColor.Location = new System.Drawing.Point(6, 65);
-			this.panelVisualiserColor.Name = "panelVisualiserColor";
-			this.panelVisualiserColor.Size = new System.Drawing.Size(32, 32);
-			this.panelVisualiserColor.TabIndex = 1;
 			// 
 			// tbVisualiserOpacity
 			// 
@@ -456,24 +423,6 @@
 			this.panelNotLoggedIn.Size = new System.Drawing.Size(365, 116);
 			this.panelNotLoggedIn.TabIndex = 4;
 			// 
-			// txtUsername
-			// 
-			this.txtUsername.GhostText = "Username";
-			this.txtUsername.Location = new System.Drawing.Point(94, 15);
-			this.txtUsername.Name = "txtUsername";
-			this.txtUsername.Size = new System.Drawing.Size(181, 20);
-			this.txtUsername.TabIndex = 2;
-			// 
-			// txtPassword
-			// 
-			this.txtPassword.GhostText = "Password";
-			this.txtPassword.Location = new System.Drawing.Point(94, 41);
-			this.txtPassword.Name = "txtPassword";
-			this.txtPassword.PasswordChar = '⚫';
-			this.txtPassword.Size = new System.Drawing.Size(181, 20);
-			this.txtPassword.TabIndex = 3;
-			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
-			// 
 			// tpAudio
 			// 
 			this.tpAudio.Controls.Add(this.btnRefreshAudioDevices);
@@ -514,6 +463,57 @@
 			this.dropdownAudioDevices.Size = new System.Drawing.Size(190, 21);
 			this.dropdownAudioDevices.TabIndex = 0;
 			this.dropdownAudioDevices.SelectionChangeCommitted += new System.EventHandler(this.cbAudioDevices_SelectionChangeCommitted);
+			// 
+			// panelAccentColor
+			// 
+			this.panelAccentColor.BackColor = System.Drawing.Color.Black;
+			this.panelAccentColor.BorderColor = System.Drawing.Color.Black;
+			this.panelAccentColor.BorderWidth = 2;
+			this.panelAccentColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelAccentColor.Location = new System.Drawing.Point(6, 65);
+			this.panelAccentColor.Name = "panelAccentColor";
+			this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
+			this.panelAccentColor.TabIndex = 4;
+			// 
+			// panelBaseColor
+			// 
+			this.panelBaseColor.BackColor = System.Drawing.Color.Black;
+			this.panelBaseColor.BorderColor = System.Drawing.Color.Black;
+			this.panelBaseColor.BorderWidth = 2;
+			this.panelBaseColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelBaseColor.Location = new System.Drawing.Point(6, 19);
+			this.panelBaseColor.Name = "panelBaseColor";
+			this.panelBaseColor.Size = new System.Drawing.Size(32, 32);
+			this.panelBaseColor.TabIndex = 2;
+			// 
+			// panelVisualiserColor
+			// 
+			this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
+			this.panelVisualiserColor.BorderColor = System.Drawing.Color.Black;
+			this.panelVisualiserColor.BorderWidth = 2;
+			this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.panelVisualiserColor.Location = new System.Drawing.Point(6, 65);
+			this.panelVisualiserColor.Name = "panelVisualiserColor";
+			this.panelVisualiserColor.Size = new System.Drawing.Size(32, 32);
+			this.panelVisualiserColor.TabIndex = 1;
+			// 
+			// txtUsername
+			// 
+			this.txtUsername.GhostText = "Username";
+			this.txtUsername.Location = new System.Drawing.Point(94, 15);
+			this.txtUsername.Name = "txtUsername";
+			this.txtUsername.Size = new System.Drawing.Size(181, 20);
+			this.txtUsername.TabIndex = 2;
+			// 
+			// txtPassword
+			// 
+			this.txtPassword.GhostText = "Password";
+			this.txtPassword.Location = new System.Drawing.Point(94, 41);
+			this.txtPassword.Name = "txtPassword";
+			this.txtPassword.PasswordChar = '⚫';
+			this.txtPassword.Size = new System.Drawing.Size(181, 20);
+			this.txtPassword.TabIndex = 3;
+			this.txtPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyUp);
 			// 
 			// FormSettings
 			// 

@@ -114,6 +114,7 @@ namespace ListenMoeClient
 			{
 				Visualiser = new AudioVisualiser();
 				Visualiser.SetBounds(new Rectangle(0, 0, this.Width, this.Height));
+				Visualiser.ReloadSettings();
 				Visualiser.Start();
 				player.SetVisualiser(Visualiser);
 			}

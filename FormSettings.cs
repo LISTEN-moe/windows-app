@@ -162,7 +162,7 @@ namespace ListenMoeClient
 		private void reloadAudioDevices()
 		{
 			dropdownAudioDevices.DataSource = audioPlayer.GetAudioOutputDevices();
-			dropdownAudioDevices.SelectedIndex = Array.IndexOf(audioPlayer.GetAudioOutputDevices().Select(a => a.DeviceInfo.Guid).ToArray(), audioPlayer.CurrentDeviceGuid);
+			dropdownAudioDevices.SelectedIndex = Math.Max(0, Array.IndexOf(audioPlayer.GetAudioOutputDevices().Select(a => a.DeviceInfo.Guid).ToArray(), audioPlayer.CurrentDeviceGuid));
 		}
 
 		private void cbAudioDevices_SelectionChangeCommitted(object sender, EventArgs e)

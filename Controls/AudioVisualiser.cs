@@ -53,14 +53,14 @@ namespace ListenMoeClient
 			if (Settings.Get<bool>("VisualiserFadeEdges"))
 			{
 				Color baseColor = Settings.Get<Color>("BaseColor");
-				barBrush = new LinearGradientBrush(new Rectangle(new Point(0, 0), Bounds.Size), baseColor, visualiserColor, LinearGradientMode.Horizontal);
+				barBrush = new LinearGradientBrush(new Rectangle(Point.Empty, Bounds.Size), baseColor, visualiserColor, LinearGradientMode.Horizontal);
 				ColorBlend blend = new ColorBlend
 				{
 					Colors = new Color[] { baseColor, baseColor, visualiserColor, visualiserColor, visualiserColor, baseColor, baseColor },
 					Positions = new float[] { 0.0f, 0.05f, 0.2f, 0.5f, 0.8f, 0.95f, 1.0f }
 				};
-				((LinearGradientBrush)barBrush).InterpolationColors = blend;
 				linePen = new Pen(barBrush, 1);
+				((LinearGradientBrush)barBrush).InterpolationColors = blend;
 			}
 			else
 			{

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 
 namespace ListenMoeClient
 {
@@ -29,7 +30,8 @@ namespace ListenMoeClient
 	{
 		BufferedWaveProvider provider;
 		DirectSoundOut directOut;
-		public Guid CurrentDeviceGuid { get; private set; }
+		SampleChannel volumeChannel;
+		public Guid CurrentDeviceGuid { get; private set; } = Guid.NewGuid();
 
 		Queue<short[]> samplesToPlay = new Queue<short[]>();
 
@@ -54,8 +56,9 @@ namespace ListenMoeClient
 		{
 			directOut = new DirectSoundOut(deviceGuid);
 			CurrentDeviceGuid = deviceGuid;
-			directOut.Init(provider);
-			directOut.Volume = Settings.Get<float>("Volume");
+			volumeChannel = new SampleChannel(provider);
+			volumeChannel.Volume = Settings.Get<float>("Volume");
+			directOut.Init(volumeChannel);
 
 			Settings.Set("OutputDeviceGuid", deviceGuid.ToString());
 			Settings.WriteSettings();
@@ -102,13 +105,13 @@ namespace ListenMoeClient
 
 		public float AddVolume(float vol)
 		{
-			SetVolume(directOut.Volume + vol);
-			return directOut.Volume;
+			SetVolume(volumeChannel.Volume + vol);
+			return volumeChannel.Volume;
 		}
 
 		public void SetVolume(float vol)
 		{
-			directOut.Volume = BoundVolume(vol);
+			volumeChannel.Volume = BoundVolume(vol);
 		}
 
 		/// <summary>
