@@ -122,9 +122,9 @@ namespace ListenMoeClient
 			Set("Username", "");
 			Set("OutputDeviceGuid", "");
 
-			Set("VisualiserColor", Color.FromArgb(236, 26, 85));
-			Set("BaseColor", Color.FromArgb(44, 46, 59));
-			Set("AccentColor", Color.FromArgb(236, 26, 85));
+			Set("VisualiserColor", Color.FromArgb(255, 1, 91));
+			Set("BaseColor", Color.FromArgb(33, 35, 48));
+			Set("AccentColor", Color.FromArgb(255, 1, 91));
 		}
 
 		public static void LoadSettings()
