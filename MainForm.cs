@@ -511,16 +511,17 @@ namespace ListenMoeClient
 			}
 
 			if (songInfoStream?.currentInfo.extended?.favorite ?? false)
-				picFavourite.Image = favSprite.Frames[favSprite.Frames.Length];
+				picFavourite.Image = favSprite.Frames[favSprite.Frames.Length - 1];
 			else
 				picFavourite.Image = favSprite.Frames[0];
 		}
 
 		private async Task TogglePlayback()
 		{
-			ReloadSprites();
 			if (player.IsPlaying())
 			{
+				Task stopTask = player.Stop();
+				ReloadSprites();
 				menuItemPlayPause.Text = "Play";
 				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
 				{
@@ -528,10 +529,12 @@ namespace ListenMoeClient
 					button.Tooltip = "Play";
 				}
 				centerPanel.StopVisualiser(player);
-				await player.Stop();
+				await stopTask;
 			}
 			else
 			{
+				player.Play();
+				ReloadSprites();
 				menuItemPlayPause.Text = "Pause";
 				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
 				{
@@ -539,7 +542,6 @@ namespace ListenMoeClient
 					button.Tooltip = "Pause";
 				}
 				centerPanel.StartVisualiser(player);
-				player.Play();
 			}
 		}
 
@@ -705,12 +707,14 @@ namespace ListenMoeClient
 				}
 
 				isAnimating = false;
+				songInfoStream.currentInfo.extended.favorite = true;
 			}
 			else
 			{
 				lock (animationLock)
 					isAnimating = false;
 				picFavourite.Image = favSprite.Frames[0];
+				songInfoStream.currentInfo.extended.favorite = false;
 			}
 		}
 
@@ -720,7 +724,7 @@ namespace ListenMoeClient
 			picFavourite.Image = favouriteStatus ? fadedFavSprite.Frames[1] : fadedFavSprite.Frames[0];
 
 			string result = await WebHelper.Post("https://listen.moe/api/songs/favorite", Settings.Get<string>("Token"), new Dictionary<string, string>() {
-				{ "song", songInfoStream.currentInfo.song_id.ToString() }
+				["song"] = songInfoStream.currentInfo.song_id.ToString()
 			});
 
 			var response = Json.Parse<FavouritesResponse>(result);
