@@ -722,15 +722,21 @@ namespace ListenMoeClient
 
 		private async void picFavourite_Click(object sender, EventArgs e)
 		{
-			bool favouriteStatus = songInfoStream.currentInfo.extended?.favorite ?? false;
-			picFavourite.Image = favouriteStatus ? fadedFavSprite.Frames[1] : fadedFavSprite.Frames[0];
+			bool currentStatus = songInfoStream.currentInfo.extended?.favorite ?? false;
+			bool newStatus = !currentStatus;
+			if (songInfoStream.currentInfo.extended == null)
+				songInfoStream.currentInfo.extended = new ExtendedSongInfo();
+			songInfoStream.currentInfo.extended.favorite = newStatus;
+
+			SetFavouriteSprite(newStatus);
 
 			string result = await WebHelper.Post("https://listen.moe/api/songs/favorite", Settings.Get<string>("Token"), new Dictionary<string, string>() {
 				["song"] = songInfoStream.currentInfo.song_id.ToString()
 			});
 
 			var response = Json.Parse<FavouritesResponse>(result);
-			SetFavouriteSprite(response.favorite);
+			picFavourite.Image = response.favorite ? favSprite.Frames[favSprite.Frames.Length - 1] : 
+				spriteColorInverted ? darkFavSprite.Frames[0] : favSprite.Frames[0];
 		}
 
 		private void menuItemResetLocation_Click(object sender, EventArgs e)
