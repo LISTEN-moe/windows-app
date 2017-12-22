@@ -137,6 +137,7 @@ namespace ListenMoeClient
 		int gripSize = 16;
 		Rectangle gripRect = new Rectangle();
 		Rectangle rightEdgeRect = new Rectangle();
+		Rectangle leftEdgeRect = new Rectangle();
 
 		bool spriteColorInverted = false;
 
@@ -227,16 +228,21 @@ namespace ListenMoeClient
 				VisualStyleRenderer renderer = new VisualStyleRenderer(VisualStyleElement.Status.Gripper.Normal);
 				renderer.DrawBackground(e.Graphics, gripRect);
 			}
+
+			//Expose 2px on the left for resizing, so we paint it the same colour so it's not noticeable
+			e.Graphics.FillRectangle(new SolidBrush(Settings.Get<Color>("AccentColor")), new Rectangle(0, 0, 2, this.ClientRectangle.Height));
 		}
 
 		private void UpdatePanelExcludedRegions()
 		{
 			gripRect = new Rectangle(this.ClientRectangle.Width - gripSize, this.ClientRectangle.Height - gripSize, gripSize, gripSize);
 			rightEdgeRect = new Rectangle(this.ClientRectangle.Width - 2, 0, 2, this.ClientRectangle.Height);
+			leftEdgeRect = new Rectangle(0, 0, 2, this.ClientRectangle.Height);
 
 			var region = new Region(new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height));
 			region.Exclude(gripRect);
 			region.Exclude(rightEdgeRect);
+			region.Exclude(leftEdgeRect);
 			gridPanel.Region = region;
 			panelRight.Region = region;
 		}
@@ -268,6 +274,8 @@ namespace ListenMoeClient
 					m.Result = (IntPtr)17;
 				else if (rightEdgeRect.Contains(pos))
 					m.Result = (IntPtr)11;
+				else if (leftEdgeRect.Contains(pos))
+					m.Result = (IntPtr)10;
 				return;
 			}
 			if (m.Msg == Program.WM_SHOWME)
