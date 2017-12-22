@@ -45,12 +45,12 @@ namespace ListenMoeClient
 			if (isEventOrRequest)
 			{
 				lblArtist.Bounds = new Rectangle((int)(8 * scale), (int)(4 * scale), this.Width, this.Height);
-				lblTitle.Bounds = new Rectangle((int)(7 * scale), (int)(18 * scale), this.Width, this.Height);
+				lblTitle.Bounds = new Rectangle((int)(6 * scale), (int)(18 * scale), this.Width, this.Height);
 			}
 			else
 			{
 				lblArtist.Bounds = new Rectangle((int)(8 * scale), (int)(13 * scale), this.Width, this.Height);
-				lblTitle.Bounds = new Rectangle((int)(7 * scale), (int)(28 * scale), this.Width, this.Height);
+				lblTitle.Bounds = new Rectangle((int)(6 * scale), (int)(28 * scale), this.Width, this.Height);
 			}
 
 			lblEvent.RecalculateBounds();
@@ -118,12 +118,9 @@ namespace ListenMoeClient
 			if (!string.IsNullOrWhiteSpace(albumText))
 				lblArtist.Text += " - " + albumText;
 			lblEvent.Text = eventText;
-
-			if (this.isEventOrRequest != isEventOrRequest)
-			{
-				RecalculateMarqueeBounds();
-				this.isEventOrRequest = isEventOrRequest;
-			}
+			
+			this.isEventOrRequest = isEventOrRequest;
+			RecalculateMarqueeBounds();
 		}
 
 		public void SetLabelBrush(Brush brush)

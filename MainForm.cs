@@ -116,7 +116,7 @@ namespace ListenMoeClient
 		SongInfoStream songInfoStream;
 
 		Font titleFont;
-		Font albumFont;
+		Font artistFont;
 		Font volumeFont;
 		float currentScale = 1f;
 
@@ -140,7 +140,8 @@ namespace ListenMoeClient
 		Rectangle rightEdgeRect = new Rectangle();
 		Rectangle leftEdgeRect = new Rectangle();
 
-		bool spriteColorInverted = false;
+		bool spriteColorInverted = false; //Excluding play/pause icon
+		bool playPauseInverted = false;
 
 		public MainForm()
 		{
@@ -295,13 +296,16 @@ namespace ListenMoeClient
 			float vol = Settings.Get<float>("Volume");
 			Color accentColor = Settings.Get<Color>("AccentColor");
 			panelPlayBtn.BackColor = accentColor;
-			spriteColorInverted = accentColor.R + accentColor.G + accentColor.B > 128 * 3;
-			ReloadSprites();
+			playPauseInverted = accentColor.R + accentColor.G + accentColor.B > 128 * 3;
 
 			Color baseColor = Settings.Get<Color>("BaseColor");
+			spriteColorInverted = baseColor.R + baseColor.G + baseColor.B > 128 * 3;
 			centerPanel.BackColor = baseColor;
 			panelRight.BackColor = baseColor.Scale(1.3f);
+
+			//Set form colour to panel right colour so the correct colour shines through during region exclusion
 			this.BackColor = panelRight.BackColor;
+			ReloadSprites();
 
 			SetVolumeLabel(vol);
 			this.Opacity = Settings.Get<float>("FormOpacity");
@@ -349,12 +353,12 @@ namespace ListenMoeClient
 			var family = Meiryo.GetFontFamily();
 			var scaleFactor = Settings.Get<float>("Scale");
 			titleFont = new Font(family, 13 * scaleFactor);
-			albumFont = Meiryo.GetFont(9 * scaleFactor);
+			artistFont = Meiryo.GetFont(8 * scaleFactor);
 			volumeFont = Meiryo.GetFont(9 * scaleFactor);
 
 			lblVol.Font = volumeFont;
 
-			centerPanel.SetFonts(titleFont, albumFont);
+			centerPanel.SetFonts(titleFont, artistFont);
 		}
 
 		private async void Connect()
@@ -486,11 +490,6 @@ namespace ListenMoeClient
 		{
 			if (spriteColorInverted)
 			{
-				if (player.IsPlaying())
-					picPlayPause.Image = Properties.Resources.pause_inverted;
-				else
-					picPlayPause.Image = Properties.Resources.play;
-
 				picSettings.Image = Properties.Resources.cog_inverted;
 				picClose.Image = Properties.Resources.close_inverted;
 				centerPanel.SetLabelBrush(Brushes.Black);
@@ -500,16 +499,27 @@ namespace ListenMoeClient
 			}
 			else
 			{
-				if (player.IsPlaying())
-					picPlayPause.Image = Properties.Resources.pause;
-				else
-					picPlayPause.Image = Properties.Resources.play;
 
 				picSettings.Image = Properties.Resources.cog;
 				picClose.Image = Properties.Resources.close;
 				centerPanel.SetLabelBrush(Brushes.White);
 				lblVol.ForeColor = Color.White;
 				favSprite = lightFavSprite;
+			}
+
+			if (playPauseInverted)
+			{
+				if (player.IsPlaying())
+					picPlayPause.Image = Properties.Resources.pause_inverted;
+				else
+					picPlayPause.Image = Properties.Resources.play;
+			}
+			else
+			{
+				if (player.IsPlaying())
+					picPlayPause.Image = Properties.Resources.pause;
+				else
+					picPlayPause.Image = Properties.Resources.play;
 			}
 
 			if (songInfoStream?.currentInfo.extended?.favorite ?? false)
@@ -564,7 +574,7 @@ namespace ListenMoeClient
 
 		void ProcessSongInfo(SongInfo songInfo)
 		{
-			centerPanel.SetLabelText(songInfo.song_name, songInfo.artist_name, songInfo.anime_name, songInfo.requested_by, !string.IsNullOrWhiteSpace(songInfo.requested_by));
+			centerPanel.SetLabelText(songInfo.song_name, songInfo.artist_name, songInfo.anime_name, "Requested by " + songInfo.requested_by, !string.IsNullOrWhiteSpace(songInfo.requested_by));
 
 			if (songInfo.extended != null)
 				SetFavouriteSprite(songInfo.extended.favorite);
@@ -672,7 +682,8 @@ namespace ListenMoeClient
 
 		private void centerPanel_Resize(object sender, EventArgs e)
 		{
-			picFavourite.Location = new Point(centerPanel.Width - 30, (centerPanel.Height / 2) - (picFavourite.Height / 2));
+			float scale = Settings.Get<float>("Scale");
+			picFavourite.Location = new Point((int)(centerPanel.Width - 30 * scale), (centerPanel.Height / 2) - (picFavourite.Height / 2));
 		}
 
 		private async void SetFavouriteSprite(bool favourited)
