@@ -10,6 +10,11 @@ namespace ListenMoeClient
 {
 	static class Settings
 	{
+		public const int DEFAULT_WIDTH = 512;
+		public const int DEFAULT_HEIGHT = 58;
+		public const int DEFAULT_RIGHT_PANEL_WIDTH = 56;
+		public const int DEFAULT_PLAY_PAUSE_SIZE = 18;
+
 		private const string settingsFileLocation = "listenMoeSettings.ini";
 
 		static object settingsMutex = new object();
@@ -99,8 +104,8 @@ namespace ListenMoeClient
 			Set("LocationY", 100);
 			Set("VisualiserResolutionFactor", 3);
 			Set("UpdateInterval", 3600); //in seconds
-			Set("SizeX", 512);
-			Set("SizeY", 48);
+			Set("SizeX", DEFAULT_WIDTH);
+			Set("SizeY", DEFAULT_HEIGHT);
 			Set("FftSize", 2048);
 
 			Set("Volume", 0.3f);

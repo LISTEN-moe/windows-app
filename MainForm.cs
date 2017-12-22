@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -144,6 +145,8 @@ namespace ListenMoeClient
 		public MainForm()
 		{
 			InitializeComponent();
+			this.MinimumSize = new Size(Settings.DEFAULT_WIDTH, Settings.DEFAULT_HEIGHT);
+
 			SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 
 			centerPanel.MouseDown += Form1_MouseDown;
@@ -206,20 +209,6 @@ namespace ListenMoeClient
 			UpdatePanelExcludedRegions();
 		}
 
-		private Color ScaleColor(Color color, float multiplier)
-		{
-			byte BoundToByte(float f)
-			{
-				return (byte)(Math.Min(Math.Max(0, f), 255));
-			}
-
-			return Color.FromArgb(
-				BoundToByte(color.R * multiplier),
-				BoundToByte(color.G * multiplier),
-				BoundToByte(color.B * multiplier)
-			);
-		}
-
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
@@ -235,12 +224,17 @@ namespace ListenMoeClient
 
 		private void UpdatePanelExcludedRegions()
 		{
-			gripRect = new Rectangle(this.ClientRectangle.Width - gripSize, this.ClientRectangle.Height - gripSize, gripSize, gripSize);
-			rightEdgeRect = new Rectangle(this.ClientRectangle.Width - 2, 0, 2, this.ClientRectangle.Height);
-			leftEdgeRect = new Rectangle(0, 0, 2, this.ClientRectangle.Height);
+			int width = this.ClientRectangle.Width;
+			int height = this.ClientRectangle.Height;
+			GraphicsPath path = new GraphicsPath();
+			path.AddPolygon(new[] { new Point(width - gripSize, height), new Point(width, height - gripSize), new Point(width, height), new Point(width - gripSize, height) });
+			//path.AddRectangle(new Rectangle(width - gripSize, height - gripSize, gripSize, gripSize));
+			gripRect = new Rectangle(width - gripSize, height - gripSize, gripSize, gripSize);
+			rightEdgeRect = new Rectangle(width - 2, 0, 2, height);
+			leftEdgeRect = new Rectangle(0, 0, 2, height);
 
-			var region = new Region(new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height));
-			region.Exclude(gripRect);
+			var region = new Region(new Rectangle(0, 0, width, height));
+			region.Exclude(path);
 			region.Exclude(rightEdgeRect);
 			region.Exclude(leftEdgeRect);
 			gridPanel.Region = region;
@@ -306,9 +300,7 @@ namespace ListenMoeClient
 
 			Color baseColor = Settings.Get<Color>("BaseColor");
 			centerPanel.BackColor = baseColor;
-			panelRight.BackColor = Color.FromArgb((int)((baseColor.R * 1.1f).Bound(0, 255)),
-				(int)((baseColor.G * 1.1f).Bound(0, 255)),
-				(int)((baseColor.B * 1.1f).Bound(0, 255)));
+			panelRight.BackColor = baseColor.Scale(1.3f);
 			this.BackColor = panelRight.BackColor;
 
 			SetVolumeLabel(vol);
@@ -341,8 +333,8 @@ namespace ListenMoeClient
 			currentScale = scaleFactor;
 			
 			gridPanel.SetRows("100%");
-			int playPauseWidth = (int)(48 * scaleFactor);
-			int rightPanelWidth = (int)(75 * scaleFactor);
+			int playPauseWidth = (int)(Settings.DEFAULT_HEIGHT * scaleFactor);
+			int rightPanelWidth = (int)(Settings.DEFAULT_RIGHT_PANEL_WIDTH * scaleFactor);
 			gridPanel.SetColumns($"{playPauseWidth}px auto {rightPanelWidth}px");
 			gridPanel.DefineAreas("playPause centerPanel rightPanel");
 
@@ -356,9 +348,9 @@ namespace ListenMoeClient
 		{
 			var family = Meiryo.GetFontFamily();
 			var scaleFactor = Settings.Get<float>("Scale");
-			titleFont = new Font(family, 12 * scaleFactor);
-			albumFont = Meiryo.GetFont(8 * scaleFactor);
-			volumeFont = Meiryo.GetFont(8 * scaleFactor);
+			titleFont = new Font(family, 13 * scaleFactor);
+			albumFont = Meiryo.GetFont(9 * scaleFactor);
+			volumeFont = Meiryo.GetFont(9 * scaleFactor);
 
 			lblVol.Font = volumeFont;
 
@@ -499,7 +491,7 @@ namespace ListenMoeClient
 				else
 					picPlayPause.Image = Properties.Resources.play;
 
-				picSettings.Image = Properties.Resources.up_inverted;
+				picSettings.Image = Properties.Resources.cog_inverted;
 				picClose.Image = Properties.Resources.close_inverted;
 				centerPanel.SetLabelBrush(Brushes.Black);
 				lblVol.ForeColor = Color.Black;
@@ -513,7 +505,7 @@ namespace ListenMoeClient
 				else
 					picPlayPause.Image = Properties.Resources.play;
 
-				picSettings.Image = Properties.Resources.up;
+				picSettings.Image = Properties.Resources.cog;
 				picClose.Image = Properties.Resources.close;
 				centerPanel.SetLabelBrush(Brushes.White);
 				lblVol.ForeColor = Color.White;
@@ -572,15 +564,7 @@ namespace ListenMoeClient
 
 		void ProcessSongInfo(SongInfo songInfo)
 		{
-			string albumName = songInfo.anime_name;
-			string middle = "";
-			if (!string.IsNullOrEmpty(songInfo.requested_by))
-			{
-				middle = songInfo.requested_by.Contains(" ") ? "" : "Requested by ";
-				if (!string.IsNullOrWhiteSpace(albumName))
-					middle = "; " + middle;
-			}
-			centerPanel.SetLabelText(songInfo.song_name, songInfo.artist_name.Trim(), albumName + middle + songInfo.requested_by);
+			centerPanel.SetLabelText(songInfo.song_name, songInfo.artist_name, songInfo.anime_name, songInfo.requested_by, !string.IsNullOrWhiteSpace(songInfo.requested_by));
 
 			if (songInfo.extended != null)
 				SetFavouriteSprite(songInfo.extended.favorite);
@@ -621,12 +605,13 @@ namespace ListenMoeClient
 		private void SetPlayPauseSize(bool bigger)
 		{
 			var scale = Settings.Get<float>("Scale");
-			int playPauseSize = bigger ? 18 : 16;
-			int picPlayPauseX = bigger ? 15 : 16;
+			var ppSize = Settings.DEFAULT_PLAY_PAUSE_SIZE;
+			int playPauseSize = bigger ? ppSize + 2 : ppSize;
 
 			picPlayPause.Size = new Size((int)(playPauseSize * scale), (int)(playPauseSize * scale));
 			int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
-			picPlayPause.Location = new Point((int)(picPlayPauseX * scale), y);
+			int x = (panelPlayBtn.Width / 2) - (picPlayPause.Width / 2);
+			picPlayPause.Location = new Point(x, y);
 		}
 
 		private void menuItemCopySongInfo_Click(object sender, EventArgs e)
@@ -685,10 +670,9 @@ namespace ListenMoeClient
 			SetPlayPauseSize(false);
 		}
 
-		private void panelRight_Resize(object sender, EventArgs e)
+		private void centerPanel_Resize(object sender, EventArgs e)
 		{
-			picFavourite.Location = new Point(0, (panelRight.Height / 2) - (picFavourite.Height / 2));
-			picFavourite.SendToBack();
+			picFavourite.Location = new Point(centerPanel.Width - 30, (centerPanel.Height / 2) - (picFavourite.Height / 2));
 		}
 
 		private async void SetFavouriteSprite(bool favourited)

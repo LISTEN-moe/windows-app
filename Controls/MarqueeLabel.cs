@@ -7,6 +7,10 @@ namespace ListenMoeClient
 	class MarqueeLabel
 	{
 		public float ScrollSpeed { get; set; } = 50; //In pixels per second
+		public bool Centered { get; set; } = false;
+		private bool renderBounds = false; //For debugging
+		Pen boundsPen = new Pen(new SolidBrush(Globals.RandomColor()));
+
 		private string text = "";
 		public string Text
 		{
@@ -48,7 +52,7 @@ namespace ListenMoeClient
 
 		private bool textChanged = true;
 
-		private void UpdateTextPosition(float scale)
+		private void UpdateTextPosition()
 		{
 			DateTime current = DateTime.Now;
 			double ms = (current - last).TotalMilliseconds;
@@ -58,7 +62,7 @@ namespace ListenMoeClient
 				float distance = (float)(ScrollSpeed * (ms / 1000));
 				currentPosition -= distance;
 				if (currentPosition < -totalStringWidth)
-					currentPosition = Bounds.Width * spacing * scale;
+					currentPosition = Bounds.Width * spacing;
 			}
 
 			last = current;
@@ -85,7 +89,7 @@ namespace ListenMoeClient
 				}
 				totalStringWidth += 2; //Padding
 
-				if (totalStringWidth > Bounds.Width * scale)
+				if (totalStringWidth > Bounds.Width)
 					scrolling = true;
 				else
 				{
@@ -100,31 +104,44 @@ namespace ListenMoeClient
 			else
 				g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
-			UpdateTextPosition(scale);
+			UpdateTextPosition();
 
 			g.TranslateTransform((int)currentPosition, 0);
-			RectangleF rect = new RectangleF(new PointF(Bounds.Location.X * scale, Bounds.Location.Y * scale), new SizeF(totalStringWidth, Bounds.Height * scale));
-			g.DrawString(text, Font, FontBrush, rect.Location);
-			if (subtext.Trim() != "")
+			float x;
+			if (Centered)
+				x = (Bounds.Width / 2 - totalStringWidth / 2);
+			else
+				x = Bounds.Location.X;
+			RectangleF rect = new RectangleF(new PointF(x, Bounds.Location.Y), new SizeF(totalStringWidth, Bounds.Height));
+
+			void DrawText()
 			{
-				g.DrawString(subtext, Subfont, FontBrush, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
+				g.DrawString(text, Font, FontBrush, rect.Location);
+				if (subtext.Trim() != "")
+				{
+					g.DrawString(subtext, Subfont, FontBrush, new PointF(x + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
+				}
 			}
+
+			DrawText();
 
 			if (scrolling)
 			{
 				//Draw it on the other side for seamless looping
-				float secondPosition = totalStringWidth + Bounds.Width * spacing * scale;
+				float secondPosition = x + totalStringWidth + Bounds.Width * spacing;
 				g.TranslateTransform(secondPosition, 0);
-				g.DrawString(text, Font, FontBrush, rect.Location);
-				if (subtext.Trim() != "")
-				{
-					g.DrawString(subtext, Subfont, FontBrush, new PointF(rect.Location.X + mainTextSize.Width + subtextDistance * scale, rect.Location.Y + ((mainTextSize.Height - subTextSize.Height) / 2)));
-				}
+
+				DrawText();
 
 				g.TranslateTransform(-secondPosition, 0);
 			}
 
 			g.TranslateTransform(-(int)currentPosition, 0);
+
+			if (renderBounds)
+			{
+				g.DrawRectangle(boundsPen, Bounds);
+			}
 		}
 	}
 }

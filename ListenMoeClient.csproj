@@ -212,11 +212,9 @@
     <None Include="Resources\fav_sprite.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\up.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="ILMergeOrder.txt" />
-    <None Include="Resources\up_inverted.png" />
+    <None Include="Resources\cog_inverted.png" />
+    <None Include="Resources\cog.png" />
     <None Include="Resources\close_inverted.png" />
     <None Include="Resources\play_inverted.png" />
     <None Include="Resources\pause_inverted.png" />

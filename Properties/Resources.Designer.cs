@@ -83,6 +83,26 @@ namespace ListenMoeClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap cog {
+            get {
+                object obj = ResourceManager.GetObject("cog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap cog_inverted {
+            get {
+                object obj = ResourceManager.GetObject("cog_inverted", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap fav_sprite {
             get {
                 object obj = ResourceManager.GetObject("fav_sprite", resourceCulture);
@@ -166,26 +186,6 @@ namespace ListenMoeClient.Properties {
         internal static System.Drawing.Bitmap play_inverted {
             get {
                 object obj = ResourceManager.GetObject("play_inverted", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap up {
-            get {
-                object obj = ResourceManager.GetObject("up", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap up_inverted {
-            get {
-                object obj = ResourceManager.GetObject("up_inverted", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

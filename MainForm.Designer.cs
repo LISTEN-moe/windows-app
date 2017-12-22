@@ -53,6 +53,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.picFavourite)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSettings)).BeginInit();
+			this.centerPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// contextMenu1
@@ -113,7 +114,7 @@
 			this.gridPanel.Location = new System.Drawing.Point(0, 0);
 			this.gridPanel.Name = "gridPanel";
 			this.gridPanel.RenderInvalidControls = false;
-			this.gridPanel.Size = new System.Drawing.Size(512, 48);
+			this.gridPanel.Size = new System.Drawing.Size(591, 294);
 			this.gridPanel.TabIndex = 10;
 			// 
 			// panelPlayBtn
@@ -121,9 +122,9 @@
 			this.panelPlayBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(26)))), ((int)(((byte)(85)))));
 			this.panelPlayBtn.Controls.Add(this.picPlayPause);
 			this.panelPlayBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.panelPlayBtn.Location = new System.Drawing.Point(3, 3);
+			this.panelPlayBtn.Location = new System.Drawing.Point(12, 78);
 			this.panelPlayBtn.Name = "panelPlayBtn";
-			this.panelPlayBtn.Size = new System.Drawing.Size(48, 48);
+			this.panelPlayBtn.Size = new System.Drawing.Size(64, 64);
 			this.panelPlayBtn.TabIndex = 5;
 			this.panelPlayBtn.Tag = "playPause";
 			this.panelPlayBtn.Click += new System.EventHandler(this.playPause_Click);
@@ -136,9 +137,9 @@
 			this.picPlayPause.BackColor = System.Drawing.Color.Transparent;
 			this.picPlayPause.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picPlayPause.Image = global::ListenMoeClient.Properties.Resources.pause;
-			this.picPlayPause.Location = new System.Drawing.Point(16, 16);
+			this.picPlayPause.Location = new System.Drawing.Point(20, 20);
 			this.picPlayPause.Name = "picPlayPause";
-			this.picPlayPause.Size = new System.Drawing.Size(16, 16);
+			this.picPlayPause.Size = new System.Drawing.Size(24, 24);
 			this.picPlayPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.picPlayPause.TabIndex = 0;
 			this.picPlayPause.TabStop = false;
@@ -147,23 +148,21 @@
 			// panelRight
 			// 
 			this.panelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
-			this.panelRight.Controls.Add(this.picFavourite);
 			this.panelRight.Controls.Add(this.picClose);
 			this.panelRight.Controls.Add(this.picSettings);
 			this.panelRight.Controls.Add(this.lblVol);
-			this.panelRight.Location = new System.Drawing.Point(431, 3);
+			this.panelRight.Location = new System.Drawing.Point(507, 78);
 			this.panelRight.Name = "panelRight";
-			this.panelRight.Size = new System.Drawing.Size(78, 52);
+			this.panelRight.Size = new System.Drawing.Size(56, 64);
 			this.panelRight.TabIndex = 8;
 			this.panelRight.Tag = "rightPanel";
-			this.panelRight.Resize += new System.EventHandler(this.panelRight_Resize);
 			// 
 			// picFavourite
 			// 
 			this.picFavourite.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.picFavourite.BackColor = System.Drawing.Color.Transparent;
 			this.picFavourite.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picFavourite.Location = new System.Drawing.Point(0, 10);
+			this.picFavourite.Location = new System.Drawing.Point(319, 8);
 			this.picFavourite.Name = "picFavourite";
 			this.picFavourite.Size = new System.Drawing.Size(32, 32);
 			this.picFavourite.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -178,7 +177,7 @@
 			this.picClose.BackColor = System.Drawing.Color.Transparent;
 			this.picClose.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picClose.Image = global::ListenMoeClient.Properties.Resources.close;
-			this.picClose.Location = new System.Drawing.Point(60, 5);
+			this.picClose.Location = new System.Drawing.Point(37, 7);
 			this.picClose.Name = "picClose";
 			this.picClose.Size = new System.Drawing.Size(12, 12);
 			this.picClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -191,8 +190,8 @@
 			this.picSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.picSettings.BackColor = System.Drawing.Color.Transparent;
 			this.picSettings.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picSettings.Image = global::ListenMoeClient.Properties.Resources.up;
-			this.picSettings.Location = new System.Drawing.Point(36, 5);
+			this.picSettings.Image = global::ListenMoeClient.Properties.Resources.cog;
+			this.picSettings.Location = new System.Drawing.Point(14, 7);
 			this.picSettings.Name = "picSettings";
 			this.picSettings.Size = new System.Drawing.Size(12, 12);
 			this.picSettings.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -207,7 +206,7 @@
 			this.lblVol.BackColor = System.Drawing.Color.Transparent;
 			this.lblVol.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
 			this.lblVol.ForeColor = System.Drawing.Color.White;
-			this.lblVol.Location = new System.Drawing.Point(31, 35);
+			this.lblVol.Location = new System.Drawing.Point(5, 46);
 			this.lblVol.Name = "lblVol";
 			this.lblVol.Size = new System.Drawing.Size(34, 13);
 			this.lblVol.TabIndex = 4;
@@ -215,22 +214,23 @@
 			// 
 			// centerPanel
 			// 
-			this.centerPanel.Location = new System.Drawing.Point(57, 3);
+			this.centerPanel.Controls.Add(this.picFavourite);
+			this.centerPanel.Location = new System.Drawing.Point(97, 90);
 			this.centerPanel.Name = "centerPanel";
-			this.centerPanel.Size = new System.Drawing.Size(375, 48);
+			this.centerPanel.Size = new System.Drawing.Size(354, 48);
 			this.centerPanel.TabIndex = 9;
 			this.centerPanel.Tag = "centerPanel";
 			this.centerPanel.Visualiser = null;
+			this.centerPanel.Resize += new System.EventHandler(this.centerPanel_Resize);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(46)))), ((int)(((byte)(59)))));
-			this.ClientSize = new System.Drawing.Size(512, 48);
+			this.ClientSize = new System.Drawing.Size(591, 294);
 			this.Controls.Add(this.gridPanel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.MinimumSize = new System.Drawing.Size(96, 48);
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Listen.moe";
@@ -246,6 +246,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.picFavourite)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSettings)).EndInit();
+			this.centerPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}

@@ -31,19 +31,14 @@
 			this.btnLogin = new System.Windows.Forms.Button();
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tpGeneral = new System.Windows.Forms.TabPage();
-			this.lblOpacityDesc = new System.Windows.Forms.Label();
-			this.lblOpacity = new System.Windows.Forms.Label();
-			this.tbOpacity = new System.Windows.Forms.TrackBar();
 			this.cbThumbnailButton = new System.Windows.Forms.CheckBox();
 			this.lblMinutes = new System.Windows.Forms.Label();
 			this.numericUpdateInterval = new System.Windows.Forms.NumericUpDown();
-			this.lblResolutionScaleDesc = new System.Windows.Forms.Label();
-			this.lblResolutionScale = new System.Windows.Forms.Label();
-			this.tbResolutionScale = new System.Windows.Forms.TrackBar();
 			this.cbHideFromAltTab = new System.Windows.Forms.CheckBox();
 			this.cbCloseToTray = new System.Windows.Forms.CheckBox();
 			this.cbUpdateAutocheck = new System.Windows.Forms.CheckBox();
 			this.cbTopmost = new System.Windows.Forms.CheckBox();
+			this.tpLayout = new System.Windows.Forms.TabPage();
 			this.tpTheme = new System.Windows.Forms.TabPage();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.lblAccentColor = new System.Windows.Forms.Label();
@@ -68,11 +63,16 @@
 			this.btnRefreshAudioDevices = new System.Windows.Forms.Button();
 			this.lblAudioDevice = new System.Windows.Forms.Label();
 			this.dropdownAudioDevices = new System.Windows.Forms.ComboBox();
+			this.lblOpacityDesc = new System.Windows.Forms.Label();
+			this.lblOpacity = new System.Windows.Forms.Label();
+			this.tbOpacity = new System.Windows.Forms.TrackBar();
+			this.lblResolutionScaleDesc = new System.Windows.Forms.Label();
+			this.tbResolutionScale = new System.Windows.Forms.TrackBar();
+			this.lblResolutionScale = new System.Windows.Forms.Label();
 			this.tabControl.SuspendLayout();
 			this.tpGeneral.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).BeginInit();
+			this.tpLayout.SuspendLayout();
 			this.tpTheme.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -81,6 +81,8 @@
 			this.panelLoggedIn.SuspendLayout();
 			this.panelNotLoggedIn.SuspendLayout();
 			this.tpAudio.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLogin
@@ -96,6 +98,7 @@
 			// tabControl
 			// 
 			this.tabControl.Controls.Add(this.tpGeneral);
+			this.tabControl.Controls.Add(this.tpLayout);
 			this.tabControl.Controls.Add(this.tpTheme);
 			this.tabControl.Controls.Add(this.tpAccount);
 			this.tabControl.Controls.Add(this.tpAudio);
@@ -108,15 +111,9 @@
 			// 
 			// tpGeneral
 			// 
-			this.tpGeneral.Controls.Add(this.lblOpacityDesc);
-			this.tpGeneral.Controls.Add(this.lblOpacity);
-			this.tpGeneral.Controls.Add(this.tbOpacity);
 			this.tpGeneral.Controls.Add(this.cbThumbnailButton);
 			this.tpGeneral.Controls.Add(this.lblMinutes);
 			this.tpGeneral.Controls.Add(this.numericUpdateInterval);
-			this.tpGeneral.Controls.Add(this.lblResolutionScaleDesc);
-			this.tpGeneral.Controls.Add(this.lblResolutionScale);
-			this.tpGeneral.Controls.Add(this.tbResolutionScale);
 			this.tpGeneral.Controls.Add(this.cbHideFromAltTab);
 			this.tpGeneral.Controls.Add(this.cbCloseToTray);
 			this.tpGeneral.Controls.Add(this.cbUpdateAutocheck);
@@ -129,41 +126,12 @@
 			this.tpGeneral.Text = "General";
 			this.tpGeneral.UseVisualStyleBackColor = true;
 			// 
-			// lblOpacityDesc
-			// 
-			this.lblOpacityDesc.AutoSize = true;
-			this.lblOpacityDesc.Location = new System.Drawing.Point(290, 51);
-			this.lblOpacityDesc.Name = "lblOpacityDesc";
-			this.lblOpacityDesc.Size = new System.Drawing.Size(43, 13);
-			this.lblOpacityDesc.TabIndex = 11;
-			this.lblOpacityDesc.Text = "Opacity";
-			// 
-			// lblOpacity
-			// 
-			this.lblOpacity.AutoSize = true;
-			this.lblOpacity.Location = new System.Drawing.Point(299, 93);
-			this.lblOpacity.Name = "lblOpacity";
-			this.lblOpacity.Size = new System.Drawing.Size(22, 13);
-			this.lblOpacity.TabIndex = 10;
-			this.lblOpacity.Text = "1.0";
-			// 
-			// tbOpacity
-			// 
-			this.tbOpacity.BackColor = System.Drawing.Color.White;
-			this.tbOpacity.Location = new System.Drawing.Point(259, 67);
-			this.tbOpacity.Maximum = 255;
-			this.tbOpacity.Name = "tbOpacity";
-			this.tbOpacity.Size = new System.Drawing.Size(104, 45);
-			this.tbOpacity.TabIndex = 9;
-			this.tbOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
-			this.tbOpacity.Scroll += new System.EventHandler(this.tbOpacity_Scroll);
-			// 
 			// cbThumbnailButton
 			// 
 			this.cbThumbnailButton.AutoSize = true;
 			this.cbThumbnailButton.Checked = true;
 			this.cbThumbnailButton.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbThumbnailButton.Location = new System.Drawing.Point(144, 6);
+			this.cbThumbnailButton.Location = new System.Drawing.Point(208, 6);
 			this.cbThumbnailButton.Name = "cbThumbnailButton";
 			this.cbThumbnailButton.Size = new System.Drawing.Size(109, 30);
 			this.cbThumbnailButton.TabIndex = 9;
@@ -173,7 +141,7 @@
 			// lblMinutes
 			// 
 			this.lblMinutes.AutoSize = true;
-			this.lblMinutes.Location = new System.Drawing.Point(205, 95);
+			this.lblMinutes.Location = new System.Drawing.Point(78, 85);
 			this.lblMinutes.Name = "lblMinutes";
 			this.lblMinutes.Size = new System.Drawing.Size(28, 13);
 			this.lblMinutes.TabIndex = 8;
@@ -181,7 +149,7 @@
 			// 
 			// numericUpdateInterval
 			// 
-			this.numericUpdateInterval.Location = new System.Drawing.Point(150, 93);
+			this.numericUpdateInterval.Location = new System.Drawing.Point(26, 82);
 			this.numericUpdateInterval.Name = "numericUpdateInterval";
 			this.numericUpdateInterval.Size = new System.Drawing.Size(49, 20);
 			this.numericUpdateInterval.TabIndex = 7;
@@ -191,41 +159,10 @@
             0,
             0});
 			// 
-			// lblResolutionScaleDesc
-			// 
-			this.lblResolutionScaleDesc.AutoSize = true;
-			this.lblResolutionScaleDesc.Location = new System.Drawing.Point(269, 3);
-			this.lblResolutionScaleDesc.Name = "lblResolutionScaleDesc";
-			this.lblResolutionScaleDesc.Size = new System.Drawing.Size(85, 13);
-			this.lblResolutionScaleDesc.TabIndex = 6;
-			this.lblResolutionScaleDesc.Text = "Resolution scale";
-			// 
-			// lblResolutionScale
-			// 
-			this.lblResolutionScale.AutoSize = true;
-			this.lblResolutionScale.Location = new System.Drawing.Point(299, 51);
-			this.lblResolutionScale.Name = "lblResolutionScale";
-			this.lblResolutionScale.Size = new System.Drawing.Size(22, 13);
-			this.lblResolutionScale.TabIndex = 5;
-			this.lblResolutionScale.Text = "1.0";
-			// 
-			// tbResolutionScale
-			// 
-			this.tbResolutionScale.BackColor = System.Drawing.Color.White;
-			this.tbResolutionScale.Location = new System.Drawing.Point(259, 19);
-			this.tbResolutionScale.Maximum = 40;
-			this.tbResolutionScale.Minimum = 10;
-			this.tbResolutionScale.Name = "tbResolutionScale";
-			this.tbResolutionScale.Size = new System.Drawing.Size(104, 45);
-			this.tbResolutionScale.TabIndex = 4;
-			this.tbResolutionScale.TickStyle = System.Windows.Forms.TickStyle.None;
-			this.tbResolutionScale.Value = 10;
-			this.tbResolutionScale.Scroll += new System.EventHandler(this.tbResolutionScale_Scroll);
-			// 
 			// cbHideFromAltTab
 			// 
 			this.cbHideFromAltTab.AutoSize = true;
-			this.cbHideFromAltTab.Location = new System.Drawing.Point(9, 55);
+			this.cbHideFromAltTab.Location = new System.Drawing.Point(208, 36);
 			this.cbHideFromAltTab.Name = "cbHideFromAltTab";
 			this.cbHideFromAltTab.Size = new System.Drawing.Size(137, 30);
 			this.cbHideFromAltTab.TabIndex = 3;
@@ -235,7 +172,7 @@
 			// cbCloseToTray
 			// 
 			this.cbCloseToTray.AutoSize = true;
-			this.cbCloseToTray.Location = new System.Drawing.Point(9, 34);
+			this.cbCloseToTray.Location = new System.Drawing.Point(9, 36);
 			this.cbCloseToTray.Name = "cbCloseToTray";
 			this.cbCloseToTray.Size = new System.Drawing.Size(84, 17);
 			this.cbCloseToTray.TabIndex = 2;
@@ -245,11 +182,11 @@
 			// cbUpdateAutocheck
 			// 
 			this.cbUpdateAutocheck.AutoSize = true;
-			this.cbUpdateAutocheck.Location = new System.Drawing.Point(9, 94);
+			this.cbUpdateAutocheck.Location = new System.Drawing.Point(9, 59);
 			this.cbUpdateAutocheck.Name = "cbUpdateAutocheck";
-			this.cbUpdateAutocheck.Size = new System.Drawing.Size(142, 17);
+			this.cbUpdateAutocheck.Size = new System.Drawing.Size(145, 17);
 			this.cbUpdateAutocheck.TabIndex = 1;
-			this.cbUpdateAutocheck.Text = "Check for updates every";
+			this.cbUpdateAutocheck.Text = "Check for updates every:";
 			this.cbUpdateAutocheck.UseVisualStyleBackColor = true;
 			// 
 			// cbTopmost
@@ -261,6 +198,22 @@
 			this.cbTopmost.TabIndex = 0;
 			this.cbTopmost.Text = "Keep form top most";
 			this.cbTopmost.UseVisualStyleBackColor = true;
+			// 
+			// tpLayout
+			// 
+			this.tpLayout.Controls.Add(this.lblResolutionScale);
+			this.tpLayout.Controls.Add(this.lblOpacityDesc);
+			this.tpLayout.Controls.Add(this.lblOpacity);
+			this.tpLayout.Controls.Add(this.tbOpacity);
+			this.tpLayout.Controls.Add(this.lblResolutionScaleDesc);
+			this.tpLayout.Controls.Add(this.tbResolutionScale);
+			this.tpLayout.Location = new System.Drawing.Point(4, 22);
+			this.tpLayout.Name = "tpLayout";
+			this.tpLayout.Padding = new System.Windows.Forms.Padding(3);
+			this.tpLayout.Size = new System.Drawing.Size(371, 122);
+			this.tpLayout.TabIndex = 4;
+			this.tpLayout.Text = "Layout";
+			this.tpLayout.UseVisualStyleBackColor = true;
 			// 
 			// tpTheme
 			// 
@@ -516,6 +469,66 @@
 			this.dropdownAudioDevices.TabIndex = 0;
 			this.dropdownAudioDevices.SelectionChangeCommitted += new System.EventHandler(this.cbAudioDevices_SelectionChangeCommitted);
 			// 
+			// lblOpacityDesc
+			// 
+			this.lblOpacityDesc.AutoSize = true;
+			this.lblOpacityDesc.Location = new System.Drawing.Point(36, 70);
+			this.lblOpacityDesc.Name = "lblOpacityDesc";
+			this.lblOpacityDesc.Size = new System.Drawing.Size(43, 13);
+			this.lblOpacityDesc.TabIndex = 16;
+			this.lblOpacityDesc.Text = "Opacity";
+			// 
+			// lblOpacity
+			// 
+			this.lblOpacity.AutoSize = true;
+			this.lblOpacity.Location = new System.Drawing.Point(106, 84);
+			this.lblOpacity.Name = "lblOpacity";
+			this.lblOpacity.Size = new System.Drawing.Size(22, 13);
+			this.lblOpacity.TabIndex = 15;
+			this.lblOpacity.Text = "1.0";
+			// 
+			// tbOpacity
+			// 
+			this.tbOpacity.AutoSize = false;
+			this.tbOpacity.BackColor = System.Drawing.Color.White;
+			this.tbOpacity.Location = new System.Drawing.Point(5, 81);
+			this.tbOpacity.Maximum = 255;
+			this.tbOpacity.Name = "tbOpacity";
+			this.tbOpacity.Size = new System.Drawing.Size(104, 33);
+			this.tbOpacity.TabIndex = 14;
+			this.tbOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
+			// 
+			// lblResolutionScaleDesc
+			// 
+			this.lblResolutionScaleDesc.AutoSize = true;
+			this.lblResolutionScaleDesc.Location = new System.Drawing.Point(13, 14);
+			this.lblResolutionScaleDesc.Name = "lblResolutionScaleDesc";
+			this.lblResolutionScaleDesc.Size = new System.Drawing.Size(85, 13);
+			this.lblResolutionScaleDesc.TabIndex = 13;
+			this.lblResolutionScaleDesc.Text = "Resolution scale";
+			// 
+			// tbResolutionScale
+			// 
+			this.tbResolutionScale.AutoSize = false;
+			this.tbResolutionScale.BackColor = System.Drawing.Color.White;
+			this.tbResolutionScale.Location = new System.Drawing.Point(4, 30);
+			this.tbResolutionScale.Maximum = 40;
+			this.tbResolutionScale.Minimum = 5;
+			this.tbResolutionScale.Name = "tbResolutionScale";
+			this.tbResolutionScale.Size = new System.Drawing.Size(104, 37);
+			this.tbResolutionScale.TabIndex = 12;
+			this.tbResolutionScale.TickStyle = System.Windows.Forms.TickStyle.None;
+			this.tbResolutionScale.Value = 10;
+			// 
+			// lblResolutionScale
+			// 
+			this.lblResolutionScale.AutoSize = true;
+			this.lblResolutionScale.Location = new System.Drawing.Point(106, 36);
+			this.lblResolutionScale.Name = "lblResolutionScale";
+			this.lblResolutionScale.Size = new System.Drawing.Size(22, 13);
+			this.lblResolutionScale.TabIndex = 17;
+			this.lblResolutionScale.Text = "1.0";
+			// 
 			// FormSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -529,9 +542,9 @@
 			this.tabControl.ResumeLayout(false);
 			this.tpGeneral.ResumeLayout(false);
 			this.tpGeneral.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).EndInit();
+			this.tpLayout.ResumeLayout(false);
+			this.tpLayout.PerformLayout();
 			this.tpTheme.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
@@ -545,6 +558,8 @@
 			this.panelNotLoggedIn.PerformLayout();
 			this.tpAudio.ResumeLayout(false);
 			this.tpAudio.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.tbResolutionScale)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -562,9 +577,6 @@
 		private System.Windows.Forms.CheckBox cbHideFromAltTab;
 		private System.Windows.Forms.CheckBox cbEnableVisualiser;
 		private ListenMoeClient.Controls.BorderedPanel panelVisualiserColor;
-		private System.Windows.Forms.TrackBar tbResolutionScale;
-		private System.Windows.Forms.Label lblResolutionScaleDesc;
-		private System.Windows.Forms.Label lblResolutionScale;
 		private GhostTextbox txtUsername;
 		private GhostTextbox txtPassword;
 		private System.Windows.Forms.Panel panelNotLoggedIn;
@@ -583,13 +595,17 @@
 		private System.Windows.Forms.Label lblAccentColor;
 		private ListenMoeClient.Controls.BorderedPanel panelAccentColor;
 		private System.Windows.Forms.CheckBox cbVisualiserFadeEdges;
-		private System.Windows.Forms.Label lblOpacityDesc;
-		private System.Windows.Forms.Label lblOpacity;
-		private System.Windows.Forms.TrackBar tbOpacity;
 		private System.Windows.Forms.CheckBox cbThumbnailButton;
         private System.Windows.Forms.TabPage tpAudio;
         private System.Windows.Forms.Label lblAudioDevice;
         private System.Windows.Forms.ComboBox dropdownAudioDevices;
         private System.Windows.Forms.Button btnRefreshAudioDevices;
-    }
+		private System.Windows.Forms.TabPage tpLayout;
+		private System.Windows.Forms.Label lblResolutionScale;
+		private System.Windows.Forms.Label lblOpacityDesc;
+		private System.Windows.Forms.Label lblOpacity;
+		private System.Windows.Forms.TrackBar tbOpacity;
+		private System.Windows.Forms.Label lblResolutionScaleDesc;
+		private System.Windows.Forms.TrackBar tbResolutionScale;
+	}
 }
