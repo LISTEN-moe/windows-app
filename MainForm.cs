@@ -331,6 +331,7 @@ namespace ListenMoeClient
 
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 			RawInput.RegisterCallback(VirtualKeys.MediaPlayPause, async () => await TogglePlayback());
+			this.Invalidate();
 		}
 
 		public void ReloadScale()
