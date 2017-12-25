@@ -17,7 +17,7 @@ namespace ListenMoeClient
 
 	class CenterPanel : Panel
 	{
-		public AudioVisualiser Visualiser { get; set; }
+		public AudioVisualiser Visualiser = new AudioVisualiser();
 
 		MarqueeLabel lblArtist = new MarqueeLabel();
 		MarqueeLabel lblTitle = new MarqueeLabel();
@@ -35,6 +35,9 @@ namespace ListenMoeClient
 			lblArtist.Text = "Connecting...";
 			lblEvent.Centered = true;
 			RecalculateMarqueeBounds();
+			
+			Visualiser.SetBounds(new Rectangle(0, 0, this.Width, this.Height));
+			Visualiser.ReloadSettings();
 		}
 
 		private void RecalculateMarqueeBounds()
@@ -63,8 +66,7 @@ namespace ListenMoeClient
 			base.OnResize(eventargs);
 
 			RecalculateMarqueeBounds();
-			if (Visualiser != null)
-				Visualiser.SetBounds(new Rectangle(0, 0, this.Width, this.Height));
+			Visualiser.SetBounds(new Rectangle(0, 0, this.Width, this.Height));
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -72,11 +74,8 @@ namespace ListenMoeClient
 			base.OnPaint(e);
 
 			this.SuspendLayout();
-
-			if (Visualiser != null)
-			{
-				Visualiser.Render(e.Graphics);
-			}
+			
+			Visualiser.Render(e.Graphics);
 			lblTitle.Render(e.Graphics);
 			lblArtist.Render(e.Graphics);
 			
@@ -144,24 +143,14 @@ namespace ListenMoeClient
 		
 		public void StartVisualiser(WebStreamPlayer player)
 		{
-			if (Visualiser == null)
-			{
-				Visualiser = new AudioVisualiser();
-				Visualiser.SetBounds(new Rectangle(0, 0, this.Width, this.Height));
-				Visualiser.ReloadSettings();
-				Visualiser.Start();
-				player.SetVisualiser(Visualiser);
-			}
+			Visualiser.Start();
+			player.SetVisualiser(Visualiser);
 		}
 
 		public void StopVisualiser(WebStreamPlayer player)
 		{
-			if (Visualiser != null)
-			{
-				player.SetVisualiser(null);
-				Visualiser.Stop();
-				Visualiser = null;
-			}
+			player.SetVisualiser(null);
+			Visualiser.Stop();
 		}
 
 		public void ReloadVisualiser()

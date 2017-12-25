@@ -191,7 +191,6 @@ namespace ListenMoeClient
 			Connect();
 
 			player = new WebStreamPlayer("https://listen.moe/stream");
-			player.SetVisualiser(centerPanel.Visualiser);
 			player.Play();
 
 			renderLoop = Task.Run(() =>
@@ -540,7 +539,8 @@ namespace ListenMoeClient
 					button.Icon = Properties.Resources.play_ico;
 					button.Tooltip = "Play";
 				}
-				centerPanel.StopVisualiser(player);
+				if (Settings.Get<bool>("EnableVisualiser"))
+					centerPanel.StopVisualiser(player);
 				await stopTask;
 			}
 			else
@@ -553,7 +553,8 @@ namespace ListenMoeClient
 					button.Icon = Properties.Resources.pause_ico;
 					button.Tooltip = "Pause";
 				}
-				centerPanel.StartVisualiser(player);
+				if (Settings.Get<bool>("EnableVisualiser"))
+					centerPanel.StartVisualiser(player);
 			}
 		}
 

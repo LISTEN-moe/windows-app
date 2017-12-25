@@ -24,7 +24,7 @@ namespace ListenMoeClient
 		float barWidth = Settings.Get<float>("VisualiserBarWidth");
 
 		bool bars = true;
-		bool stopped = false;
+		bool stopped = true;
 
 		Rectangle Bounds = Rectangle.Empty;
 		Color visualiserColor;

@@ -220,7 +220,6 @@
 			this.centerPanel.Size = new System.Drawing.Size(354, 48);
 			this.centerPanel.TabIndex = 9;
 			this.centerPanel.Tag = "centerPanel";
-			this.centerPanel.Visualiser = null;
 			this.centerPanel.Resize += new System.EventHandler(this.centerPanel_Resize);
 			// 
 			// MainForm
