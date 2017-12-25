@@ -118,8 +118,6 @@ namespace ListenMoeClient
 		Font titleFont;
 		Font artistFont;
 		Font volumeFont;
-		float currentScale = 1f;
-
 
 		public FormSettings SettingsForm;
 
@@ -279,6 +277,24 @@ namespace ListenMoeClient
 			base.WndProc(ref m);
 		}
 
+		public void ReloadScale()
+		{
+			this.Width = Settings.DEFAULT_WIDTH;
+			this.Height = Settings.DEFAULT_HEIGHT;
+			float scaleFactor = Settings.Get<float>(Setting.Scale);
+			this.BetterScale(scaleFactor);
+
+			gridPanel.SetRows("100%");
+			int playPauseWidth = (int)(Settings.DEFAULT_HEIGHT * scaleFactor);
+			int rightPanelWidth = (int)(Settings.DEFAULT_RIGHT_PANEL_WIDTH * scaleFactor);
+			gridPanel.SetColumns($"{playPauseWidth}px auto {rightPanelWidth}px");
+			gridPanel.DefineAreas("playPause centerPanel rightPanel");
+
+			//Reload fonts to get newly scaled font sizes
+			LoadFonts();
+			SetPlayPauseSize(false);
+		}
+
 		public void ReloadSettings()
 		{
 			this.TopMost = Settings.Get<bool>(Setting.TopMost);
@@ -327,24 +343,6 @@ namespace ListenMoeClient
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 			RawInput.RegisterCallback(VirtualKeys.MediaPlayPause, async () => await TogglePlayback());
 			this.Invalidate();
-		}
-
-		public void ReloadScale()
-		{
-			float scaleFactor = Settings.Get<float>(Setting.Scale);
-			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
-			currentScale = scaleFactor;
-
-			gridPanel.SetRows("100%");
-			int playPauseWidth = (int)(Settings.DEFAULT_HEIGHT * scaleFactor);
-			int rightPanelWidth = (int)(Settings.DEFAULT_RIGHT_PANEL_WIDTH * scaleFactor);
-			gridPanel.SetColumns($"{playPauseWidth}px auto {rightPanelWidth}px");
-			gridPanel.DefineAreas("playPause centerPanel rightPanel");
-
-			//Reload fonts to get newly scaled font sizes
-			LoadFonts();
-			SetPlayPauseSize(false);
-
 		}
 
 		private void LoadFonts()
