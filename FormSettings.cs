@@ -138,16 +138,13 @@ namespace ListenMoeClient
 			User.Logout();
 		}
 
-		private void txtPassword_KeyUp(object sender, KeyEventArgs e)
-		{
-			if (e.KeyCode == Keys.Enter)
-				btnLogin.PerformClick();
-		}
-
 		private void tbVisualiserOpacity_Scroll(object sender, EventArgs e)
 		{
-			Settings.Set(Setting.VisualiserTransparency, tbVisualiserOpacity.Value / 255f);
+			float newVal = tbVisualiserOpacity.Value / 255f;
+			lblVisualiserOpacity.Text = newVal.ToString("N1");
+			Settings.Set(Setting.VisualiserTransparency, newVal);
 			Settings.WriteSettings();
+
 			mainForm.ReloadSettings();
 		}
 
@@ -176,6 +173,16 @@ namespace ListenMoeClient
 		private void btnRefreshAudioDevices_Click(object sender, EventArgs e)
 		{
 			reloadAudioDevices();
+		}
+
+		private void txtPassword_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == (char)Keys.Enter)
+			{
+				e.Handled = true;
+
+				btnLogin.PerformClick();
+			}
 		}
 	}
 }
