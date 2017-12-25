@@ -12,20 +12,22 @@ namespace ListenMoeClient
 
 	class SpriteLoader
 	{
+		const int frameSize = 256;
+
 		public static Sprite LoadFavSprite()
 		{
 			Bitmap sheet = Properties.Resources.fav_sprite;
 
 			Sprite result = new Sprite
 			{
-				Frames = new Image[sheet.Width / 64]
+				Frames = new Image[sheet.Width / frameSize]
 			};
-			//Split into 64x64
-			for (int i = 0; i < sheet.Width / 64; i++)
+			//Split into frameSizexframeSize
+			for (int i = 0; i < sheet.Width / frameSize; i++)
 			{
-				Bitmap bitmap = new Bitmap(64, 64, PixelFormat.Format32bppArgb);
+				Bitmap bitmap = new Bitmap(frameSize, frameSize, PixelFormat.Format32bppArgb);
 				using (Graphics g = Graphics.FromImage(bitmap))
-					g.DrawImage(sheet, new Rectangle(0, 0, 64, 64), new Rectangle(64 * i, 0, 64, 64), GraphicsUnit.Pixel);
+					g.DrawImage(sheet, new Rectangle(0, 0, frameSize, frameSize), new Rectangle(frameSize * i, 0, frameSize, frameSize), GraphicsUnit.Pixel);
 
 				result.Frames[i] = bitmap;
 			}
@@ -60,15 +62,15 @@ namespace ListenMoeClient
 				Frames = new Image[2]
 			};
 
-			int n = sheet.Width / 64;
+			int n = sheet.Width / frameSize;
 
-			Bitmap b0 = new Bitmap(64, 64, PixelFormat.Format32bppArgb);
+			Bitmap b0 = new Bitmap(frameSize, frameSize, PixelFormat.Format32bppArgb);
 			using (Graphics g = Graphics.FromImage(b0))
-				g.DrawImage(sheet, new Rectangle(0, 0, 64, 64), new Rectangle(0, 0, 64, 64), GraphicsUnit.Pixel);
+				g.DrawImage(sheet, new Rectangle(0, 0, frameSize, frameSize), new Rectangle(0, 0, frameSize, frameSize), GraphicsUnit.Pixel);
 
-			Bitmap b1 = new Bitmap(64, 64, PixelFormat.Format32bppArgb);
+			Bitmap b1 = new Bitmap(frameSize, frameSize, PixelFormat.Format32bppArgb);
 			using (Graphics g = Graphics.FromImage(b1))
-				g.DrawImage(sheet, new Rectangle(0, 0, 64, 64), new Rectangle(64 * (n - 1), 0, 64, 64), GraphicsUnit.Pixel);
+				g.DrawImage(sheet, new Rectangle(0, 0, frameSize, frameSize), new Rectangle(frameSize * (n - 1), 0, frameSize, frameSize), GraphicsUnit.Pixel);
 
 			SetAlpha(b0, 128);
 			SetAlpha(b1, 128);
@@ -105,14 +107,14 @@ namespace ListenMoeClient
 
 			Sprite result = new Sprite
 			{
-				Frames = new Image[sheet.Width / 64]
+				Frames = new Image[sheet.Width / frameSize]
 			};
-			//Split into 64x64
-			for (int i = 0; i < sheet.Width / 64; i++)
+			//Split into frameSizexframeSize
+			for (int i = 0; i < sheet.Width / frameSize; i++)
 			{
-				Bitmap bitmap = new Bitmap(64, 64, PixelFormat.Format32bppArgb);
+				Bitmap bitmap = new Bitmap(frameSize, frameSize, PixelFormat.Format32bppArgb);
 				using (Graphics g = Graphics.FromImage(bitmap))
-					g.DrawImage(sheet, new Rectangle(0, 0, 64, 64), new Rectangle(64 * i, 0, 64, 64), GraphicsUnit.Pixel);
+					g.DrawImage(sheet, new Rectangle(0, 0, frameSize, frameSize), new Rectangle(frameSize * i, 0, frameSize, frameSize), GraphicsUnit.Pixel);
 
 				result.Frames[i] = bitmap;
 			}

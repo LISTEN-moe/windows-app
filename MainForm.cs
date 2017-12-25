@@ -349,9 +349,8 @@ namespace ListenMoeClient
 
 		private void LoadFonts()
 		{
-			var family = Meiryo.GetFontFamily();
 			var scaleFactor = Settings.Get<float>(Setting.Scale);
-			titleFont = new Font(family, 13 * scaleFactor);
+			titleFont = Meiryo.GetFont(13 * scaleFactor);
 			artistFont = Meiryo.GetFont(8 * scaleFactor);
 			volumeFont = Meiryo.GetFont(9 * scaleFactor);
 
