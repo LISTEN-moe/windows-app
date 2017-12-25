@@ -11,7 +11,7 @@ namespace ListenMoeClient
 		DateTime anchor;
 		Deque<short> sampleBuffer = new Deque<short>();
 
-		int fftSize = Settings.Get<int>("FftSize");
+		int fftSize = Settings.Get<int>(Setting.FftSize);
 		const int exponent = 11;
 
 		float[] lastFftPoints;
@@ -20,8 +20,8 @@ namespace ListenMoeClient
 		float ScaleFactor = 1f;
 		float normalisationFactor = 0.9f;
 
-		int resolutionFactor = Settings.Get<int>("VisualiserResolutionFactor"); //higher = lower resolution, number is the number of samples to skip
-		float barWidth = Settings.Get<float>("VisualiserBarWidth");
+		int resolutionFactor = Settings.Get<int>(Setting.VisualiserResolutionFactor); //higher = lower resolution, number is the number of samples to skip
+		float barWidth = Settings.Get<float>(Setting.VisualiserBarWidth);
 
 		bool bars = true;
 		bool stopped = true;
@@ -43,16 +43,16 @@ namespace ListenMoeClient
 
 		public void ReloadSettings()
 		{
-			bars = Settings.Get<bool>("VisualiserBars");
-			var opacity = (int)Math.Min(Math.Max(Settings.Get<float>("VisualiserTransparency") * 255, 0), 255);
-			visualiserColor = Color.FromArgb(opacity, Settings.Get<Color>("VisualiserColor"));
+			bars = Settings.Get<bool>(Setting.VisualiserBars);
+			var opacity = (int)Math.Min(Math.Max(Settings.Get<float>(Setting.VisualiserTransparency) * 255, 0), 255);
+			visualiserColor = Color.FromArgb(opacity, Settings.Get<Color>(Setting.VisualiserColor));
 
 			if (Bounds.Width == 0 || Bounds.Height == 0)
 				return;
 
-			if (Settings.Get<bool>("VisualiserFadeEdges"))
+			if (Settings.Get<bool>(Setting.VisualiserFadeEdges))
 			{
-				Color baseColor = Settings.Get<Color>("BaseColor");
+				Color baseColor = Settings.Get<Color>(Setting.BaseColor);
 				barBrush = new LinearGradientBrush(new Rectangle(Point.Empty, Bounds.Size), baseColor, visualiserColor, LinearGradientMode.Horizontal);
 				ColorBlend blend = new ColorBlend
 				{
@@ -111,7 +111,7 @@ namespace ListenMoeClient
 		public void IncreaseBarWidth(float amount)
 		{
 			barWidth += amount;
-			Settings.Set("VisualiserBarWidth", barWidth);
+			Settings.Set(Setting.VisualiserBarWidth, barWidth);
 			Settings.WriteSettings();
 		}
 
@@ -120,7 +120,7 @@ namespace ListenMoeClient
 			if (resolutionFactor - amount > 0)
 			{
 				resolutionFactor -= amount;
-				Settings.Set("VisualiserResolutionFactor", resolutionFactor);
+				Settings.Set(Setting.VisualiserResolutionFactor, resolutionFactor);
 				Settings.WriteSettings();
 			}
 		}
@@ -217,7 +217,7 @@ namespace ListenMoeClient
 
 			g.SmoothingMode = SmoothingMode.HighQuality;
 
-			var scale = Settings.Get<float>("Scale");
+			var scale = Settings.Get<float>(Setting.Scale);
 
 			//Bins go from bottom to top
 			g.TranslateTransform(0, Bounds.Height);

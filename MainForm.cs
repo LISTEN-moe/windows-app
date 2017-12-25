@@ -85,8 +85,8 @@ namespace ListenMoeClient
 
 					this.Location = new Point(finalX, finalY);
 
-					Settings.Set("LocationX", this.Location.X);
-					Settings.Set("LocationY", this.Location.Y);
+					Settings.Set(Setting.LocationX, this.Location.X);
+					Settings.Set(Setting.LocationY, this.Location.Y);
 					Settings.WriteSettings();
 				}
 			}
@@ -181,7 +181,7 @@ namespace ListenMoeClient
 			favSprite = lightFavSprite;
 			picFavourite.Image = favSprite.Frames[0];
 
-			if (Settings.Get<bool>("ThumbnailButton"))
+			if (Settings.Get<bool>(Setting.ThumbnailButton))
 			{
 				button = new ThumbnailToolBarButton(Properties.Resources.pause_ico, "Pause");
 				button.Click += async (_, __) => await TogglePlayback();
@@ -219,7 +219,7 @@ namespace ListenMoeClient
 			}
 
 			//Expose 2px on the left for resizing, so we paint it the same colour so it's not noticeable
-			e.Graphics.FillRectangle(new SolidBrush(Settings.Get<Color>("AccentColor")), new Rectangle(0, 0, 2, this.ClientRectangle.Height));
+			e.Graphics.FillRectangle(new SolidBrush(Settings.Get<Color>(Setting.AccentColor)), new Rectangle(0, 0, 2, this.ClientRectangle.Height));
 		}
 
 		private void UpdatePanelExcludedRegions()
@@ -250,8 +250,8 @@ namespace ListenMoeClient
 			//wow such performance
 			//TODO: don't make this write to disk on every resize event
 			//Settings buffering would be nice
-			Settings.Set("SizeX", Width);
-			Settings.Set("SizeY", Height);
+			Settings.Set(Setting.SizeX, Width);
+			Settings.Set(Setting.SizeY, Height);
 			Settings.WriteSettings();
 		}
 
@@ -281,23 +281,23 @@ namespace ListenMoeClient
 
 		public void ReloadSettings()
 		{
-			this.TopMost = Settings.Get<bool>("TopMost");
+			this.TopMost = Settings.Get<bool>(Setting.TopMost);
 
-			this.Location = new Point(Settings.Get<int>("LocationX"), Settings.Get<int>("LocationY"));
-			this.Size = new Size(Settings.Get<int>("SizeX"), Settings.Get<int>("SizeY"));
+			this.Location = new Point(Settings.Get<int>(Setting.LocationX), Settings.Get<int>(Setting.LocationY));
+			this.Size = new Size(Settings.Get<int>(Setting.SizeX), Settings.Get<int>(Setting.SizeY));
 
-			if (Settings.Get<bool>("EnableVisualiser"))
+			if (Settings.Get<bool>(Setting.EnableVisualiser))
 				centerPanel.StartVisualiser(player);
 			else
 				centerPanel.StopVisualiser(player);
 			centerPanel.ReloadVisualiser();
 
-			float vol = Settings.Get<float>("Volume");
-			Color accentColor = Settings.Get<Color>("AccentColor");
+			float vol = Settings.Get<float>(Setting.Volume);
+			Color accentColor = Settings.Get<Color>(Setting.AccentColor);
 			panelPlayBtn.BackColor = accentColor;
 			playPauseInverted = accentColor.R + accentColor.G + accentColor.B > 128 * 3;
 
-			Color baseColor = Settings.Get<Color>("BaseColor");
+			Color baseColor = Settings.Get<Color>(Setting.BaseColor);
 			spriteColorInverted = baseColor.R + baseColor.G + baseColor.B > 128 * 3;
 			centerPanel.BackColor = baseColor;
 			panelRight.BackColor = baseColor.Scale(1.3f);
@@ -307,9 +307,9 @@ namespace ListenMoeClient
 			ReloadSprites();
 
 			SetVolumeLabel(vol);
-			this.Opacity = Settings.Get<float>("FormOpacity");
+			this.Opacity = Settings.Get<float>(Setting.FormOpacity);
 
-			if (Settings.Get<bool>("HideFromAltTab"))
+			if (Settings.Get<bool>(Setting.HideFromAltTab))
 			{
 				this.ShowInTaskbar = false;
 				int windowStyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
@@ -331,7 +331,7 @@ namespace ListenMoeClient
 
 		public void ReloadScale()
 		{
-			float scaleFactor = Settings.Get<float>("Scale");
+			float scaleFactor = Settings.Get<float>(Setting.Scale);
 			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
 			currentScale = scaleFactor;
 			
@@ -350,7 +350,7 @@ namespace ListenMoeClient
 		private void LoadFonts()
 		{
 			var family = Meiryo.GetFontFamily();
-			var scaleFactor = Settings.Get<float>("Scale");
+			var scaleFactor = Settings.Get<float>(Setting.Scale);
 			titleFont = new Font(family, 13 * scaleFactor);
 			artistFont = Meiryo.GetFont(8 * scaleFactor);
 			volumeFont = Meiryo.GetFont(9 * scaleFactor);
@@ -384,7 +384,7 @@ namespace ListenMoeClient
 					await factory.StartNew(() => picFavourite.Visible = false);
 					await Task.Run(() => songInfoStream.Reconnect());
 				};
-				string savedToken = Settings.Get<string>("Token").Trim();
+				string savedToken = Settings.Get<string>(Setting.Token).Trim();
 				if (savedToken != "")
 					await User.Login(savedToken);
 			});
@@ -415,10 +415,10 @@ namespace ListenMoeClient
 				long last = stopwatch.ElapsedMilliseconds;
 				while (!ct.IsCancellationRequested)
 				{
-					if (stopwatch.ElapsedMilliseconds - last > Settings.Get<int>("UpdateInterval") * 1000)
+					if (stopwatch.ElapsedMilliseconds - last > Settings.Get<int>(Setting.UpdateInterval) * 1000)
 					{
 						//We only check for the setting here, because I'm lazy to dispose/recreate this checker thread when they change the setting
-						if (!Settings.Get<bool>("UpdateAutocheck"))
+						if (!Settings.Get<bool>(Setting.UpdateAutocheck))
 						{
 							last = stopwatch.ElapsedMilliseconds;
 							continue;
@@ -466,7 +466,7 @@ namespace ListenMoeClient
 					float newVol = player.AddVolume(volumeChange);
 					if (newVol >= 0)
 					{
-						Settings.Set("Volume", newVol);
+						Settings.Set(Setting.Volume, newVol);
 						Settings.WriteSettings();
 						SetVolumeLabel(newVol);
 					}
@@ -534,12 +534,12 @@ namespace ListenMoeClient
 				Task stopTask = player.Stop();
 				ReloadSprites();
 				menuItemPlayPause.Text = "Play";
-				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
+				if (Settings.Get<bool>(Setting.ThumbnailButton) && !Settings.Get<bool>(Setting.HideFromAltTab))
 				{
 					button.Icon = Properties.Resources.play_ico;
 					button.Tooltip = "Play";
 				}
-				if (Settings.Get<bool>("EnableVisualiser"))
+				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StopVisualiser(player);
 				await stopTask;
 			}
@@ -548,21 +548,21 @@ namespace ListenMoeClient
 				player.Play();
 				ReloadSprites();
 				menuItemPlayPause.Text = "Pause";
-				if (Settings.Get<bool>("ThumbnailButton") && !Settings.Get<bool>("HideFromAltTab"))
+				if (Settings.Get<bool>(Setting.ThumbnailButton) && !Settings.Get<bool>(Setting.HideFromAltTab))
 				{
 					button.Icon = Properties.Resources.pause_ico;
 					button.Tooltip = "Pause";
 				}
-				if (Settings.Get<bool>("EnableVisualiser"))
+				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StartVisualiser(player);
 			}
 		}
 
 		private void picClose_Click(object sender, EventArgs e)
 		{
-			if (Settings.Get<bool>("CloseToTray"))
+			if (Settings.Get<bool>(Setting.CloseToTray))
 			{
-				if (!Settings.Get<bool>("HideFromAltTab"))
+				if (!Settings.Get<bool>(Setting.HideFromAltTab))
 					notifyIcon1.Visible = true;
 
 				this.Hide();
@@ -615,7 +615,7 @@ namespace ListenMoeClient
 
 		private void SetPlayPauseSize(bool bigger)
 		{
-			var scale = Settings.Get<float>("Scale");
+			var scale = Settings.Get<float>(Setting.Scale);
 			var ppSize = Settings.DEFAULT_PLAY_PAUSE_SIZE;
 			int playPauseSize = bigger ? ppSize + 2 : ppSize;
 
@@ -667,7 +667,7 @@ namespace ListenMoeClient
 			this.Show();
 			this.Activate();
 			
-			if (!Settings.Get<bool>("HideFromAltTab"))
+			if (!Settings.Get<bool>(Setting.HideFromAltTab))
 				notifyIcon1.Visible = false;
 		}
 
@@ -683,7 +683,7 @@ namespace ListenMoeClient
 
 		private void centerPanel_Resize(object sender, EventArgs e)
 		{
-			float scale = Settings.Get<float>("Scale");
+			float scale = Settings.Get<float>(Setting.Scale);
 			picFavourite.Location = new Point((int)(centerPanel.Width - 30 * scale), (centerPanel.Height / 2) - (picFavourite.Height / 2));
 		}
 
@@ -735,7 +735,7 @@ namespace ListenMoeClient
 
 			SetFavouriteSprite(newStatus);
 
-			string result = await WebHelper.Post("https://listen.moe/api/songs/favorite", Settings.Get<string>("Token"), new Dictionary<string, string>() {
+			string result = await WebHelper.Post("https://listen.moe/api/songs/favorite", Settings.Get<string>(Setting.Token), new Dictionary<string, string>() {
 				["song"] = songInfoStream.currentInfo.song_id.ToString()
 			});
 
@@ -746,8 +746,8 @@ namespace ListenMoeClient
 
 		private void menuItemResetLocation_Click(object sender, EventArgs e)
 		{
-			Settings.Set("LocationX", 0);
-			Settings.Set("LocationY", 0);
+			Settings.Set(Setting.LocationX, 0);
+			Settings.Set(Setting.LocationY, 0);
 			Settings.WriteSettings();
 			this.Location = new Point(0, 0);
 		}

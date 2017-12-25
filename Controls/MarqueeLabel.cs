@@ -75,7 +75,7 @@ namespace ListenMoeClient
 
 		public void Render(Graphics g)
 		{
-			var scale = Settings.Get<float>("Scale");
+			var scale = Settings.Get<float>(Setting.Scale);
 			if (textChanged)
 			{
 				mainTextSize = g.MeasureString(text, Font);

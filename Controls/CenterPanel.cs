@@ -42,7 +42,7 @@ namespace ListenMoeClient
 
 		private void RecalculateMarqueeBounds()
 		{
-			float scale = Settings.Get<float>("Scale");
+			float scale = Settings.Get<float>(Setting.Scale);
 
 			lblEvent.Bounds = new Rectangle(0, (int)(scale + this.Height - eventBarHeight * scale), this.Width, (int)(eventBarHeight * scale));
 			if (isEventOrRequest)
@@ -81,7 +81,7 @@ namespace ListenMoeClient
 			
 			if (isEventOrRequest)
 			{
-				float scale = Settings.Get<float>("Scale");
+				float scale = Settings.Get<float>(Setting.Scale);
 
 				Brush brush = new SolidBrush(Color.FromArgb(64, 0, 0, 0));
 				e.Graphics.FillRectangle(brush, 0, this.Height - eventBarHeight * scale, this.Width, eventBarHeight * scale);

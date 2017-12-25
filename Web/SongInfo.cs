@@ -85,7 +85,7 @@ namespace ListenMoeClient
 		{
 			try
 			{
-				socket.Send("{ \"token\": \"" + Settings.Get<string>("Token") + "\" }");
+				socket.Send("{ \"token\": \"" + Settings.Get<string>(Setting.Token) + "\" }");
 			} catch (Exception) { }
 		}
 

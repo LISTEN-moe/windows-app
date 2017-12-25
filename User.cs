@@ -32,13 +32,13 @@ namespace ListenMoeClient
 
 			string resp = await WebHelper.Post("https://listen.moe/api/authenticate", postData);
 			var response = Json.Parse<AuthenticateResponse>(resp);
-			Settings.Set("Username", response.success ? username : "");
+			Settings.Set(Setting.Username, response.success ? username : "");
 			loggedIn = response.success;
 			if (loggedIn)
 			{
 				//Save successful credentials
-				Settings.Set("Username", username);
-				Settings.Set("Token", response.token);
+				Settings.Set(Setting.Username, username);
+				Settings.Set(Setting.Token, response.token);
 				Settings.WriteSettings();
 
 				OnLoginComplete();
@@ -64,8 +64,8 @@ namespace ListenMoeClient
 			else
 			{
 				//Clear saved credentials on failure
-				Settings.Set("Username", "");
-				Settings.Set("Token", "");
+				Settings.Set(Setting.Username, "");
+				Settings.Set(Setting.Token, "");
 				Settings.WriteSettings();
 			}
 			return loggedIn;
@@ -74,8 +74,8 @@ namespace ListenMoeClient
 		public static void Logout()
 		{
 			loggedIn = false;
-			Settings.Set("Username", "");
-			Settings.Set("Token", "");
+			Settings.Set(Setting.Username, "");
+			Settings.Set(Setting.Token, "");
 			Settings.WriteSettings();
 			OnLogout();
 		}

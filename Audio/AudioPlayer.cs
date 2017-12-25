@@ -45,9 +45,9 @@ namespace ListenMoeClient
 			};
 
 			volumeChannel = new SampleChannel(provider);
-			volumeChannel.Volume = Settings.Get<float>("Volume");
+			volumeChannel.Volume = Settings.Get<float>(Setting.Volume);
 
-			bool success = Guid.TryParse(Settings.Get<string>("OutputDeviceGuid"), out Guid deviceGuid);
+			bool success = Guid.TryParse(Settings.Get<string>(Setting.OutputDeviceGuid), out Guid deviceGuid);
 
 			SetAudioOutputDevice(success ? deviceGuid : DirectSoundOut.DSDEVID_DefaultPlayback);
 		}
@@ -61,7 +61,7 @@ namespace ListenMoeClient
 			CurrentDeviceGuid = deviceGuid;
 			directOut.Init(volumeChannel);
 
-			Settings.Set("OutputDeviceGuid", deviceGuid.ToString());
+			Settings.Set(Setting.OutputDeviceGuid, deviceGuid.ToString());
 			Settings.WriteSettings();
 		}
 

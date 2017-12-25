@@ -33,26 +33,26 @@ namespace ListenMoeClient
 			LoadAndBindColorSetting(panelBaseColor, "BaseColor");
 			LoadAndBindColorSetting(panelAccentColor, "AccentColor");
 
-			numericUpdateInterval.Value = Settings.Get<int>("UpdateInterval") / 60;
+			numericUpdateInterval.Value = Settings.Get<int>(Setting.UpdateInterval) / 60;
 			numericUpdateInterval.ValueChanged += NumericUpdateInterval_ValueChanged;
 
-			float scale = Settings.Get<float>("Scale");
+			float scale = Settings.Get<float>(Setting.Scale);
 			tbResolutionScale.Value = (int)(scale * 10);
 			lblResolutionScale.Text = scale.ToString("N1");
 
-			tbVisualiserOpacity.Value = (int)(Settings.Get<float>("VisualiserTransparency") * 255);
-			float opacity = Settings.Get<float>("FormOpacity");
+			tbVisualiserOpacity.Value = (int)(Settings.Get<float>(Setting.VisualiserTransparency) * 255);
+			float opacity = Settings.Get<float>(Setting.FormOpacity);
 			tbOpacity.Value = (int)(opacity * 255);
 			lblOpacity.Text = opacity.ToString("N1");
 
 			panelNotLoggedIn.Visible = !User.LoggedIn;
 			panelLoggedIn.Visible = User.LoggedIn;
-			lblLoginStatus.Text = "Logged in as " + Settings.Get<string>("Username");
+			lblLoginStatus.Text = "Logged in as " + Settings.Get<string>(Setting.Username);
 			lblLoginStatus.Location = new Point((this.Width / 2) - (lblLoginStatus.Width / 2), lblLoginStatus.Location.Y);
 
 			User.OnLoginComplete += () =>
 			{
-				lblLoginStatus.Text = "Logged in as " + Settings.Get<string>("Username");
+				lblLoginStatus.Text = "Logged in as " + Settings.Get<string>(Setting.Username);
 				lblLoginStatus.Location = new Point((this.Width / 2) - (lblLoginStatus.Width / 2), lblLoginStatus.Location.Y);
 				txtUsername.Clear();
 				txtPassword.Clear();
@@ -72,16 +72,17 @@ namespace ListenMoeClient
 
 		private void NumericUpdateInterval_ValueChanged(object sender, EventArgs e)
 		{
-			Settings.Set("UpdateInterval", (int)numericUpdateInterval.Value * 60);
+			Settings.Set(Setting.UpdateInterval, (int)numericUpdateInterval.Value * 60);
 			Settings.WriteSettings();
 		}
 
 		private void LoadAndBindCheckboxSetting(CheckBox checkbox, string settingsKey)
 		{
-			checkbox.Checked = Settings.Get<bool>(settingsKey);
+			Setting key = (Setting)Enum.Parse(typeof(Setting), settingsKey);
+			checkbox.Checked = Settings.Get<bool>(key);
 			checkbox.CheckStateChanged += (sender, e) =>
 			{
-				Settings.Set(settingsKey, checkbox.Checked);
+				Settings.Set(key, checkbox.Checked);
 				Settings.WriteSettings();
 				mainForm.ReloadSettings();
 			};
@@ -89,7 +90,8 @@ namespace ListenMoeClient
 
 		private void LoadAndBindColorSetting(Panel panel, string settingsKey)
 		{
-			panel.BackColor = Settings.Get<Color>(settingsKey);
+			Setting key = (Setting)Enum.Parse(typeof(Setting), settingsKey);
+			panel.BackColor = Settings.Get<Color>(key);
 			panel.MouseClick += (sender, e) =>
 			{
 				ColorDialog dialog = new ColorDialog();
@@ -98,7 +100,7 @@ namespace ListenMoeClient
 					Color c = dialog.Color;
 					panel.BackColor = c;
 
-					Settings.Set(settingsKey, c);
+					Settings.Set(key, c);
 					Settings.WriteSettings();
 
 					mainForm.ReloadSettings();
@@ -111,7 +113,7 @@ namespace ListenMoeClient
 			//Set new scale
 			float newScale = tbResolutionScale.Value / 10f;
 			lblResolutionScale.Text = newScale.ToString("N1");
-			Settings.Set("Scale", newScale);
+			Settings.Set(Setting.Scale, newScale);
 			Settings.WriteSettings();
 
 			//Reload form scaling
@@ -144,7 +146,7 @@ namespace ListenMoeClient
 
 		private void tbVisualiserOpacity_Scroll(object sender, EventArgs e)
 		{
-			Settings.Set("VisualiserTransparency", tbVisualiserOpacity.Value / 255f);
+			Settings.Set(Setting.VisualiserTransparency, tbVisualiserOpacity.Value / 255f);
 			Settings.WriteSettings();
 			mainForm.ReloadSettings();
 		}
@@ -153,7 +155,7 @@ namespace ListenMoeClient
 		{
 			float newVal = tbOpacity.Value / 255f;
 			lblOpacity.Text = newVal.ToString("N1");
-			Settings.Set("FormOpacity", newVal);
+			Settings.Set(Setting.FormOpacity, newVal);
 			Settings.WriteSettings();
 
 			mainForm.ReloadSettings();

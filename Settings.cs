@@ -8,6 +8,42 @@ using System.Text;
 
 namespace ListenMoeClient
 {
+	enum Setting
+	{
+		//UI and form settings
+		LocationX,
+		LocationY,
+		TopMost,
+		SizeX,
+		SizeY,
+		FormOpacity,
+		BaseColor,
+		AccentColor,
+		Scale,
+		CloseToTray,
+		HideFromAltTab,
+		ThumbnailButton,
+
+		//Visualiser settings
+		EnableVisualiser,
+		VisualiserResolutionFactor,
+		FftSize,
+		VisualiserBarWidth,
+		VisualiserTransparency,
+		VisualiserBars,
+		VisualiserFadeEdges,
+		VisualiserColor,
+
+		//Misc
+		UpdateAutocheck,
+		UpdateInterval,
+		Volume,
+		OutputDeviceGuid,
+		Token,
+		Username
+	}
+
+	//I should have just used a json serialiser
 	static class Settings
 	{
 		public const int DEFAULT_WIDTH = 512;
@@ -38,6 +74,7 @@ namespace ListenMoeClient
 			{ typeof(Color), 'c' }
 		};
 
+		//Deserialisation
 		static Dictionary<Type, Func<string, (bool Success, object Result)>> parseActions = new Dictionary<Type, Func<string, (bool, object)>>()
 		{
 			{ typeof(int), s => {
@@ -63,6 +100,7 @@ namespace ListenMoeClient
 			}}
 		};
 
+		//Serialisation
 		static Dictionary<Type, Func<dynamic, string>> saveActions = new Dictionary<Type, Func<dynamic, string>>()
 		{
 			{ typeof(int), i => i.ToString() },
@@ -77,59 +115,59 @@ namespace ListenMoeClient
 			LoadDefaultSettings();
 		}
 
-		public static T Get<T>(string key)
+		public static T Get<T>(Setting key)
 		{
 			lock (settingsMutex)
 			{
-				return ((Dictionary<string, T>)(typedSettings[typeof(T)]))[key];
+				return ((Dictionary<Setting, T>)(typedSettings[typeof(T)]))[key];
 			}
 		}
 
-		public static void Set<T>(string key, T value)
+		public static void Set<T>(Setting key, T value)
 		{
 			Type t = typeof(T);
 			lock (settingsMutex)
 			{
 				if (!typedSettings.ContainsKey(t))
 				{
-					typedSettings.Add(t, new Dictionary<string, T>());
+					typedSettings.Add(t, new Dictionary<Setting, T>());
 				}
-				((Dictionary<string, T>)typedSettings[t])[key] = value;
+				((Dictionary<Setting, T>)typedSettings[t])[key] = value;
 			}
 		}
 
 		private static void LoadDefaultSettings()
 		{
-			Set("LocationX", 100);
-			Set("LocationY", 100);
-			Set("VisualiserResolutionFactor", 3);
-			Set("UpdateInterval", 3600); //in seconds
-			Set("SizeX", DEFAULT_WIDTH);
-			Set("SizeY", DEFAULT_HEIGHT);
-			Set("FftSize", 2048);
+			Set(Setting.LocationX, 100);
+			Set(Setting.LocationY, 100);
+			Set(Setting.VisualiserResolutionFactor, 3);
+			Set(Setting.UpdateInterval, 3600); //in seconds
+			Set(Setting.SizeX, DEFAULT_WIDTH);
+			Set(Setting.SizeY, DEFAULT_HEIGHT);
+			Set(Setting.FftSize, 2048);
 
-			Set("Volume", 0.3f);
-			Set("VisualiserBarWidth", 3.0f);
-			Set("VisualiserTransparency", 0.5f); //TODO: rename this to opacity
-			Set("FormOpacity", 1.0f);
-			Set("Scale", 1.0f);
+			Set(Setting.Volume, 0.3f);
+			Set(Setting.VisualiserBarWidth, 3.0f);
+			Set(Setting.VisualiserTransparency, 0.5f); //TODO: rename this to opacity
+			Set(Setting.FormOpacity, 1.0f);
+			Set(Setting.Scale, 1.0f);
 
-			Set("TopMost", false);
-			Set("UpdateAutocheck", true);
-			Set("CloseToTray", false);
-			Set("HideFromAltTab", false);
-			Set("ThumbnailButton", true);
-			Set("EnableVisualiser", true);
-			Set("VisualiserBars", true);
-			Set("VisualiserFadeEdges", false);
+			Set(Setting.TopMost, false);
+			Set(Setting.UpdateAutocheck, true);
+			Set(Setting.CloseToTray, false);
+			Set(Setting.HideFromAltTab, false);
+			Set(Setting.ThumbnailButton, true);
+			Set(Setting.EnableVisualiser, true);
+			Set(Setting.VisualiserBars, true);
+			Set(Setting.VisualiserFadeEdges, false);
 
-			Set("Token", "");
-			Set("Username", "");
-			Set("OutputDeviceGuid", "");
+			Set(Setting.Token, "");
+			Set(Setting.Username, "");
+			Set(Setting.OutputDeviceGuid, "");
 
-			Set("VisualiserColor", Color.FromArgb(255, 1, 91));
-			Set("BaseColor", Color.FromArgb(33, 35, 48));
-			Set("AccentColor", Color.FromArgb(255, 1, 91));
+			Set(Setting.VisualiserColor, Color.FromArgb(255, 1, 91));
+			Set(Setting.BaseColor, Color.FromArgb(33, 35, 48));
+			Set(Setting.AccentColor, Color.FromArgb(255, 1, 91));
 		}
 
 		public static void LoadSettings()
@@ -156,7 +194,7 @@ namespace ListenMoeClient
 
 				MethodInfo setMethod = typeof(Settings).GetMethod("Set", BindingFlags.Static | BindingFlags.Public);
 				MethodInfo genericSet = setMethod.MakeGenericMethod(t);
-				genericSet.Invoke(null, new object[] { parts[0].Substring(1), o });
+				genericSet.Invoke(null, new object[] { Enum.Parse(typeof(Setting), parts[0].Substring(1)), o });
 			}
 		}
 
@@ -173,7 +211,7 @@ namespace ListenMoeClient
 
 					foreach (dynamic setting in typedDict)
 					{
-						sb.AppendLine(reverseTypePrefixes[t] + setting.Key + "=" + saveAction(setting.Value));
+						sb.AppendLine(reverseTypePrefixes[t] + ((Setting)setting.Key).ToString() + "=" + saveAction(setting.Value));
 					}
 				}
 			}
