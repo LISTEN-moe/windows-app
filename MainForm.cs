@@ -125,6 +125,7 @@ namespace ListenMoeClient
 		Sprite lightFavSprite;
 		Sprite darkFavSprite;
 		Sprite fadedFavSprite;
+		bool heartFav = false;
 
 		private ThumbnailToolBarButton button;
 
@@ -172,11 +173,7 @@ namespace ListenMoeClient
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
 
-			lightFavSprite = SpriteLoader.LoadFavSprite();
-			fadedFavSprite = SpriteLoader.LoadFadedFavSprite();
-			darkFavSprite = SpriteLoader.LoadDarkFavSprite();
-			favSprite = lightFavSprite;
-			picFavourite.Image = favSprite.Frames[0];
+			LoadFavSprite(heartFav);
 
 			if (Settings.Get<bool>(Setting.ThumbnailButton))
 			{
@@ -204,6 +201,37 @@ namespace ListenMoeClient
 
 			this.SizeChanged += MainForm_SizeChanged;
 			UpdatePanelExcludedRegions();
+		}
+
+		private async void LoadFavSprite(bool heart)
+		{
+			await Task.Run(() =>
+			{
+				Bitmap spritesheet = heart ? Properties.Resources.heart_sprite : Properties.Resources.fav_sprite;
+				int frameSize = heart ? 400 : 256;
+				lightFavSprite = SpriteLoader.LoadFavSprite(spritesheet, frameSize);
+				fadedFavSprite = SpriteLoader.LoadFadedFavSprite(spritesheet, frameSize);
+				darkFavSprite = SpriteLoader.LoadDarkFavSprite(spritesheet, frameSize);
+				favSprite = lightFavSprite;
+			});
+
+			picFavourite.ResetScale();
+			if (heart)
+				picFavourite.Size = new Size(48, 48);
+			else
+				picFavourite.Size = new Size(32, 32);
+
+			picFavourite.SizeChanged += PicFavourite_SizeChanged;
+
+			bool favourite = songInfoStream?.currentInfo.extended?.favorite ?? false;
+			picFavourite.Image = favourite ? favSprite.Frames[favSprite.Frames.Length - 1] : favSprite.Frames[0];
+
+			ReloadScale();
+		}
+
+		private void PicFavourite_SizeChanged(object sender, EventArgs e)
+		{
+
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -344,6 +372,14 @@ namespace ListenMoeClient
 
 			RawInput.RegisterDevice(HIDUsagePage.Generic, HIDUsage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
 			RawInput.RegisterCallback(VirtualKeys.MediaPlayPause, async () => await TogglePlayback());
+			RawInput.RegisterPassword(new[] {
+				VirtualKeys.Up, VirtualKeys.Up,
+				VirtualKeys.Down, VirtualKeys.Down,
+				VirtualKeys.Left, VirtualKeys.Right,
+				VirtualKeys.Left, VirtualKeys.Right,
+				VirtualKeys.B, VirtualKeys.A,
+				VirtualKeys.Return
+			}, () => LoadFavSprite(heartFav = !heartFav));
 			this.Invalidate();
 		}
 
@@ -521,9 +557,9 @@ namespace ListenMoeClient
 			}
 
 			if (songInfoStream?.currentInfo.extended?.favorite ?? false)
-				picFavourite.Image = favSprite.Frames[favSprite.Frames.Length - 1];
+				picFavourite.Image = favSprite?.Frames[favSprite.Frames.Length - 1];
 			else
-				picFavourite.Image = favSprite.Frames[0];
+				picFavourite.Image = favSprite?.Frames[0];
 		}
 
 		private async Task TogglePlayback()
@@ -683,7 +719,7 @@ namespace ListenMoeClient
 		private void centerPanel_Resize(object sender, EventArgs e)
 		{
 			float scale = Settings.Get<float>(Setting.Scale);
-			picFavourite.Location = new Point((int)(centerPanel.Width - 30 * scale), (centerPanel.Height / 2) - (picFavourite.Height / 2));
+			picFavourite.Location = new Point((int)(centerPanel.Width - picFavourite.Width), (centerPanel.Height / 2) - (picFavourite.Height / 2));
 		}
 
 		private async void SetFavouriteSprite(bool favourited)
@@ -741,6 +777,7 @@ namespace ListenMoeClient
 			var response = Json.Parse<FavouritesResponse>(result);
 			picFavourite.Image = response.favorite ? favSprite.Frames[favSprite.Frames.Length - 1] :
 				spriteColorInverted ? darkFavSprite.Frames[0] : favSprite.Frames[0];
+			songInfoStream.currentInfo.extended.favorite = response.favorite;
 		}
 
 		private void menuItemResetLocation_Click(object sender, EventArgs e)

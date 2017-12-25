@@ -96,10 +96,12 @@ namespace ListenMoeClient
 				c.Height = origRect.Height;
 				c.Location = origRect.Location;
 
-
 				//Reset children
 				foreach (Control c2 in c.Controls)
 					ResetScale(c2);
+
+				originalRect.Remove(c);
+				originalMinSize.Remove(c);
 			}
 		}
 	}

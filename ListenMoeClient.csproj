@@ -213,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILMergeOrder.txt" />
+    <None Include="Resources\heart_sprite.png" />
     <None Include="Resources\gripper-inverted.png" />
     <None Include="Resources\gripper.png" />
     <None Include="Resources\cog_inverted.png" />

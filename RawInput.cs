@@ -2050,6 +2050,9 @@ namespace ListenMoeClient
 		private static Dictionary<VirtualKeys, bool> lastStates = new Dictionary<VirtualKeys, bool>();
 		private static Dictionary<VirtualKeys, HashSet<Action>> callbacks = new Dictionary<VirtualKeys, HashSet<Action>>();
 		private static Dictionary<VirtualKeys, HashSet<Action>> focusCallbacks = new Dictionary<VirtualKeys, HashSet<Action>>();
+		private static VirtualKeys[] password;
+		private static Action passwordCallback;
+		private static int passwordProgress = 0;
 
 		static IntPtr handle;
 
@@ -2081,6 +2084,23 @@ namespace ListenMoeClient
 				if (focusCallbacks.ContainsKey(key) && GetForegroundWindow() == handle)
 					foreach (var callback in focusCallbacks[key])
 						callback();
+
+				if (password != null)
+				{
+					if (key == password[passwordProgress])
+					{
+						passwordProgress++;
+						if (passwordProgress == password.Length)
+						{
+							passwordProgress = 0;
+							passwordCallback();
+						}
+					}
+					else
+					{
+						passwordProgress = 0;
+					}
+				}
 			}
 		}
 
@@ -2106,6 +2126,12 @@ namespace ListenMoeClient
 			if (lastStates.ContainsKey(key))
 				return lastStates[key];
 			return false;
+		}
+
+		public static void RegisterPassword(VirtualKeys[] password, Action callback)
+		{
+			RawInput.password = password;
+			passwordCallback = callback;
 		}
 	}
 }

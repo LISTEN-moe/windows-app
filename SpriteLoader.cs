@@ -12,12 +12,8 @@ namespace ListenMoeClient
 
 	class SpriteLoader
 	{
-		const int frameSize = 256;
-
-		public static Sprite LoadFavSprite()
+		public static Sprite LoadFavSprite(Bitmap sheet, int frameSize)
 		{
-			Bitmap sheet = Properties.Resources.fav_sprite;
-
 			Sprite result = new Sprite
 			{
 				Frames = new Image[sheet.Width / frameSize]
@@ -53,10 +49,8 @@ namespace ListenMoeClient
 			b.UnlockBits(bmpData);
 		}
 
-		public static Sprite LoadFadedFavSprite()
+		public static Sprite LoadFadedFavSprite(Bitmap sheet, int frameSize)
 		{
-			Bitmap sheet = Properties.Resources.fav_sprite;
-
 			Sprite result = new Sprite
 			{
 				Frames = new Image[2]
@@ -101,10 +95,8 @@ namespace ListenMoeClient
 			return darkened;
 		}
 
-		public static Sprite LoadDarkFavSprite()
+		public static Sprite LoadDarkFavSprite(Bitmap sheet, int frameSize)
 		{
-			Bitmap sheet = Properties.Resources.fav_sprite;
-
 			Sprite result = new Sprite
 			{
 				Frames = new Image[sheet.Width / frameSize]
