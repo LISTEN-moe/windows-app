@@ -185,11 +185,12 @@
 			//
 			// lblVol
 			//
+			this.lblVol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.lblVol.AutoSize = true;
 			this.lblVol.BackColor = System.Drawing.Color.Transparent;
 			this.lblVol.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
 			this.lblVol.ForeColor = System.Drawing.Color.White;
-			this.lblVol.Location = new System.Drawing.Point(5, 43);
+			this.lblVol.Location = new System.Drawing.Point(5, 47);
 			this.lblVol.Name = "lblVol";
 			this.lblVol.Size = new System.Drawing.Size(34, 13);
 			this.lblVol.TabIndex = 4;

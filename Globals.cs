@@ -61,6 +61,8 @@ namespace ListenMoeClient
 		static Dictionary<Control, Size> originalMinSize = new Dictionary<Control, Size>();
 		public static void BetterScale(this Control c, float f)
 		{
+			c.SuspendLayout();
+
 			if (!originalRect.ContainsKey(c))
 			{
 				originalRect[c] = new Rectangle(c.Location.X, c.Location.Y, c.Width, c.Height);
@@ -79,6 +81,8 @@ namespace ListenMoeClient
 			//Scale children
 			foreach (Control c2 in c.Controls)
 				BetterScale(c2, f);
+
+			c.ResumeLayout();
 		}
 
 		public static void ResetScale(this Control c)
