@@ -185,16 +185,16 @@
 			//
 			// lblVol
 			//
-			this.lblVol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.lblVol.AutoSize = true;
+			this.lblVol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblVol.BackColor = System.Drawing.Color.Transparent;
 			this.lblVol.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
 			this.lblVol.ForeColor = System.Drawing.Color.White;
-			this.lblVol.Location = new System.Drawing.Point(5, 47);
+			this.lblVol.Location = new System.Drawing.Point(-8, 47);
 			this.lblVol.Name = "lblVol";
-			this.lblVol.Size = new System.Drawing.Size(34, 13);
+			this.lblVol.Size = new System.Drawing.Size(48, 16);
 			this.lblVol.TabIndex = 4;
 			this.lblVol.Text = "100%";
+			this.lblVol.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			//
 			// centerPanel
 			//
@@ -239,7 +239,6 @@
 			this.panelPlayBtn.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).EndInit();
 			this.panelRight.ResumeLayout(false);
-			this.panelRight.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSettings)).EndInit();
 			this.centerPanel.ResumeLayout(false);
