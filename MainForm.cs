@@ -133,7 +133,6 @@ namespace ListenMoeClient
 		Task updaterTask;
 		Task renderLoop;
 
-		int gripSize = 16;
 		Rectangle gripRect = new Rectangle();
 		Rectangle rightEdgeRect = new Rectangle();
 		Rectangle leftEdgeRect = new Rectangle();
@@ -210,11 +209,10 @@ namespace ListenMoeClient
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-			if (VisualStyleRenderer.IsElementDefined(VisualStyleElement.Status.Gripper.Normal))
-			{
-				VisualStyleRenderer renderer = new VisualStyleRenderer(VisualStyleElement.Status.Gripper.Normal);
-				renderer.DrawBackground(e.Graphics, gripRect);
-			}
+
+			e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+			e.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
+			e.Graphics.DrawImage(spriteColorInverted ? Properties.Resources.gripper_inverted : Properties.Resources.gripper, gripRect);
 
 			//Expose 2px on the left for resizing, so we paint it the same colour so it's not noticeable
 			e.Graphics.FillRectangle(new SolidBrush(Settings.Get<Color>(Setting.AccentColor)), new Rectangle(0, 0, 2, this.ClientRectangle.Height));
@@ -225,9 +223,13 @@ namespace ListenMoeClient
 			int width = this.ClientRectangle.Width;
 			int height = this.ClientRectangle.Height;
 			GraphicsPath path = new GraphicsPath();
-			path.AddPolygon(new[] { new Point(width - gripSize, height), new Point(width, height - gripSize), new Point(width, height), new Point(width - gripSize, height) });
-			//path.AddRectangle(new Rectangle(width - gripSize, height - gripSize, gripSize, gripSize));
-			gripRect = new Rectangle(width - gripSize, height - gripSize, gripSize, gripSize);
+
+			float scale = Settings.Get<float>(Setting.Scale);
+			int gripSize = (int)(Properties.Resources.gripper.Width * scale);
+			int padding = (int)scale;
+
+			path.AddPolygon(new[] { new Point(width - gripSize * 2 - padding, height), new Point(width, height - gripSize * 2 - padding), new Point(width, height) });
+			gripRect = new Rectangle(width - gripSize - padding, height - gripSize - padding, gripSize, gripSize);
 			rightEdgeRect = new Rectangle(width - 2, 0, 2, height);
 			leftEdgeRect = new Rectangle(0, 0, 2, height);
 
