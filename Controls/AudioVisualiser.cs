@@ -243,7 +243,7 @@ namespace ListenMoeClient
 				g.DrawCurve(linePen, points);
 			}
 			g.TranslateTransform(-Bounds.X, 0);
-			
+
 			g.ScaleTransform(1, -1);
 			g.TranslateTransform(0, -(Bounds.Height));
 

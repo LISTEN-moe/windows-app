@@ -66,7 +66,7 @@ namespace ListenMoeClient
 				panelNotLoggedIn.Visible = true;
 				panelNotLoggedIn.BringToFront();
 			};
-			
+
 			reloadAudioDevices();
 		}
 

@@ -35,7 +35,7 @@ namespace ListenMoeClient
 			lblArtist.Text = "Connecting...";
 			lblEvent.Centered = true;
 			RecalculateMarqueeBounds();
-			
+
 			Visualiser.SetBounds(new Rectangle(0, 0, this.Width, this.Height));
 			Visualiser.ReloadSettings();
 		}
@@ -74,11 +74,11 @@ namespace ListenMoeClient
 			base.OnPaint(e);
 
 			this.SuspendLayout();
-			
+
 			Visualiser.Render(e.Graphics);
 			lblTitle.Render(e.Graphics);
 			lblArtist.Render(e.Graphics);
-			
+
 			if (isEventOrRequest)
 			{
 				float scale = Settings.Get<float>(Setting.Scale);
@@ -117,7 +117,7 @@ namespace ListenMoeClient
 			if (!string.IsNullOrWhiteSpace(albumText))
 				lblArtist.Text += " - " + albumText;
 			lblEvent.Text = eventText;
-			
+
 			this.isEventOrRequest = isEventOrRequest;
 			RecalculateMarqueeBounds();
 		}
@@ -140,7 +140,7 @@ namespace ListenMoeClient
 			lblArtist.RecalculateBounds();
 			lblEvent.RecalculateBounds();
 		}
-		
+
 		public void StartVisualiser(WebStreamPlayer player)
 		{
 			Visualiser.Start();

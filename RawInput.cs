@@ -1987,7 +1987,7 @@ namespace ListenMoeClient
 	}
 
 	/// <summary>
-	/// Contains the raw input from a device. 
+	/// Contains the raw input from a device.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct RAWINPUT

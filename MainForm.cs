@@ -120,7 +120,7 @@ namespace ListenMoeClient
 		Font volumeFont;
 		float currentScale = 1f;
 
-		
+
 		public FormSettings SettingsForm;
 
 		Sprite favSprite;
@@ -334,7 +334,7 @@ namespace ListenMoeClient
 			float scaleFactor = Settings.Get<float>(Setting.Scale);
 			this.Scale(new SizeF(scaleFactor / currentScale, scaleFactor / currentScale));
 			currentScale = scaleFactor;
-			
+
 			gridPanel.SetRows("100%");
 			int playPauseWidth = (int)(Settings.DEFAULT_HEIGHT * scaleFactor);
 			int rightPanelWidth = (int)(Settings.DEFAULT_RIGHT_PANEL_WIDTH * scaleFactor);
@@ -344,7 +344,7 @@ namespace ListenMoeClient
 			//Reload fonts to get newly scaled font sizes
 			LoadFonts();
 			SetPlayPauseSize(false);
-			
+
 		}
 
 		private void LoadFonts()
@@ -666,7 +666,7 @@ namespace ListenMoeClient
 			WindowState = FormWindowState.Normal;
 			this.Show();
 			this.Activate();
-			
+
 			if (!Settings.Get<bool>(Setting.HideFromAltTab))
 				notifyIcon1.Visible = false;
 		}
@@ -740,7 +740,7 @@ namespace ListenMoeClient
 			});
 
 			var response = Json.Parse<FavouritesResponse>(result);
-			picFavourite.Image = response.favorite ? favSprite.Frames[favSprite.Frames.Length - 1] : 
+			picFavourite.Image = response.favorite ? favSprite.Frames[favSprite.Frames.Length - 1] :
 				spriteColorInverted ? darkFavSprite.Frames[0] : favSprite.Frames[0];
 		}
 
