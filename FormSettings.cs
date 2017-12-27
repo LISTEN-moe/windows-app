@@ -40,7 +40,10 @@ namespace ListenMoeClient
 			tbResolutionScale.Value = (int)(scale * 10);
 			lblResolutionScale.Text = scale.ToString("N1");
 
-			tbVisualiserOpacity.Value = (int)(Settings.Get<float>(Setting.VisualiserTransparency) * 255);
+			float visualiserOpacity = Settings.Get<float>(Setting.VisualiserTransparency);
+			tbVisualiserOpacity.Value = (int)(visualiserOpacity * 255);
+			lblVisualiserOpacity.Text = visualiserOpacity.ToString("N1");
+
 			float opacity = Settings.Get<float>(Setting.FormOpacity);
 			tbOpacity.Value = (int)(opacity * 255);
 			lblOpacity.Text = opacity.ToString("N1");
