@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -10,21 +11,15 @@ namespace ListenMoeClient
 {
 	class Updater
 	{
-		[DataContract]
 		class LatestReleaseResponse
 		{
-			[DataMember]
 			public string tag_name { get; set; }
-			[DataMember]
 			public LatestReleaseAsset[] assets { get; set; }
 		}
 
-		[DataContract]
 		class LatestReleaseAsset
 		{
-			[DataMember]
 			public string browser_download_url { get; set; }
-			[DataMember]
 			public string name { get; set; }
 		}
 
@@ -32,8 +27,8 @@ namespace ListenMoeClient
 
 		public static async Task<bool> CheckGithubVersion()
 		{
-			string rawResponse = await WebHelper.Get(UPDATE_ENDPOINT);
-			LatestReleaseResponse response = Json.Parse<LatestReleaseResponse>(rawResponse);
+			(bool success, string rawResponse) = await WebHelper.Get(UPDATE_ENDPOINT, false);
+			LatestReleaseResponse response = JsonConvert.DeserializeObject<LatestReleaseResponse>(rawResponse);
 
 			var version = response.tag_name;
 			if (version == null)
@@ -75,8 +70,8 @@ namespace ListenMoeClient
 
 		public static async Task UpdateToNewVersion(DownloadProgressChangedEventHandler dpceh, System.ComponentModel.AsyncCompletedEventHandler aceh)
 		{
-			string rawResponse = await WebHelper.Get(UPDATE_ENDPOINT);
-			LatestReleaseResponse response = Json.Parse<LatestReleaseResponse>(rawResponse);
+			(bool success, string rawResponse) = await WebHelper.Get(UPDATE_ENDPOINT, false);
+			LatestReleaseResponse response = JsonConvert.DeserializeObject<LatestReleaseResponse>(rawResponse);
 
 			if (response.assets.Length == 0)
 			{

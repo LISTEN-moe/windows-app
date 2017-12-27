@@ -101,6 +101,9 @@
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -110,7 +113,6 @@
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -158,7 +160,6 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="Controls\AudioVisualiser.cs" />
-    <Compile Include="Web\Json.cs" />
     <Compile Include="Controls\MarqueeLabel.cs" />
     <Compile Include="Audio\Ogg.cs" />
     <Compile Include="Controls\Meiryo.cs" />
@@ -175,7 +176,7 @@
     <Compile Include="Web\SongInfo.cs" />
     <Compile Include="SpriteLoader.cs" />
     <Compile Include="Web\Updater.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Web\User.cs" />
     <Compile Include="Web\WebHelper.cs" />
     <Compile Include="Audio\WebStreamPlayer.cs" />
     <EmbeddedResource Include="FormSettings.resx">

@@ -9,7 +9,6 @@ namespace ListenMoeClient
 {
 	public class ListenMoeResponse
 	{
-		public bool success { get; set; }
 		public string message { get; set; }
 	}
 
@@ -38,17 +37,17 @@ namespace ListenMoeClient
 			return Encoding.UTF8.GetBytes(result.ToString());
 		}
 
-		public static async Task<string> Post(string url, string token, Dictionary<string, string> postData)
+		public static async Task<(bool, string)> Post(string url, string token, Dictionary<string, string> postData, bool isListenMoe)
 		{
-			return await Post(url, token, postData, "application/json");
+			return await Post(url, token, postData, "application/json", isListenMoe);
 		}
 
-		public static async Task<string> Post(string url, Dictionary<string, string> postData)
+		public static async Task<(bool, string)> Post(string url, Dictionary<string, string> postData, bool isListenMoe)
 		{
-			return await Post(url, "", postData, "application/json");
+			return await Post(url, "", postData, "application/json", isListenMoe);
 		}
 
-		public static async Task<string> Post(string url, string token, Dictionary<string, string> postData, string contentType)
+		public static async Task<(bool, string)> Post(string url, string token, Dictionary<string, string> postData, string contentType, bool isListenMoe)
 		{
 			HttpWebRequest hwr = WebRequest.CreateHttp(url);
 			hwr.ContentType = contentType;
@@ -56,6 +55,9 @@ namespace ListenMoeClient
 			hwr.Timeout = 2000;
 			if (token.Trim() != "")
 				hwr.Headers["authorization"] = token;
+
+			if (isListenMoe)
+				hwr.Accept = "application/vnd.listen.v4+json";
 
 			byte[] postDataBytes = createPostData(postData);
 			hwr.ContentLength = postDataBytes.Length;
@@ -66,25 +68,27 @@ namespace ListenMoeClient
 			reqStream.Close();
 
 			Stream respStream;
+			bool success = true;
 			try
 			{
 				respStream = (await hwr.GetResponseAsync()).GetResponseStream();
 			}
 			catch (WebException e)
 			{
+				success = false;
 				respStream = e.Response.GetResponseStream();
 			}
 
 			string result = await new StreamReader(respStream).ReadToEndAsync();
-			return result;
+			return (success, result);
 		}
 
-		public static async Task<string> Get(string endpoint)
+		public static async Task<(bool, string)> Get(string endpoint, bool isListenMoe)
 		{
-			return await Get(endpoint, "");
+			return await Get(endpoint, "", isListenMoe);
 		}
 
-		public static async Task<string> Get(string url, string token)
+		public static async Task<(bool, string)> Get(string url, string token, bool isListenMoe)
 		{
 			HttpWebRequest hwr = WebRequest.CreateHttp(url);
 			hwr.Method = "GET";
@@ -93,19 +97,23 @@ namespace ListenMoeClient
 			if (token.Trim() != "")
 				hwr.Headers["authorization"] = token;
 
+			if (isListenMoe)
+				hwr.Accept = "application/vnd.listen.v4+json";
+
 			Stream respStream;
+			bool success = true;
 			try
 			{
-				var response = await hwr.GetResponseAsync();
-				respStream = response.GetResponseStream();
+				respStream = (await hwr.GetResponseAsync()).GetResponseStream();
 			}
 			catch (WebException e)
 			{
+				success = false;
 				respStream = e.Response.GetResponseStream();
 			}
 
 			string result = await new StreamReader(respStream).ReadToEndAsync();
-			return result;
+			return (success, result);
 		}
 	}
 }

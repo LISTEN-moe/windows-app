@@ -1,52 +1,94 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
+using Newtonsoft.Json;
 
 namespace ListenMoeClient
 {
-	public class SongInfo
+
+	public class WelcomeResponse
 	{
-		public int song_id { get; set; }
-		public string requested_by { get; set; }
-		public string listeners { get; set; }
-		public string song_name { get; set; }
-		public string artist_name { get; set; }
-		public string anime_name { get; set; }
-
-		public PreviousSongInfo last { get; set; }
-		public PreviousSongInfo second_last { get; set; }
-
-		public ExtendedSongInfo extended { get; set; }
+		public int op { get; set; }
+		public WelcomeResponseData d { get; set; }
 	}
 
-	public class PreviousSongInfo
+	public class WelcomeResponseData
 	{
-		public string song_name { get; set; }
-		public string artist_name { get; set; }
+		public string message { get; set; }
+		public WelcomeResponseUserData user { get; set; }
+		public int heartbeat { get; set; }
 	}
 
-	public class ExtendedSongInfo
+	public class WelcomeResponseUserData
 	{
+		public string uuid { get; set; }
+		public string email { get; set; }
+		public string username { get; set; }
+		public string displayName { get; set; }
+		public int uploads { get; set; }
+	}
+
+	public class SongInfoResponse
+	{
+		public int op { get; set; }
+		public SongInfoResponseData d { get; set; }
+		public string t { get; set; }
+	}
+
+	public class SongInfoResponseData
+	{
+		public Song song { get; set; }
+		public string requester { get; set; }
+		public string _event { get; set; }
+		public DateTime startTime { get; set; }
+		public Song[] lastPlayed { get; set; }
+		public int listeners { get; set; }
+	}
+
+	public class Song
+	{
+		public int id { get; set; }
+		public string title { get; set; }
+		public string source { get; set; }
+		public Artist[] artists { get; set; }
+		public Album[] albums { get; set; }
+		public int duration { get; set; }
 		public bool favorite { get; set; }
 	}
 
-	public class SongQueue
+	public class Artist
 	{
-		public int songsInQueue { get; set; }
-		public bool hasSongInQueue { get; set; }
-		public int inQueueBeforeUserSong { get; set; }
-		public int userSongsInQueue { get; set; }
+		public int id { get; set; }
+		public string name { get; set; }
+		public object nameRomaji { get; set; }
+		public object artistImage { get; set; }
 	}
+
+	public class Album
+	{
+		public int id { get; set; }
+		public string name { get; set; }
+		public object nameRomaji { get; set; }
+		public string coverImage { get; set; }
+	}
+
+
 
 	public class SongInfoStream
 	{
 		private WebSocket socket;
 		private TaskFactory factory;
-		public delegate void StatsReceived(SongInfo info);
+		public delegate void StatsReceived(SongInfoResponseData info);
 		public event StatsReceived OnSongInfoReceived = (info) => { };
-		public SongInfo currentInfo;
+		public SongInfoResponseData currentInfo;
 
-		private const string SOCKET_ADDR = "wss://listen.moe/api/v2/socket";
+		private const string SOCKET_ADDR = "wss://dev.listen.moe/gateway";
+
+		private Thread heartbeatThread;
+		private CancellationTokenSource cts;
 
 		public SongInfoStream(TaskFactory factory)
 		{
@@ -75,8 +117,7 @@ namespace ListenMoeClient
 			{
 				socket.Connect();
 
-				if (User.LoggedIn)
-					Authenticate();
+				Authenticate();
 			}
 			catch (Exception) { }
 		}
@@ -85,28 +126,98 @@ namespace ListenMoeClient
 		{
 			try
 			{
-				socket.Send("{ \"token\": \"" + Settings.Get<string>(Setting.Token) + "\" }");
+				string token;
+				if (User.LoggedIn)
+					token = "Bearer " + Settings.Get<string>(Setting.Token);
+				else
+					token = "";
+
+				socket.Send("{ \"op\": 0, \"d\": { \"auth\": \"" + token + "\" } }");
+			}
+			catch (Exception) { }
+		}
+
+		private void SendHeartbeat()
+		{
+			try
+			{
+				socket.Send("{ \"op\": 9 }");
 			} catch (Exception) { }
+		}
+
+		private void ProcessWelcomeResponse(WelcomeResponse resp)
+		{
+			int heartbeatInterval = resp.d.heartbeat;
+
+			if (heartbeatThread != null)
+			{
+				cts.Cancel();
+
+				//Running on the websocket thread, so no need to async/await
+				heartbeatThread.Join();
+			}
+
+			cts = new CancellationTokenSource();
+			heartbeatThread = new Thread(() =>
+			{
+				Stopwatch watch = new Stopwatch();
+				watch.Start();
+				long lastMillis = watch.ElapsedMilliseconds;
+				while (!cts.IsCancellationRequested)
+				{
+					long currentMillis = watch.ElapsedMilliseconds;
+					if (currentMillis - lastMillis > heartbeatInterval) {
+						SendHeartbeat();
+						lastMillis = currentMillis;
+					}
+					Thread.Sleep(1000);
+				}
+			});
+			heartbeatThread.Start();
+		}
+
+		private string Clean(string input)
+		{
+			return input.Trim().Replace('\n', ' ');
 		}
 
 		private void ParseSongInfo(string data)
 		{
-			if (data.Trim() == "{\"reason\":\"MALFORMED-JSON\"}" || data.Trim() == "{\"reason\":\"CLEANUP\"}" || data.Trim() == "")
-				return;
-
-			try
+			string noWhitespaceData = new string(data.Where(c => !Char.IsWhiteSpace(c)).ToArray());
+			if (noWhitespaceData.Contains("\"op\":0"))
 			{
-				currentInfo = Json.Parse<SongInfo>(data);
-				currentInfo.anime_name = currentInfo.anime_name.Trim().Replace('\n', ' ');
-				currentInfo.artist_name = currentInfo.artist_name.Trim().Replace('\n', ' ');
-				currentInfo.song_name = currentInfo.song_name.Trim().Replace('\n', ' ');
-				currentInfo.requested_by = currentInfo.requested_by.Trim().Replace('\n', ' ');
+				//Identify/Welcome response
+				WelcomeResponse resp = JsonConvert.DeserializeObject<WelcomeResponse>(data);
+				ProcessWelcomeResponse(resp);
+			}
+			else if (noWhitespaceData.Contains("\"op\":1"))
+			{
+				//Song info
+				SongInfoResponse resp = JsonConvert.DeserializeObject<SongInfoResponse>(data);
+				if (resp.t != "TRACK_UPDATE")
+					return;
+
+				currentInfo = resp.d;
+				if (currentInfo.song.source != null)
+					currentInfo.song.source = Clean(currentInfo.song.source);
+
+				foreach (var artist in currentInfo.song.artists)
+				{
+					artist.name = Clean(artist.name);
+				}
+				currentInfo.song.title = Clean(currentInfo.song.title);
+
+				if (currentInfo.requester != null)
+					currentInfo.requester = Clean(currentInfo.requester);
+
+				if (currentInfo._event != null)
+					currentInfo._event = Clean(currentInfo._event);
 
 				factory.StartNew(() =>
 				{
 					OnSongInfoReceived(currentInfo);
 				});
-			} catch (Exception) { }
+			}
 		}
 	}
 }
