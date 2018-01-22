@@ -186,7 +186,7 @@ namespace ListenMoeClient
 
 			Connect();
 
-			player = new WebStreamPlayer("https://listen.moe/stream");
+			player = new WebStreamPlayer("https://listen.moe/opus");
 			player.Play();
 
 			renderLoop = Task.Run(() =>
@@ -612,8 +612,9 @@ namespace ListenMoeClient
 
 		void ProcessSongInfo(SongInfoResponseData songInfo)
 		{
-			string eventInfo = songInfo.requester != null ? "Requested by " + songInfo.requester : songInfo._event ?? "";
-			centerPanel.SetLabelText(songInfo.song.title, string.Join(",", songInfo.song.artists.Select(a => a.name)), songInfo.song.source, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
+			string eventInfo = songInfo.requester != null ? "Requested by " + songInfo.requester.displayName : songInfo._event ?? "";
+			string source = songInfo.song.source.Length > 0 ? songInfo.song.source[0].name : "";
+			centerPanel.SetLabelText(songInfo.song.title, string.Join(",", songInfo.song.artists.Select(a => a.name)), source, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
 
 			if (User.LoggedIn)
 				SetFavouriteSprite(songInfo.song.favorite);

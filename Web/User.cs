@@ -31,7 +31,7 @@ namespace ListenMoeClient
 				{ "password", password }
 			};
 
-			(bool success, string resp) = await WebHelper.Post("https://dev.listen.moe/api/login", postData, true);
+			(bool success, string resp) = await WebHelper.Post("https://listen.moe/api/login", postData, true);
 			var response = JsonConvert.DeserializeObject<AuthenticateResponse>(resp);
 			if (success)
 			{
@@ -59,7 +59,7 @@ namespace ListenMoeClient
 		/// <returns></returns>
 		public static async Task<bool> Login(string token)
 		{
-			(bool success, string resp) = await WebHelper.Get("https://dev.listen.moe/api/users/@me", "Bearer " + token, true);
+			(bool success, string resp) = await WebHelper.Get("https://listen.moe/api/users/@me", "Bearer " + token, true);
 			var response = JsonConvert.DeserializeObject<ListenMoeResponse>(resp);
 			if (success)
 			{
