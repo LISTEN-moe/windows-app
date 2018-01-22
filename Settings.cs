@@ -192,9 +192,12 @@ namespace ListenMoeClient
 				if (!success)
 					continue;
 
+				if (!Enum.TryParse(parts[0].Substring(1), out Setting settingKey))
+					continue;
+
 				MethodInfo setMethod = typeof(Settings).GetMethod("Set", BindingFlags.Static | BindingFlags.Public);
 				MethodInfo genericSet = setMethod.MakeGenericMethod(t);
-				genericSet.Invoke(null, new object[] { Enum.Parse(typeof(Setting), parts[0].Substring(1)), o });
+				genericSet.Invoke(null, new object[] { settingKey, o });
 			}
 		}
 
