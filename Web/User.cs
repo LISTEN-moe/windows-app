@@ -41,7 +41,10 @@ namespace ListenMoeClient
 				Settings.Set(Setting.Token, response.token);
 				Settings.WriteSettings();
 
-				OnLoginComplete();
+				if (!response.mfa)
+				{
+					OnLoginComplete();
+				}
 			}
 			else
 			{
@@ -74,6 +77,27 @@ namespace ListenMoeClient
 				Settings.WriteSettings();
 			}
 			return loggedIn;
+		}
+
+		public static async Task<bool> LoginMfa(string mfaCode)
+		{
+			var postData = new Dictionary<string, string>
+			{
+				{ "token", mfaCode }
+			};
+
+			var token = "Bearer " + Settings.Get<string>(Setting.Token);
+			(bool success, string resp) = await WebHelper.Post("https://listen.moe/api/login/mfa", token, postData, true);
+			var response = JsonConvert.DeserializeObject<AuthenticateResponse>(resp);
+			if (success)
+			{
+				loggedIn = true;
+				Settings.Set(Setting.Token, response.token);
+				Settings.WriteSettings();
+
+				OnLoginComplete();
+			}
+			return success;
 		}
 
 		public static void Logout()

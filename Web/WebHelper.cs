@@ -20,6 +20,7 @@ namespace ListenMoeClient
 	public class AuthenticateResponse : ListenMoeResponse
 	{
 		public string token { get; set; }
+		public bool mfa { get; set; }
 	}
 
 	class WebHelper
