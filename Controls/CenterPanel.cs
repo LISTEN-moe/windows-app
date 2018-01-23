@@ -92,7 +92,7 @@ namespace ListenMoeClient
 			{
 				Brush brush = new SolidBrush(updateState == UpdateState.InProgress ? Color.Yellow : Color.LimeGreen);
 				//Height for pause/play button
-				e.Graphics.FillRectangle(brush, Settings.DEFAULT_HEIGHT, this.Height - 3, (this.Width - Settings.DEFAULT_HEIGHT- Settings.DEFAULT_RIGHT_PANEL_WIDTH) * updatePercent, 3);
+				e.Graphics.FillRectangle(brush, 0, this.Height - 3, this.Width * updatePercent, 3);
 			}
 
 			this.ResumeLayout();
