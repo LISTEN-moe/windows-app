@@ -193,7 +193,7 @@ namespace ListenMoeClient
 
 		private string Clean(string input)
 		{
-			return input.Trim().Replace('\n', ' ');
+			return input != null ? input.Trim().Replace('\n', ' ') : "";
 		}
 
 		private void ParseSongInfo(string data)

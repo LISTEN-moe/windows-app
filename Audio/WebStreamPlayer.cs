@@ -44,16 +44,22 @@ namespace ListenMoeClient
 			{
 				try
 				{
-					HttpWebRequest req = WebRequest.CreateHttp(url);
-					req.UserAgent = Globals.USER_AGENT;
+					WebClient wc = new WebClient();
+					wc.Headers[HttpRequestHeader.UserAgent] = Globals.USER_AGENT;
 
-					using (var stream = req.GetResponse().GetResponseStream())
+					using (var stream = wc.OpenRead(url))
 					{
 						var readFullyStream = new ReadFullyStream(stream);
 
+						int packetCounter = 0;
 						while (playing)
 						{
 							byte[][] packets = ogg.GetAudioPackets(readFullyStream);
+
+							packetCounter++;
+							//Skip first 5 pages (control frames, etc)
+							if (packetCounter <= 5)
+								continue;
 
 							for (int i = 0; i < packets.Length; i++)
 							{
@@ -71,7 +77,6 @@ namespace ListenMoeClient
 								catch (Concentus.OpusException)
 								{
 									//Skip this frame
-									//Note: the first 2 frames will hit this exception (I'm pretty sure they're not audio data frames)
 								}
 							}
 						}
