@@ -62,7 +62,7 @@ namespace ListenMoeClient
 		/// <returns></returns>
 		public static async Task<bool> Login(string token)
 		{
-			(bool success, string resp) = await WebHelper.Get("https://listen.moe/api/users/@me", "Bearer " + token, true);
+			(bool success, string resp) = await WebHelper.Get("https://listen.moe/api/users/@me", token, true);
 			var response = JsonConvert.DeserializeObject<ListenMoeResponse>(resp);
 			if (success)
 			{
@@ -86,7 +86,7 @@ namespace ListenMoeClient
 				{ "token", mfaCode }
 			};
 
-			var token = "Bearer " + Settings.Get<string>(Setting.Token);
+			var token = Settings.Get<string>(Setting.Token);
 			(bool success, string resp) = await WebHelper.Post("https://listen.moe/api/login/mfa", token, postData, true);
 			var response = JsonConvert.DeserializeObject<AuthenticateResponse>(resp);
 			if (success)
@@ -97,6 +97,20 @@ namespace ListenMoeClient
 
 				OnLoginComplete();
 			}
+			return success;
+		}
+
+		public static async Task<bool> FavoriteSong(string id, bool favorite)
+		{
+			var token = Settings.Get<string>(Setting.Token);
+			bool success = false;
+			string result = null;
+
+			if (favorite)
+				(success, result) = await WebHelper.Post("https://listen.moe/api/favorites/" + id, token, null, true);
+			else
+				(success, result) = await WebHelper.Delete("https://listen.moe/api/favorites/" + id, token, true);
+
 			return success;
 		}
 

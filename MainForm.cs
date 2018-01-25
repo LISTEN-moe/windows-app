@@ -142,6 +142,7 @@ namespace ListenMoeClient
 
 		bool spriteColorInverted = false; //Excluding play/pause icon
 		bool playPauseInverted = false;
+		bool currentlyFavoriting = false;
 
 		public MainForm()
 		{
@@ -771,24 +772,29 @@ namespace ListenMoeClient
 
 		private async void picFavourite_Click(object sender, EventArgs e)
 		{
-			bool currentStatus = songInfoStream?.currentInfo?.song.favorite ?? false;
-			bool newStatus = !currentStatus;
+			if (songInfoStream.currentInfo == null || songInfoStream.currentInfo.song == null)
+				return;
 
-			if (songInfoStream.currentInfo != null && songInfoStream.currentInfo.song != null)
-				songInfoStream.currentInfo.song.favorite = newStatus;
+			bool currentStatus = songInfoStream.currentInfo.song.favorite;
+			bool newStatus = !currentStatus;
 
 			SetFavouriteSprite(newStatus);
 
-			(bool success, string result) = await WebHelper.Post("https://listen.moe/api/songs/favorite", Settings.Get<string>(Setting.Token), new Dictionary<string, string>() {
-				["song"] = songInfoStream?.currentInfo?.song.id.ToString() ?? ""
-			}, true);
+			if (currentlyFavoriting)
+				return;
 
-			var response = JsonConvert.DeserializeObject<FavouritesResponse>(result);
-			picFavourite.Image = response.favorite ? favSprite.Frames[favSprite.Frames.Length - 1] :
+			currentlyFavoriting = true;
+
+			string id = songInfoStream.currentInfo.song.id.ToString();
+
+			bool success = await User.FavoriteSong(id, newStatus);
+			bool finalState = success ? newStatus : currentStatus;
+
+			picFavourite.Image = finalState ? favSprite.Frames[favSprite.Frames.Length - 1] :
 				spriteColorInverted ? darkFavSprite.Frames[0] : favSprite.Frames[0];
+			songInfoStream.currentInfo.song.favorite = finalState;
 
-			if (songInfoStream.currentInfo != null && songInfoStream.currentInfo.song != null)
-				songInfoStream.currentInfo.song.favorite = response.favorite;
+			currentlyFavoriting = false;
 		}
 
 		private void menuItemResetLocation_Click(object sender, EventArgs e)

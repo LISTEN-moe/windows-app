@@ -12,11 +12,6 @@ namespace ListenMoeClient
 		public string message { get; set; }
 	}
 
-	public class FavouritesResponse : ListenMoeResponse
-	{
-		public bool favorite { get; set; }
-	}
-
 	public class AuthenticateResponse : ListenMoeResponse
 	{
 		public string token { get; set; }
@@ -25,8 +20,11 @@ namespace ListenMoeClient
 
 	class WebHelper
 	{
-		private static byte[] createPostData(Dictionary<string, string> postData)
+		private static byte[] CreatePostData(Dictionary<string, string> postData)
 		{
+			if (postData == null)
+				return Encoding.UTF8.GetBytes("{ }");
+
 			StringBuilder result = new StringBuilder("{");
 			foreach (var keyValuePair in postData)
 			{
@@ -36,6 +34,39 @@ namespace ListenMoeClient
 			result[result.Length - 1] = '}';
 
 			return Encoding.UTF8.GetBytes(result.ToString());
+		}
+
+		private static HttpWebRequest CreateWebRequest(string url, string token, bool isListenMoe, string method)
+		{
+			HttpWebRequest hwr = WebRequest.CreateHttp(url);
+			hwr.Method = method;
+			hwr.Timeout = 2000;
+			hwr.UserAgent = Globals.USER_AGENT;
+			if (token.Trim() != "")
+				hwr.Headers["authorization"] = "Bearer " + token;
+
+			if (isListenMoe)
+				hwr.Accept = "application/vnd.listen.v4+json";
+
+			return hwr;
+		}
+
+		private static async Task<(bool, string)> GetResponse(HttpWebRequest hwr)
+		{
+			Stream respStream;
+			bool success = true;
+			try
+			{
+				respStream = (await hwr.GetResponseAsync()).GetResponseStream();
+			}
+			catch (WebException e)
+			{
+				success = false;
+				respStream = e.Response.GetResponseStream();
+			}
+
+			string result = await new StreamReader(respStream).ReadToEndAsync();
+			return (success, result);
 		}
 
 		public static async Task<(bool, string)> Post(string url, string token, Dictionary<string, string> postData, bool isListenMoe)
@@ -50,17 +81,10 @@ namespace ListenMoeClient
 
 		public static async Task<(bool, string)> Post(string url, string token, Dictionary<string, string> postData, string contentType, bool isListenMoe)
 		{
-			HttpWebRequest hwr = WebRequest.CreateHttp(url);
+			var hwr = CreateWebRequest(url, token, isListenMoe, "POST");
+
+			byte[] postDataBytes = CreatePostData(postData);
 			hwr.ContentType = contentType;
-			hwr.Method = "POST";
-			hwr.Timeout = 2000;
-			if (token.Trim() != "")
-				hwr.Headers["authorization"] = token;
-
-			if (isListenMoe)
-				hwr.Accept = "application/vnd.listen.v4+json";
-
-			byte[] postDataBytes = createPostData(postData);
 			hwr.ContentLength = postDataBytes.Length;
 
 			Stream reqStream = await hwr.GetRequestStreamAsync();
@@ -68,20 +92,7 @@ namespace ListenMoeClient
 			reqStream.Flush();
 			reqStream.Close();
 
-			Stream respStream;
-			bool success = true;
-			try
-			{
-				respStream = (await hwr.GetResponseAsync()).GetResponseStream();
-			}
-			catch (WebException e)
-			{
-				success = false;
-				respStream = e.Response.GetResponseStream();
-			}
-
-			string result = await new StreamReader(respStream).ReadToEndAsync();
-			return (success, result);
+			return await GetResponse(hwr);
 		}
 
 		public static async Task<(bool, string)> Get(string endpoint, bool isListenMoe)
@@ -91,30 +102,14 @@ namespace ListenMoeClient
 
 		public static async Task<(bool, string)> Get(string url, string token, bool isListenMoe)
 		{
-			HttpWebRequest hwr = WebRequest.CreateHttp(url);
-			hwr.Method = "GET";
-			hwr.Timeout = 2000;
-			hwr.UserAgent = Globals.USER_AGENT;
-			if (token.Trim() != "")
-				hwr.Headers["authorization"] = token;
+			var hwr = CreateWebRequest(url, token, isListenMoe, "GET");
+			return await GetResponse(hwr);
+		}
 
-			if (isListenMoe)
-				hwr.Accept = "application/vnd.listen.v4+json";
-
-			Stream respStream;
-			bool success = true;
-			try
-			{
-				respStream = (await hwr.GetResponseAsync()).GetResponseStream();
-			}
-			catch (WebException e)
-			{
-				success = false;
-				respStream = e.Response.GetResponseStream();
-			}
-
-			string result = await new StreamReader(respStream).ReadToEndAsync();
-			return (success, result);
+		public static async Task<(bool, string)> Delete(string url, string token, bool isListenMoe)
+		{
+			var hwr = CreateWebRequest(url, token, isListenMoe, "DELETE");
+			return await GetResponse(hwr);
 		}
 	}
 }
