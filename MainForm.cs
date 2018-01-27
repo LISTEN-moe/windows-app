@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -670,7 +671,11 @@ namespace ListenMoeClient
 			SongInfoResponseData info = songInfoStream.currentInfo;
 			if (info != null)
 			{
-				Clipboard.SetText(info.song.title + " \n" + string.Join(", ", info.song.artists.Select(a => a.name)) + " \n" + info.song.source);
+				StringBuilder sb = new StringBuilder();
+				sb.AppendLine(info.song.title);
+				sb.AppendLine(string.Join(", ", info.song.artists.Select(a => a.name)));
+				sb.AppendLine(string.Join(", ", info.song.source.Select(s => s.name)));
+				Clipboard.SetText(sb.ToString());
 			}
 		}
 
