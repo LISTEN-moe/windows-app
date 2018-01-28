@@ -762,16 +762,12 @@ namespace ListenMoeClient
 				}
 
 				isAnimating = false;
-				if (songInfoStream.currentInfo != null && songInfoStream.currentInfo.song != null)
-					songInfoStream.currentInfo.song.favorite = true;
 			}
 			else
 			{
 				lock (animationLock)
 					isAnimating = false;
 				picFavourite.Image = favSprite.Frames[0];
-				if (songInfoStream.currentInfo != null && songInfoStream.currentInfo.song != null)
-					songInfoStream.currentInfo.song.favorite = false;
 			}
 		}
 
