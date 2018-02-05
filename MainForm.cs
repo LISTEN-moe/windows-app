@@ -177,7 +177,7 @@ namespace ListenMoeClient
 			notifyIcon1.ContextMenu = contextMenu2;
 			notifyIcon1.Icon = Properties.Resources.icon;
 
-			LoadFavSprite(heartFav);
+			Task.Run(async () => await LoadFavSprite(heartFav)).Wait();
 
 			if (Settings.Get<bool>(Setting.ThumbnailButton))
 			{
@@ -207,7 +207,7 @@ namespace ListenMoeClient
 			UpdatePanelExcludedRegions();
 		}
 
-		private async void LoadFavSprite(bool heart)
+		private async Task LoadFavSprite(bool heart)
 		{
 			await Task.Run(() =>
 			{
@@ -737,6 +737,13 @@ namespace ListenMoeClient
 
 		private async void SetFavouriteSprite(bool favourited)
 		{
+			await Task.Run(() =>
+			{
+				while (favSprite == null)
+				{
+
+				}
+			});
 			picFavourite.Visible = true;
 			if (favourited)
 			{
