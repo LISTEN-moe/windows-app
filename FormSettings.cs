@@ -218,5 +218,11 @@ namespace ListenMoeClient
 				btnTwoFactorAuthSubmit.PerformClick();
 			}
 		}
-	}
+
+        private void numericVolumeStep_ValueChanged(object sender, EventArgs e)
+        {
+            Settings.Set(Setting.VolumeStep, (int)numericVolumeStep.Value * 0.01f);
+            Settings.WriteSettings();
+        }
+    }
 }
