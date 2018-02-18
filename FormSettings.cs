@@ -36,6 +36,9 @@ namespace ListenMoeClient
 			numericUpdateInterval.Value = Settings.Get<int>(Setting.UpdateInterval) / 60;
 			numericUpdateInterval.ValueChanged += NumericUpdateInterval_ValueChanged;
 
+            numericVolumeStep.Value = (int)(Settings.Get<float>(Setting.VolumeStep) * 100);
+            numericVolumeStep.ValueChanged += numericVolumeStep_ValueChanged;
+
 			float scale = Settings.Get<float>(Setting.Scale);
 			tbResolutionScale.Value = (int)(scale * 10);
 			lblResolutionScale.Text = scale.ToString("N1");
@@ -218,5 +221,16 @@ namespace ListenMoeClient
 				btnTwoFactorAuthSubmit.PerformClick();
 			}
 		}
-	}
+
+        private void numericVolumeStep_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericVolumeStep.Value <= 0)
+                numericVolumeStep.Value = 1;
+            else if (numericVolumeStep.Value > 100)
+                numericVolumeStep.Value = 100;
+
+            Settings.Set(Setting.VolumeStep, (float)numericVolumeStep.Value / 100.0f);
+            Settings.WriteSettings();
+        }
+    }
 }

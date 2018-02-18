@@ -35,6 +35,8 @@ namespace ListenMoeClient
 			{
 				SendMessage((IntPtr)HWND_BROADCAST, WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
 			}
-		}
+
+            Environment.Exit(0);
+        }
 	}
 }

@@ -501,8 +501,8 @@ namespace ListenMoeClient
 					float delta = 0.05f;
 					if (RawInput.IsPressed(VirtualKeys.Shift))
 						delta = 0.01f;
-					float volumeChange = (e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * delta;
-					float newVol = player.AddVolume(volumeChange);
+                    short volumeChange = ((e.Delta / (float)SystemInformation.MouseWheelScrollDelta) * delta) > 0 ? (short)1 : (short)-1;
+                    float newVol = player.AddVolume(Settings.Get<float>(Setting.VolumeStep) * volumeChange);
 					if (newVol >= 0)
 					{
 						Settings.Set(Setting.Volume, newVol);

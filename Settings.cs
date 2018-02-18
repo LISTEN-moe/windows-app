@@ -38,6 +38,7 @@ namespace ListenMoeClient
 		UpdateAutocheck,
 		UpdateInterval,
 		Volume,
+        VolumeStep,
 		OutputDeviceGuid,
 		Token,
 		Username
@@ -147,6 +148,7 @@ namespace ListenMoeClient
 			Set(Setting.FftSize, 2048);
 
 			Set(Setting.Volume, 0.3f);
+            Set(Setting.VolumeStep, 0.05f);
 			Set(Setting.VisualiserBarWidth, 3.0f);
 			Set(Setting.VisualiserTransparency, 0.5f); //TODO: rename this to opacity
 			Set(Setting.FormOpacity, 1.0f);
