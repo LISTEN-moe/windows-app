@@ -40,12 +40,8 @@
             this.cbCloseToTray = new System.Windows.Forms.CheckBox();
             this.cbThumbnailButton = new System.Windows.Forms.CheckBox();
             this.cbHideFromAltTab = new System.Windows.Forms.CheckBox();
-            this.btnRefreshAudioDevices = new System.Windows.Forms.Button();
-            this.lblAudioDevice = new System.Windows.Forms.Label();
-            this.dropdownAudioDevices = new System.Windows.Forms.ComboBox();
             this.tpTheme = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.panelVisualiserColor = new ListenMoeClient.Controls.BorderedPanel();
             this.lblVisualiserOpacity = new System.Windows.Forms.Label();
             this.lblVisualiserOpacityDesc = new System.Windows.Forms.Label();
             this.tbVisualiserOpacity = new System.Windows.Forms.TrackBar();
@@ -56,9 +52,7 @@
             this.cbEnableVisualiser = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblAccentColor = new System.Windows.Forms.Label();
-            this.panelAccentColor = new ListenMoeClient.Controls.BorderedPanel();
             this.lblBaseColor = new System.Windows.Forms.Label();
-            this.panelBaseColor = new ListenMoeClient.Controls.BorderedPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblResolutionScaleDesc = new System.Windows.Forms.Label();
             this.tbResolutionScale = new System.Windows.Forms.TrackBar();
@@ -69,17 +63,24 @@
             this.tpAccount = new System.Windows.Forms.TabPage();
             this.panelTwoFactorAuth = new System.Windows.Forms.Panel();
             this.lblIncorrectTwoFactorAuth = new System.Windows.Forms.Label();
-            this.txtTwoFactorAuthCode = new ListenMoeClient.GhostTextbox();
             this.btnTwoFactorAuthSubmit = new System.Windows.Forms.Button();
             this.panelNotLoggedIn = new System.Windows.Forms.Panel();
-            this.txtUsername = new ListenMoeClient.GhostTextbox();
-            this.txtPassword = new ListenMoeClient.GhostTextbox();
             this.panelLoggedIn = new System.Windows.Forms.Panel();
             this.lblLoginStatus = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
             this.tpSound = new System.Windows.Forms.TabPage();
             this.numericVolumeStep = new System.Windows.Forms.NumericUpDown();
             this.lblVolStep = new System.Windows.Forms.Label();
+            this.panelVisualiserColor = new ListenMoeClient.Controls.BorderedPanel();
+            this.panelAccentColor = new ListenMoeClient.Controls.BorderedPanel();
+            this.panelBaseColor = new ListenMoeClient.Controls.BorderedPanel();
+            this.txtTwoFactorAuthCode = new ListenMoeClient.GhostTextbox();
+            this.txtUsername = new ListenMoeClient.GhostTextbox();
+            this.txtPassword = new ListenMoeClient.GhostTextbox();
+            this.btnRefreshAudioDevices = new System.Windows.Forms.Button();
+            this.lblAudioDevice = new System.Windows.Forms.Label();
+            this.dropdownAudioDevices = new System.Windows.Forms.ComboBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tabControl.SuspendLayout();
             this.tpGeneral.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -99,6 +100,7 @@
             this.panelLoggedIn.SuspendLayout();
             this.tpSound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericVolumeStep)).BeginInit();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnLogin
@@ -128,9 +130,6 @@
             // 
             this.tpGeneral.Controls.Add(this.groupBox5);
             this.tpGeneral.Controls.Add(this.groupBox3);
-            this.tpGeneral.Controls.Add(this.btnRefreshAudioDevices);
-            this.tpGeneral.Controls.Add(this.lblAudioDevice);
-            this.tpGeneral.Controls.Add(this.dropdownAudioDevices);
             this.tpGeneral.Location = new System.Drawing.Point(4, 22);
             this.tpGeneral.Name = "tpGeneral";
             this.tpGeneral.Padding = new System.Windows.Forms.Padding(3);
@@ -189,9 +188,9 @@
             this.groupBox3.Controls.Add(this.cbCloseToTray);
             this.groupBox3.Controls.Add(this.cbThumbnailButton);
             this.groupBox3.Controls.Add(this.cbHideFromAltTab);
-            this.groupBox3.Location = new System.Drawing.Point(12, 34);
+            this.groupBox3.Location = new System.Drawing.Point(12, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(333, 85);
+            this.groupBox3.Size = new System.Drawing.Size(333, 113);
             this.groupBox3.TabIndex = 13;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "General";
@@ -209,7 +208,7 @@
             // cbCloseToTray
             // 
             this.cbCloseToTray.AutoSize = true;
-            this.cbCloseToTray.Location = new System.Drawing.Point(6, 55);
+            this.cbCloseToTray.Location = new System.Drawing.Point(6, 84);
             this.cbCloseToTray.Name = "cbCloseToTray";
             this.cbCloseToTray.Size = new System.Drawing.Size(84, 17);
             this.cbCloseToTray.TabIndex = 2;
@@ -231,41 +230,12 @@
             // cbHideFromAltTab
             // 
             this.cbHideFromAltTab.AutoSize = true;
-            this.cbHideFromAltTab.Location = new System.Drawing.Point(174, 48);
+            this.cbHideFromAltTab.Location = new System.Drawing.Point(174, 77);
             this.cbHideFromAltTab.Name = "cbHideFromAltTab";
             this.cbHideFromAltTab.Size = new System.Drawing.Size(158, 30);
             this.cbHideFromAltTab.TabIndex = 3;
             this.cbHideFromAltTab.Text = "Hide from Alt-Tab menu\r\nand taskbar (show tray only)";
             this.cbHideFromAltTab.UseVisualStyleBackColor = true;
-            // 
-            // btnRefreshAudioDevices
-            // 
-            this.btnRefreshAudioDevices.Location = new System.Drawing.Point(270, 5);
-            this.btnRefreshAudioDevices.Name = "btnRefreshAudioDevices";
-            this.btnRefreshAudioDevices.Size = new System.Drawing.Size(75, 23);
-            this.btnRefreshAudioDevices.TabIndex = 12;
-            this.btnRefreshAudioDevices.Text = "Refresh";
-            this.btnRefreshAudioDevices.UseVisualStyleBackColor = true;
-            this.btnRefreshAudioDevices.Click += new System.EventHandler(this.btnRefreshAudioDevices_Click);
-            // 
-            // lblAudioDevice
-            // 
-            this.lblAudioDevice.AutoSize = true;
-            this.lblAudioDevice.Location = new System.Drawing.Point(9, 10);
-            this.lblAudioDevice.Name = "lblAudioDevice";
-            this.lblAudioDevice.Size = new System.Drawing.Size(72, 13);
-            this.lblAudioDevice.TabIndex = 11;
-            this.lblAudioDevice.Text = "Audio device:";
-            // 
-            // dropdownAudioDevices
-            // 
-            this.dropdownAudioDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.dropdownAudioDevices.FormattingEnabled = true;
-            this.dropdownAudioDevices.Location = new System.Drawing.Point(89, 6);
-            this.dropdownAudioDevices.Name = "dropdownAudioDevices";
-            this.dropdownAudioDevices.Size = new System.Drawing.Size(175, 21);
-            this.dropdownAudioDevices.TabIndex = 10;
-            this.dropdownAudioDevices.SelectionChangeCommitted += new System.EventHandler(this.cbAudioDevices_SelectionChangeCommitted);
             // 
             // tpTheme
             // 
@@ -294,17 +264,6 @@
             this.groupBox6.TabIndex = 27;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Visualiser theme";
-            // 
-            // panelVisualiserColor
-            // 
-            this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
-            this.panelVisualiserColor.BorderColor = System.Drawing.Color.Black;
-            this.panelVisualiserColor.BorderWidth = 2;
-            this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelVisualiserColor.Location = new System.Drawing.Point(9, 40);
-            this.panelVisualiserColor.Name = "panelVisualiserColor";
-            this.panelVisualiserColor.Size = new System.Drawing.Size(32, 32);
-            this.panelVisualiserColor.TabIndex = 21;
             // 
             // lblVisualiserOpacity
             // 
@@ -410,17 +369,6 @@
             this.lblAccentColor.TabIndex = 5;
             this.lblAccentColor.Text = "Accent color";
             // 
-            // panelAccentColor
-            // 
-            this.panelAccentColor.BackColor = System.Drawing.Color.Black;
-            this.panelAccentColor.BorderColor = System.Drawing.Color.Black;
-            this.panelAccentColor.BorderWidth = 2;
-            this.panelAccentColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelAccentColor.Location = new System.Drawing.Point(89, 32);
-            this.panelAccentColor.Name = "panelAccentColor";
-            this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
-            this.panelAccentColor.TabIndex = 4;
-            // 
             // lblBaseColor
             // 
             this.lblBaseColor.AutoSize = true;
@@ -429,17 +377,6 @@
             this.lblBaseColor.Size = new System.Drawing.Size(57, 13);
             this.lblBaseColor.TabIndex = 3;
             this.lblBaseColor.Text = "Base color";
-            // 
-            // panelBaseColor
-            // 
-            this.panelBaseColor.BackColor = System.Drawing.Color.Black;
-            this.panelBaseColor.BorderColor = System.Drawing.Color.Black;
-            this.panelBaseColor.BorderWidth = 2;
-            this.panelBaseColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelBaseColor.Location = new System.Drawing.Point(9, 32);
-            this.panelBaseColor.Name = "panelBaseColor";
-            this.panelBaseColor.Size = new System.Drawing.Size(32, 32);
-            this.panelBaseColor.TabIndex = 2;
             // 
             // groupBox1
             // 
@@ -553,15 +490,6 @@
             this.lblIncorrectTwoFactorAuth.Text = "Incorrect two factor authentication code provided.";
             this.lblIncorrectTwoFactorAuth.Visible = false;
             // 
-            // txtTwoFactorAuthCode
-            // 
-            this.txtTwoFactorAuthCode.GhostText = "Two factor authentication code";
-            this.txtTwoFactorAuthCode.Location = new System.Drawing.Point(94, 32);
-            this.txtTwoFactorAuthCode.Name = "txtTwoFactorAuthCode";
-            this.txtTwoFactorAuthCode.Size = new System.Drawing.Size(181, 20);
-            this.txtTwoFactorAuthCode.TabIndex = 2;
-            this.txtTwoFactorAuthCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTwoFactorAuthCode_KeyPress);
-            // 
             // btnTwoFactorAuthSubmit
             // 
             this.btnTwoFactorAuthSubmit.Location = new System.Drawing.Point(147, 58);
@@ -582,24 +510,6 @@
             this.panelNotLoggedIn.Name = "panelNotLoggedIn";
             this.panelNotLoggedIn.Size = new System.Drawing.Size(349, 215);
             this.panelNotLoggedIn.TabIndex = 4;
-            // 
-            // txtUsername
-            // 
-            this.txtUsername.GhostText = "Username";
-            this.txtUsername.Location = new System.Drawing.Point(94, 15);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(181, 20);
-            this.txtUsername.TabIndex = 2;
-            // 
-            // txtPassword
-            // 
-            this.txtPassword.GhostText = "Password";
-            this.txtPassword.Location = new System.Drawing.Point(94, 41);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '⚫';
-            this.txtPassword.Size = new System.Drawing.Size(181, 20);
-            this.txtPassword.TabIndex = 3;
-            this.txtPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPassword_KeyPress);
             // 
             // panelLoggedIn
             // 
@@ -632,8 +542,7 @@
             // 
             // tpSound
             // 
-            this.tpSound.Controls.Add(this.lblVolStep);
-            this.tpSound.Controls.Add(this.numericVolumeStep);
+            this.tpSound.Controls.Add(this.groupBox7);
             this.tpSound.Location = new System.Drawing.Point(4, 22);
             this.tpSound.Name = "tpSound";
             this.tpSound.Size = new System.Drawing.Size(355, 221);
@@ -643,7 +552,7 @@
             // 
             // numericVolumeStep
             // 
-            this.numericVolumeStep.Location = new System.Drawing.Point(121, 13);
+            this.numericVolumeStep.Location = new System.Drawing.Point(78, 51);
             this.numericVolumeStep.Name = "numericVolumeStep";
             this.numericVolumeStep.Size = new System.Drawing.Size(49, 20);
             this.numericVolumeStep.TabIndex = 8;
@@ -657,11 +566,112 @@
             // lblVolStep
             // 
             this.lblVolStep.AutoSize = true;
-            this.lblVolStep.Location = new System.Drawing.Point(8, 15);
+            this.lblVolStep.Location = new System.Drawing.Point(4, 53);
             this.lblVolStep.Name = "lblVolStep";
-            this.lblVolStep.Size = new System.Drawing.Size(107, 13);
+            this.lblVolStep.Size = new System.Drawing.Size(68, 13);
             this.lblVolStep.TabIndex = 9;
-            this.lblVolStep.Text = "Change volume step:";
+            this.lblVolStep.Text = "Volume step:";
+            // 
+            // panelVisualiserColor
+            // 
+            this.panelVisualiserColor.BackColor = System.Drawing.Color.Black;
+            this.panelVisualiserColor.BorderColor = System.Drawing.Color.Black;
+            this.panelVisualiserColor.BorderWidth = 2;
+            this.panelVisualiserColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelVisualiserColor.Location = new System.Drawing.Point(9, 40);
+            this.panelVisualiserColor.Name = "panelVisualiserColor";
+            this.panelVisualiserColor.Size = new System.Drawing.Size(32, 32);
+            this.panelVisualiserColor.TabIndex = 21;
+            // 
+            // panelAccentColor
+            // 
+            this.panelAccentColor.BackColor = System.Drawing.Color.Black;
+            this.panelAccentColor.BorderColor = System.Drawing.Color.Black;
+            this.panelAccentColor.BorderWidth = 2;
+            this.panelAccentColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelAccentColor.Location = new System.Drawing.Point(89, 32);
+            this.panelAccentColor.Name = "panelAccentColor";
+            this.panelAccentColor.Size = new System.Drawing.Size(32, 32);
+            this.panelAccentColor.TabIndex = 4;
+            // 
+            // panelBaseColor
+            // 
+            this.panelBaseColor.BackColor = System.Drawing.Color.Black;
+            this.panelBaseColor.BorderColor = System.Drawing.Color.Black;
+            this.panelBaseColor.BorderWidth = 2;
+            this.panelBaseColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelBaseColor.Location = new System.Drawing.Point(9, 32);
+            this.panelBaseColor.Name = "panelBaseColor";
+            this.panelBaseColor.Size = new System.Drawing.Size(32, 32);
+            this.panelBaseColor.TabIndex = 2;
+            // 
+            // txtTwoFactorAuthCode
+            // 
+            this.txtTwoFactorAuthCode.GhostText = "Two factor authentication code";
+            this.txtTwoFactorAuthCode.Location = new System.Drawing.Point(94, 32);
+            this.txtTwoFactorAuthCode.Name = "txtTwoFactorAuthCode";
+            this.txtTwoFactorAuthCode.Size = new System.Drawing.Size(181, 20);
+            this.txtTwoFactorAuthCode.TabIndex = 2;
+            this.txtTwoFactorAuthCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTwoFactorAuthCode_KeyPress);
+            // 
+            // txtUsername
+            // 
+            this.txtUsername.GhostText = "Username";
+            this.txtUsername.Location = new System.Drawing.Point(94, 15);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(181, 20);
+            this.txtUsername.TabIndex = 2;
+            // 
+            // txtPassword
+            // 
+            this.txtPassword.GhostText = "Password";
+            this.txtPassword.Location = new System.Drawing.Point(94, 41);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '⚫';
+            this.txtPassword.Size = new System.Drawing.Size(181, 20);
+            this.txtPassword.TabIndex = 3;
+            this.txtPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPassword_KeyPress);
+            // 
+            // btnRefreshAudioDevices
+            // 
+            this.btnRefreshAudioDevices.Location = new System.Drawing.Point(270, 19);
+            this.btnRefreshAudioDevices.Name = "btnRefreshAudioDevices";
+            this.btnRefreshAudioDevices.Size = new System.Drawing.Size(57, 23);
+            this.btnRefreshAudioDevices.TabIndex = 15;
+            this.btnRefreshAudioDevices.Text = "Refresh";
+            this.btnRefreshAudioDevices.UseVisualStyleBackColor = true;
+            // 
+            // lblAudioDevice
+            // 
+            this.lblAudioDevice.AutoSize = true;
+            this.lblAudioDevice.Location = new System.Drawing.Point(4, 23);
+            this.lblAudioDevice.Name = "lblAudioDevice";
+            this.lblAudioDevice.Size = new System.Drawing.Size(72, 13);
+            this.lblAudioDevice.TabIndex = 14;
+            this.lblAudioDevice.Text = "Audio device:";
+            // 
+            // dropdownAudioDevices
+            // 
+            this.dropdownAudioDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dropdownAudioDevices.FormattingEnabled = true;
+            this.dropdownAudioDevices.Location = new System.Drawing.Point(82, 19);
+            this.dropdownAudioDevices.Name = "dropdownAudioDevices";
+            this.dropdownAudioDevices.Size = new System.Drawing.Size(182, 21);
+            this.dropdownAudioDevices.TabIndex = 13;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.dropdownAudioDevices);
+            this.groupBox7.Controls.Add(this.btnRefreshAudioDevices);
+            this.groupBox7.Controls.Add(this.numericVolumeStep);
+            this.groupBox7.Controls.Add(this.lblAudioDevice);
+            this.groupBox7.Controls.Add(this.lblVolStep);
+            this.groupBox7.Location = new System.Drawing.Point(12, 6);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(333, 207);
+            this.groupBox7.TabIndex = 16;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Sound";
             // 
             // FormSettings
             // 
@@ -675,7 +685,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             this.tabControl.ResumeLayout(false);
             this.tpGeneral.ResumeLayout(false);
-            this.tpGeneral.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpdateInterval)).EndInit();
@@ -701,8 +710,9 @@
             this.panelLoggedIn.ResumeLayout(false);
             this.panelLoggedIn.PerformLayout();
             this.tpSound.ResumeLayout(false);
-            this.tpSound.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericVolumeStep)).EndInit();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -739,9 +749,6 @@
 		private System.Windows.Forms.Label lblBaseColor;
 		private Controls.BorderedPanel panelBaseColor;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.Button btnRefreshAudioDevices;
-		private System.Windows.Forms.Label lblAudioDevice;
-		private System.Windows.Forms.ComboBox dropdownAudioDevices;
 		private System.Windows.Forms.CheckBox cbVisualiserFadeEdges;
 		private System.Windows.Forms.CheckBox cbEnableVisualiser;
 		private System.Windows.Forms.Label lblVisualiserOpacityDesc;
@@ -761,5 +768,9 @@
         private System.Windows.Forms.TabPage tpSound;
         private System.Windows.Forms.Label lblVolStep;
         private System.Windows.Forms.NumericUpDown numericVolumeStep;
+        private System.Windows.Forms.Button btnRefreshAudioDevices;
+        private System.Windows.Forms.ComboBox dropdownAudioDevices;
+        private System.Windows.Forms.Label lblAudioDevice;
+        private System.Windows.Forms.GroupBox groupBox7;
     }
 }
