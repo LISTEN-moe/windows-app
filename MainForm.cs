@@ -616,7 +616,11 @@ namespace ListenMoeClient
 		{
 			string eventInfo = songInfo.requester != null ? "Requested by " + songInfo.requester.displayName : songInfo._event ?? "";
 			string source = songInfo.song.source.Length > 0 ? songInfo.song.source[0].name : "";
-			centerPanel.SetLabelText(songInfo.song.title, string.Join(",", songInfo.song.artists.Select(a => a.name)), source, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
+			centerPanel.SetLabelText(songInfo.song.title, string.Join(",", songInfo.song.artists.Select(a =>
+			{
+				if (!string.IsNullOrWhiteSpace(a.nameRomaji)) return a.nameRomaji;
+				return a.name;
+			})), source, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
 
 			if (User.LoggedIn)
 				SetFavouriteSprite(songInfo.song.favorite);
