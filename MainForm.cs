@@ -118,6 +118,9 @@ namespace ListenMoeClient
 		WebStreamPlayer player;
 		SongInfoStream songInfoStream;
 
+		const string JPOP_STREAM = "https://listen.moe/opus";
+		const string KPOP_STREAM = "https://listen.moe/kpop/opus";
+
 		Font titleFont;
 		Font artistFont;
 		Font volumeFont;
@@ -188,7 +191,8 @@ namespace ListenMoeClient
 
 			Connect();
 
-			player = new WebStreamPlayer("https://listen.moe/opus");
+			string stream = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? JPOP_STREAM : KPOP_STREAM;
+			player = new WebStreamPlayer(stream);
 			player.Play();
 
 			renderLoop = Task.Run(() =>
@@ -385,6 +389,24 @@ namespace ListenMoeClient
 				VirtualKeys.Return
 			}, () => LoadFavSprite(heartFav = !heartFav));
 			this.Invalidate();
+		}
+
+		public async Task ReloadStream()
+		{
+			centerPanel.StopVisualiser(player);
+
+			// Reload audio stream
+			await player.Stop();
+			string stream = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? JPOP_STREAM : KPOP_STREAM;
+			player.SetStreamUrl(stream);
+			player.Play();
+
+			// Reload web socket
+			songInfoStream.Reconnect();
+			centerPanel.ReloadVisualiser();
+
+			if (Settings.Get<bool>(Setting.EnableVisualiser))
+				centerPanel.StartVisualiser(player);
 		}
 
 		private void LoadFonts()
@@ -615,12 +637,19 @@ namespace ListenMoeClient
 		void ProcessSongInfo(SongInfoResponseData songInfo)
 		{
 			string eventInfo = songInfo.requester != null ? "Requested by " + songInfo.requester.displayName : songInfo._event ?? "";
-			string source = songInfo.song.source.Length > 0 ? songInfo.song.source[0].name : "";
-			centerPanel.SetLabelText(songInfo.song.title, string.Join(",", songInfo.song.artists.Select(a =>
+			string sources = string.Join(", ", songInfo.song.sources.Select(s =>
 			{
-				if (!string.IsNullOrWhiteSpace(a.nameRomaji)) return a.nameRomaji;
+				if (!string.IsNullOrWhiteSpace(s.nameRomaji))
+					return s.nameRomaji;
+				return s.name;
+			}));
+			string artists = string.Join(", ", songInfo.song.artists.Select(a =>
+			{
+				if (!string.IsNullOrWhiteSpace(a.nameRomaji))
+					return a.nameRomaji;
 				return a.name;
-			})), source, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
+			}));
+			centerPanel.SetLabelText(songInfo.song.title, artists, sources, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
 
 			if (User.LoggedIn)
 				SetFavouriteSprite(songInfo.song.favorite);
@@ -678,7 +707,7 @@ namespace ListenMoeClient
 				StringBuilder sb = new StringBuilder();
 				sb.AppendLine(info.song.title);
 				sb.AppendLine(string.Join(", ", info.song.artists.Select(a => a.name)));
-				sb.AppendLine(string.Join(", ", info.song.source.Select(s => s.name)));
+				sb.AppendLine(string.Join(", ", info.song.sources.Select(s => s.name)));
 				Clipboard.SetText(sb.ToString());
 			}
 		}

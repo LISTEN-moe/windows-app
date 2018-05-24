@@ -34,6 +34,9 @@ namespace ListenMoeClient
 		VisualiserFadeEdges,
 		VisualiserColor,
 
+		//Stream
+		StreamType,
+
 		//Misc
 		UpdateAutocheck,
 		UpdateInterval,
@@ -41,6 +44,12 @@ namespace ListenMoeClient
 		OutputDeviceGuid,
 		Token,
 		Username
+	}
+
+	enum StreamType
+	{
+		Jpop,
+		Kpop
 	}
 
 	//I should have just used a json serialiser
@@ -63,7 +72,8 @@ namespace ListenMoeClient
 			{ 'f', typeof(float) },
 			{ 'b', typeof(bool) },
 			{ 's', typeof(string) },
-			{ 'c', typeof(Color) }
+			{ 'c', typeof(Color) },
+			{ 't', typeof(StreamType) }
 		};
 		static Dictionary<Type, char> reverseTypePrefixes = new Dictionary<Type, char>()
 		{
@@ -71,7 +81,8 @@ namespace ListenMoeClient
 			{ typeof(float), 'f'},
 			{ typeof(bool), 'b'},
 			{ typeof(string), 's'},
-			{ typeof(Color), 'c' }
+			{ typeof(Color), 'c' },
+			{ typeof(StreamType), 't' }
 		};
 
 		//Deserialisation
@@ -97,6 +108,13 @@ namespace ListenMoeClient
 					return (true, Color.FromArgb(255, Color.FromArgb(argb)));
 				else
 					throw new Exception("Could not parse color '" + s + "'. Check your settings file for any errors.");
+			}},
+			{ typeof(StreamType), s => {
+				if (s == "jpop")
+					return (true, StreamType.Jpop);
+				else if (s == "kpop")
+					return (true, StreamType.Kpop);
+				throw new Exception("Could not parse StreamType.");
 			}}
 		};
 
@@ -107,7 +125,8 @@ namespace ListenMoeClient
 			{ typeof(float), f => f.ToString() },
 			{ typeof(bool), b => b.ToString() },
 			{ typeof(string), s => s },
-			{ typeof(Color), c => ("#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLowerInvariant() }
+			{ typeof(Color), c => ("#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLowerInvariant() },
+			{ typeof(StreamType), st => st == StreamType.Jpop ? "jpop" : "kpop" }
 		};
 
 		static Settings()
@@ -168,6 +187,8 @@ namespace ListenMoeClient
 			Set(Setting.VisualiserColor, Color.FromArgb(255, 1, 91));
 			Set(Setting.BaseColor, Color.FromArgb(33, 35, 48));
 			Set(Setting.AccentColor, Color.FromArgb(255, 1, 91));
+
+			Set(Setting.StreamType, StreamType.Jpop);
 		}
 
 		public static void LoadSettings()

@@ -53,6 +53,9 @@ namespace ListenMoeClient
 			lblLoginStatus.Text = "Logged in as " + Settings.Get<string>(Setting.Username);
 			lblLoginStatus.Location = new Point((this.Width / 2) - (lblLoginStatus.Width / 2), lblLoginStatus.Location.Y);
 
+			StreamType st = Settings.Get<StreamType>(Setting.StreamType);
+			rbKpop.Checked = st == StreamType.Kpop;
+
 			User.OnLoginComplete += () =>
 			{
 				lblLoginStatus.Text = "Logged in as " + Settings.Get<string>(Setting.Username);
@@ -217,6 +220,30 @@ namespace ListenMoeClient
 				e.Handled = true;
 				btnTwoFactorAuthSubmit.PerformClick();
 			}
+		}
+
+		private async Task ReloadStreamType()
+		{
+			StreamType current = Settings.Get<StreamType>(Setting.StreamType);
+			StreamType next = rbJpop.Checked ? StreamType.Jpop : StreamType.Kpop;
+
+			if (current != next)
+			{
+				Settings.Set(Setting.StreamType, next);
+				Settings.WriteSettings();
+
+				await mainForm.ReloadStream();
+			}
+		}
+
+		private async void rbKpop_CheckedChanged(object sender, EventArgs e)
+		{
+			await ReloadStreamType();
+		}
+
+		private async void rbJpop_CheckedChanged(object sender, EventArgs e)
+		{
+			await ReloadStreamType();
 		}
 	}
 }

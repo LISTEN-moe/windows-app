@@ -59,7 +59,7 @@ namespace ListenMoeClient
 	{
 		public int id { get; set; }
 		public string title { get; set; }
-		public Source[] source { get; set; }
+		public Source[] sources { get; set; }
 		public Artist[] artists { get; set; }
 		public Album[] albums { get; set; }
 		public int duration { get; set; }
@@ -100,7 +100,8 @@ namespace ListenMoeClient
 		public event StatsReceived OnSongInfoReceived = (info) => { };
 		public SongInfoResponseData currentInfo;
 
-		private const string SOCKET_ADDR = "wss://listen.moe/gateway";
+		private const string JPOP_SOCKET_ADDR = "wss://listen.moe/gateway";
+		private const string KPOP_SOCKET_ADDR = "wss://listen.moe/kpop/gateway";
 
 		private Thread heartbeatThread;
 		private CancellationTokenSource cts;
@@ -113,7 +114,8 @@ namespace ListenMoeClient
 
 		public void Reconnect()
 		{
-			socket = new WebSocket(SOCKET_ADDR);
+			string address = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? JPOP_SOCKET_ADDR : KPOP_SOCKET_ADDR;
+			socket = new WebSocket(address);
 
 			socket.OnMessage += (sender, e) => ParseSongInfo(e.Data);
 			socket.OnError += (sender, e) => { throw e.Exception; };
@@ -213,8 +215,8 @@ namespace ListenMoeClient
 					return;
 
 				currentInfo = resp.d;
-				currentInfo.song.source = currentInfo.song.source ?? new Source[0];
-				foreach (var source in currentInfo.song.source)
+				currentInfo.song.sources = currentInfo.song.sources ?? new Source[0];
+				foreach (var source in currentInfo.song.sources)
 				{
 					source.name = Clean(source.name);
 				}

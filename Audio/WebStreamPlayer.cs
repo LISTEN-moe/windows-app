@@ -35,6 +35,11 @@ namespace ListenMoeClient
 			this.visualiser = visualiser;
 		}
 
+		public void SetStreamUrl(string url)
+		{
+			this.url = url;
+		}
+
 		public void Play()
 		{
 			BasePlayer.Play();
