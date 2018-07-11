@@ -20,29 +20,17 @@ namespace ListenMoeClient
 
 		AudioVisualiser visualiser;
 
-		public WebStreamPlayer(string url)
-		{
-			this.url = url;
-		}
+		public WebStreamPlayer(string url) => this.url = url;
 
-		public async Task Dispose()
-		{
-			await Stop();
-		}
+		public async Task Dispose() => await Stop();
 
-		public void SetVisualiser(AudioVisualiser visualiser)
-		{
-			this.visualiser = visualiser;
-		}
+		public void SetVisualiser(AudioVisualiser visualiser) => this.visualiser = visualiser;
 
-		public void SetStreamUrl(string url)
-		{
-			this.url = url;
-		}
+		public void SetStreamUrl(string url) => this.url = url;
 
 		public void Play()
 		{
-			BasePlayer.Play();
+			this.BasePlayer.Play();
 			playing = true;
 
 			provideThread = new Thread(() =>
@@ -52,9 +40,9 @@ namespace ListenMoeClient
 					WebClient wc = new WebClient();
 					wc.Headers[HttpRequestHeader.UserAgent] = Globals.USER_AGENT;
 
-					using (var stream = wc.OpenRead(url))
+					using (System.IO.Stream stream = wc.OpenRead(url))
 					{
-						var readFullyStream = new ReadFullyStream(stream);
+						ReadFullyStream readFullyStream = new ReadFullyStream(stream);
 
 						int packetCounter = 0;
 						while (playing)
@@ -68,13 +56,13 @@ namespace ListenMoeClient
 
 							for (int i = 0; i < packets.Length; i++)
 							{
-								var streamBytes = packets[i];
+								byte[] streamBytes = packets[i];
 								try
 								{
 									int frameSize = OpusPacketInfo.GetNumSamplesPerFrame(streamBytes, 0, Globals.SAMPLE_RATE); //Get frame size from opus packet
 									short[] rawBuffer = new short[frameSize * 2]; //2 channels
-									var buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
-									BasePlayer.QueueBuffer(rawBuffer);
+									int buffer = decoder.Decode(streamBytes, 0, streamBytes.Length, rawBuffer, 0, frameSize, false);
+									this.BasePlayer.QueueBuffer(rawBuffer);
 
 									if (visualiser != null)
 										visualiser.AddSamples(rawBuffer);
@@ -95,10 +83,7 @@ namespace ListenMoeClient
 			provideThread.Start();
 		}
 
-		public float AddVolume(float vol)
-		{
-			return BasePlayer.AddVolume(vol);
-		}
+		public float AddVolume(float vol) => this.BasePlayer.AddVolume(vol);
 
 		public async Task Stop()
 		{
@@ -106,7 +91,7 @@ namespace ListenMoeClient
 			{
 				playing = false;
 
-				BasePlayer.Stop();
+				this.BasePlayer.Stop();
 
 				if (provideThread != null)
 				{
@@ -119,9 +104,6 @@ namespace ListenMoeClient
 			}
 		}
 
-		public bool IsPlaying()
-		{
-			return playing;
-		}
+		public bool IsPlaying() => playing;
 	}
 }

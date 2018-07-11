@@ -26,7 +26,7 @@ namespace ListenMoeClient
 				return Encoding.UTF8.GetBytes("{ }");
 
 			StringBuilder result = new StringBuilder("{");
-			foreach (var keyValuePair in postData)
+			foreach (KeyValuePair<string, string> keyValuePair in postData)
 			{
 				result.Append("\"" + HttpUtility.JavaScriptStringEncode(keyValuePair.Key) + "\":");
 				result.Append("\"" + HttpUtility.JavaScriptStringEncode(keyValuePair.Value) + "\",");
@@ -69,19 +69,13 @@ namespace ListenMoeClient
 			return (success, result);
 		}
 
-		public static async Task<(bool, string)> Post(string url, string token, Dictionary<string, string> postData, bool isListenMoe)
-		{
-			return await Post(url, token, postData, "application/json", isListenMoe);
-		}
+		public static async Task<(bool, string)> Post(string url, string token, Dictionary<string, string> postData, bool isListenMoe) => await Post(url, token, postData, "application/json", isListenMoe);
 
-		public static async Task<(bool, string)> Post(string url, Dictionary<string, string> postData, bool isListenMoe)
-		{
-			return await Post(url, "", postData, "application/json", isListenMoe);
-		}
+		public static async Task<(bool, string)> Post(string url, Dictionary<string, string> postData, bool isListenMoe) => await Post(url, "", postData, "application/json", isListenMoe);
 
 		public static async Task<(bool, string)> Post(string url, string token, Dictionary<string, string> postData, string contentType, bool isListenMoe)
 		{
-			var hwr = CreateWebRequest(url, token, isListenMoe, "POST");
+			HttpWebRequest hwr = CreateWebRequest(url, token, isListenMoe, "POST");
 
 			byte[] postDataBytes = CreatePostData(postData);
 			hwr.ContentType = contentType;
@@ -95,20 +89,17 @@ namespace ListenMoeClient
 			return await GetResponse(hwr);
 		}
 
-		public static async Task<(bool, string)> Get(string endpoint, bool isListenMoe)
-		{
-			return await Get(endpoint, "", isListenMoe);
-		}
+		public static async Task<(bool, string)> Get(string endpoint, bool isListenMoe) => await Get(endpoint, "", isListenMoe);
 
 		public static async Task<(bool, string)> Get(string url, string token, bool isListenMoe)
 		{
-			var hwr = CreateWebRequest(url, token, isListenMoe, "GET");
+			HttpWebRequest hwr = CreateWebRequest(url, token, isListenMoe, "GET");
 			return await GetResponse(hwr);
 		}
 
 		public static async Task<(bool, string)> Delete(string url, string token, bool isListenMoe)
 		{
-			var hwr = CreateWebRequest(url, token, isListenMoe, "DELETE");
+			HttpWebRequest hwr = CreateWebRequest(url, token, isListenMoe, "DELETE");
 			return await GetResponse(hwr);
 		}
 	}

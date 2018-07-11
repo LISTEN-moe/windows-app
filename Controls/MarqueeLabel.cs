@@ -8,13 +8,13 @@ namespace ListenMoeClient
 	{
 		public float ScrollSpeed { get; set; } = 50; //In pixels per second
 		public bool Centered { get; set; } = false;
-		private bool renderBounds = false; //For debugging
-		Pen boundsPen = new Pen(new SolidBrush(Globals.RandomColor()));
+		private readonly bool renderBounds = false; //For debugging
+		readonly Pen boundsPen = new Pen(new SolidBrush(Globals.RandomColor()));
 
 		private string text = "";
 		public string Text
 		{
-			get { return text; }
+			get => text;
 			set
 			{
 				text = value;
@@ -25,7 +25,7 @@ namespace ListenMoeClient
 		private string subtext = "";
 		public string Subtext
 		{
-			get { return subtext; }
+			get => subtext;
 			set
 			{
 				subtext = value;
@@ -34,8 +34,8 @@ namespace ListenMoeClient
 		}
 
 		private float currentPosition = 0;
-		private float spacing = 0.7f; //As a multiple of the width of the label
-		private float subtextDistance = 3; //In pixels
+		private readonly float spacing = 0.7f; //As a multiple of the width of the label
+		private readonly float subtextDistance = 3; //In pixels
 
 		private DateTime last;
 
@@ -59,7 +59,7 @@ namespace ListenMoeClient
 
 			if (scrolling)
 			{
-				float distance = (float)(ScrollSpeed * (ms / 1000));
+				float distance = (float)(this.ScrollSpeed * (ms / 1000));
 				currentPosition -= distance;
 				if (currentPosition < -totalStringWidth)
 					currentPosition = Bounds.Width * spacing;
@@ -68,14 +68,11 @@ namespace ListenMoeClient
 			last = current;
 		}
 
-		public void RecalculateBounds()
-		{
-			textChanged = true;
-		}
+		public void RecalculateBounds() => textChanged = true;
 
 		public void Render(Graphics g)
 		{
-			var scale = Settings.Get<float>(Setting.Scale);
+			float scale = Settings.Get<float>(Setting.Scale);
 			if (textChanged)
 			{
 				mainTextSize = g.MeasureString(text, Font);
@@ -108,7 +105,7 @@ namespace ListenMoeClient
 
 			g.TranslateTransform((int)currentPosition, 0);
 			float x;
-			if (Centered)
+			if (this.Centered)
 				x = (Bounds.Width / 2 - totalStringWidth / 2);
 			else
 				x = Bounds.Location.X;

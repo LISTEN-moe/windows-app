@@ -17,41 +17,20 @@ namespace ListenMoeClient
 			this.sourceStream = sourceStream;
 			readAheadBuffer = new byte[4096];
 		}
-		public override bool CanRead
-		{
-			get { return true; }
-		}
+		public override bool CanRead => true;
 
-		public override bool CanSeek
-		{
-			get { return false; }
-		}
+		public override bool CanSeek => false;
 
-		public override bool CanWrite
-		{
-			get { return false; }
-		}
+		public override bool CanWrite => false;
 
-		public override void Flush()
-		{
-			throw new InvalidOperationException();
-		}
+		public override void Flush() => throw new InvalidOperationException();
 
-		public override long Length
-		{
-			get { return pos; }
-		}
+		public override long Length => pos;
 
 		public override long Position
 		{
-			get
-			{
-				return pos;
-			}
-			set
-			{
-				throw new InvalidOperationException();
-			}
+			get => pos;
+			set => throw new InvalidOperationException();
 		}
 
 		public override int Read(byte[] buffer, int offset, int count)
@@ -90,19 +69,10 @@ namespace ListenMoeClient
 			return bytesRead;
 		}
 
-		public override long Seek(long offset, SeekOrigin origin)
-		{
-			throw new InvalidOperationException();
-		}
+		public override long Seek(long offset, SeekOrigin origin) => throw new InvalidOperationException();
 
-		public override void SetLength(long value)
-		{
-			throw new InvalidOperationException();
-		}
+		public override void SetLength(long value) => throw new InvalidOperationException();
 
-		public override void Write(byte[] buffer, int offset, int count)
-		{
-			throw new InvalidOperationException();
-		}
+		public override void Write(byte[] buffer, int offset, int count) => throw new InvalidOperationException();
 	}
 }
