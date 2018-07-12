@@ -1,5 +1,4 @@
 ﻿using DiscordRPC;
-using DiscordRPC.Logging;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System;
 using System.Diagnostics;
