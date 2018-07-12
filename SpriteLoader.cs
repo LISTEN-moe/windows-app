@@ -79,10 +79,12 @@ namespace ListenMoeClient
 		{
 			Bitmap darkened = new Bitmap(b);
 
-			ColorMatrix mat = new ColorMatrix();
-			mat.Matrix00 = 0.8f;
-			mat.Matrix11 = 0.8f;
-			mat.Matrix22 = 0.8f;
+			ColorMatrix mat = new ColorMatrix
+			{
+				Matrix00 = 0.8f,
+				Matrix11 = 0.8f,
+				Matrix22 = 0.8f
+			};
 
 			ImageAttributes attr = new ImageAttributes();
 			attr.SetColorMatrix(mat);

@@ -6,10 +6,10 @@ namespace ListenMoeClient
 {
 	class Ogg
 	{
-		byte[] magic = { 0x4F, 0x67, 0x67, 0x53 }; //OggS
+		readonly byte[] magic = { 0x4F, 0x67, 0x67, 0x53 }; //OggS
 
 		//Pre gen'd CRC lookup table cause why not: http://barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code
-		uint[] crcLookup = {
+		readonly uint[] crcLookup = {
 			0x00000000, 0x04C11DB7, 0x09823B6E, 0x0D4326D9,
 			0x130476DC, 0x17C56B6B, 0x1A864DB2, 0x1E475005,
 			0x2608EDB8, 0x22C9F00F, 0x2F8AD6D6, 0x2B4BCB61,
@@ -118,25 +118,25 @@ namespace ListenMoeClient
 
 			ReadUntilMagic(stream); //Magic word
 			pageBytes.AddRange(magic);
-			var vn = stream.ReadByte(); //Ogg version number (0)
+			int vn = stream.ReadByte(); //Ogg version number (0)
 			pageBytes.Add((byte)vn);
 
-			var packetFlag = stream.ReadByte(); //Packet flag, we ignore ¯\_(ツ)_/¯
+			int packetFlag = stream.ReadByte(); //Packet flag, we ignore ¯\_(ツ)_/¯
 			pageBytes.Add((byte)packetFlag);
 
-			var granulePosition = ReadBytes(stream, 8); //Granule position
+			byte[] granulePosition = ReadBytes(stream, 8); //Granule position
 			pageBytes.AddRange(granulePosition);
 
-			var streamSN = ReadBytes(stream, 4);
+			byte[] streamSN = ReadBytes(stream, 4);
 			pageBytes.AddRange(streamSN);
 
-			var pageSN = ReadBytes(stream, 4);
+			byte[] pageSN = ReadBytes(stream, 4);
 			pageBytes.AddRange(pageSN);
 
-			var crc = ReadBytes(stream, 4);
+			byte[] crc = ReadBytes(stream, 4);
 			pageBytes.AddRange(new byte[] { 0, 0, 0, 0});
 
-			var segmentCount = stream.ReadByte(); //Number of segments in this page, 0-255
+			int segmentCount = stream.ReadByte(); //Number of segments in this page, 0-255
 			pageBytes.Add((byte)segmentCount);
 
 			int[] segmentLengths = new int[segmentCount];

@@ -10,15 +10,14 @@ namespace ListenMoeClient
 	{
 		DateTime anchor;
 		Deque<short> sampleBuffer = new Deque<short>();
-
-		int fftSize = Settings.Get<int>(Setting.FftSize);
+		readonly int fftSize = Settings.Get<int>(Setting.FftSize);
 		const int exponent = 11;
 
 		float[] lastFftPoints;
-		bool logarithmic = false;
-		float bias = 0.3f;
-		float ScaleFactor = 1f;
-		float normalisationFactor = 0.9f;
+		readonly bool logarithmic = false;
+		readonly float bias = 0.3f;
+		readonly float ScaleFactor = 1f;
+		readonly float normalisationFactor = 0.9f;
 
 		int resolutionFactor = Settings.Get<int>(Setting.VisualiserResolutionFactor); //higher = lower resolution, number is the number of samples to skip
 		float barWidth = Settings.Get<float>(Setting.VisualiserBarWidth);
@@ -31,20 +30,14 @@ namespace ListenMoeClient
 		Brush barBrush;
 		Pen linePen;
 
-		public AudioVisualiser()
-		{
-			lastFftPoints = new float[fftSize];
-		}
+		public AudioVisualiser() => lastFftPoints = new float[fftSize];
 
-		public void SetBounds(Rectangle bounds)
-		{
-			this.Bounds = bounds;
-		}
+		public void SetBounds(Rectangle bounds) => Bounds = bounds;
 
 		public void ReloadSettings()
 		{
 			bars = Settings.Get<bool>(Setting.VisualiserBars);
-			var opacity = (int)Math.Min(Math.Max(Settings.Get<float>(Setting.VisualiserTransparency) * 255, 0), 255);
+			int opacity = (int)Math.Min(Math.Max(Settings.Get<float>(Setting.VisualiserTransparency) * 255, 0), 255);
 			visualiserColor = Color.FromArgb(opacity, Settings.Get<Color>(Setting.VisualiserColor));
 
 			if (Bounds.Width == 0 || Bounds.Height == 0)
@@ -77,7 +70,7 @@ namespace ListenMoeClient
 			if (anchor == DateTime.MinValue)
 				anchor = DateTime.Now;
 
-			foreach (var s in samples)
+			foreach (short s in samples)
 				sampleBuffer.PushRight(s);
 
 			if (sampleBuffer.Count > fftSize * 4)
@@ -103,10 +96,7 @@ namespace ListenMoeClient
 			anchor = DateTime.MinValue;
 		}
 
-		public void Start()
-		{
-			stopped = false;
-		}
+		public void Start() => stopped = false;
 
 		public void IncreaseBarWidth(float amount)
 		{
@@ -138,14 +128,14 @@ namespace ListenMoeClient
 			for (int i = 0; i < fftSize; i++)
 				window[i] = sampleBuffer[currentPos + i];
 
-			applyWindowFunction(window);
+			ApplyWindowFunction(window);
 			float[] bins = FFT.Fft(window, exponent);
 			bins = bins.Take(bins.Length / 4).ToArray();
 			bins = bins.Select(f => (float)Math.Log10(f * 10) * 2 + 1).Select(f => ((f - 0.3f) * 1.5f) + 1.5f).ToArray();
 			return bins;
 		}
 
-		private void applyWindowFunction(short[] data)
+		private void ApplyWindowFunction(short[] data)
 		{
 			for (int i = 0; i < data.Length; i++)
 			{
@@ -183,7 +173,7 @@ namespace ListenMoeClient
 				float maxNote = (float)(12 * Math.Log(((fftPoints.Length - 1) * binWidth) / 16.35, 10));
 				for (int i = 1; j < noPoints && i < fftPoints.Length; i += resolutionFactor)
 				{
-					var yVal = fftPoints[i];
+					float yVal = fftPoints[i];
 					yVal *= Bounds.Height * ScaleFactor * 0.1f;
 					yVal = yVal + ((yVal * normalisationFactor * j / noPoints) - (yVal * normalisationFactor / 2));
 					if (float.IsInfinity(yVal) || float.IsNaN(yVal))
@@ -204,7 +194,7 @@ namespace ListenMoeClient
 				float spacing = Bounds.Width / ((float)noPoints - 1);
 				for (int i = 0; j < noPoints && i < fftPoints.Length; i += resolutionFactor)
 				{
-					var yVal = fftPoints[i];
+					float yVal = fftPoints[i];
 					yVal *= Bounds.Height * ScaleFactor * 0.1f;
 					yVal = yVal + ((yVal * normalisationFactor * j / noPoints) - (yVal * normalisationFactor / 2));
 					if (float.IsInfinity(yVal) || float.IsNaN(yVal))
@@ -217,7 +207,7 @@ namespace ListenMoeClient
 
 			g.SmoothingMode = SmoothingMode.HighQuality;
 
-			var scale = Settings.Get<float>(Setting.Scale);
+			float scale = Settings.Get<float>(Setting.Scale);
 
 			//Bins go from bottom to top
 			g.TranslateTransform(0, Bounds.Height);
@@ -229,8 +219,8 @@ namespace ListenMoeClient
 				RectangleF[] rectangles = new RectangleF[points.Length - 1];
 				for (int i = 0; i < points.Length - 1; i++)
 				{
-					var next = points[i + 1];
-					var current = points[i];
+					PointF next = points[i + 1];
+					PointF current = points[i];
 
 					float pos = Math.Max(current.X, current.X + (next.X - current.X - barWidth * scale) / 2);
 					float width = Math.Min(barWidth * scale, next.X - current.X);

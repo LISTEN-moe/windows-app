@@ -16,14 +16,11 @@ namespace ListenMoeClient
 
 		public AudioDevice(DirectSoundDeviceInfo deviceInfo, string name)
 		{
-			this.DeviceInfo = deviceInfo;
-			this.Name = name;
+			DeviceInfo = deviceInfo;
+			Name = name;
 		}
 
-		public override string ToString()
-		{
-			return this.Name;
-		}
+		public override string ToString() => Name;
 	}
 
 	public class AudioPlayer : IDisposable
@@ -33,7 +30,7 @@ namespace ListenMoeClient
 		SampleChannel volumeChannel;
 		public Guid CurrentDeviceGuid { get; private set; } = Guid.NewGuid();
 
-		Queue<short[]> samplesToPlay = new Queue<short[]>();
+		readonly Queue<short[]> samplesToPlay = new Queue<short[]>();
 
 		public AudioPlayer()
 		{
@@ -43,8 +40,10 @@ namespace ListenMoeClient
 				BufferDuration = TimeSpan.FromSeconds(10)
 			};
 
-			volumeChannel = new SampleChannel(provider);
-			volumeChannel.Volume = Settings.Get<float>(Setting.Volume);
+			volumeChannel = new SampleChannel(provider)
+			{
+				Volume = Settings.Get<float>(Setting.Volume)
+			};
 
 			bool success = Guid.TryParse(Settings.Get<string>(Setting.OutputDeviceGuid), out Guid deviceGuid);
 
@@ -57,7 +56,7 @@ namespace ListenMoeClient
 		public void Initialize(Guid deviceGuid)
 		{
 			directOut = new DirectSoundOut(deviceGuid);
-			CurrentDeviceGuid = deviceGuid;
+			this.CurrentDeviceGuid = deviceGuid;
 			directOut.Init(volumeChannel);
 
 			Settings.Set(Setting.OutputDeviceGuid, deviceGuid.ToString());
@@ -118,19 +117,13 @@ namespace ListenMoeClient
 			return volumeChannel.Volume;
 		}
 
-		public void SetVolume(float vol)
-		{
-			volumeChannel.Volume = BoundVolume(vol);
-		}
+		public void SetVolume(float vol) => volumeChannel.Volume = BoundVolume(vol);
 
 		/// <summary>
 		/// Get an array of the available audio output devices.
 		/// <para>Because of a limitation of WaveOut, device's names will be cut if they are too long.</para>
 		/// </summary>
-		public AudioDevice[] GetAudioOutputDevices()
-		{
-			return DirectSoundOut.Devices.Select(d => new AudioDevice(d, d.Description)).ToArray();
-		}
+		public AudioDevice[] GetAudioOutputDevices() => DirectSoundOut.Devices.Select(d => new AudioDevice(d, d.Description)).ToArray();
 
 		/// <summary>
 		/// Set the audio output device (if available); Returns current audio device (desired if valid).
@@ -139,7 +132,7 @@ namespace ListenMoeClient
 		/// <returns></returns>
 		public void SetAudioOutputDevice(Guid deviceGuid)
 		{
-			if (deviceGuid == CurrentDeviceGuid)
+			if (deviceGuid == this.CurrentDeviceGuid)
 				return;
 
 			PlaybackState prevState = directOut?.PlaybackState ?? PlaybackState.Playing;

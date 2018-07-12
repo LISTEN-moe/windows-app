@@ -1,7 +1,6 @@
-﻿using Microsoft.WindowsAPICodePack.Taskbar;
-using Newtonsoft.Json;
+﻿using DiscordRPC;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -12,7 +11,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace ListenMoeClient
 {
@@ -148,6 +146,30 @@ namespace ListenMoeClient
 		bool playPauseInverted = false;
 		bool currentlyFavoriting = false;
 
+		public DiscordRpcClient client;
+		public RichPresence presence;
+
+		public void InitDiscordPresence()
+		{
+			client = new DiscordRpcClient("383375119827075072", false, -1);
+
+			presence = new RichPresence()
+			{
+				Assets = new Assets()
+				{
+					LargeImageKey = "large",
+					LargeImageText = "LISTEN.moe",
+					SmallImageKey = "play"
+				},
+				Timestamps = new Timestamps()
+				{
+					Start = DateTime.UtcNow
+				}
+			};
+
+			client.Initialize();
+		}
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -174,7 +196,7 @@ namespace ListenMoeClient
 #pragma warning restore CS4014
 			StartUpdateAutochecker();
 
-			this.MouseWheel += Form1_MouseWheel;
+			MouseWheel += Form1_MouseWheel;
 			this.Icon = Properties.Resources.icon;
 
 			notifyIcon1.ContextMenu = contextMenu2;
@@ -188,6 +210,8 @@ namespace ListenMoeClient
 				button.Click += async (_, __) => await TogglePlayback();
 				TaskbarManager.Instance.ThumbnailToolBars.AddButtons(this.Handle, button);
 			}
+
+			InitDiscordPresence();
 
 			Connect();
 
@@ -207,7 +231,7 @@ namespace ListenMoeClient
 			ReloadScale();
 			ReloadSettings();
 
-			this.SizeChanged += MainForm_SizeChanged;
+			SizeChanged += MainForm_SizeChanged;
 			UpdatePanelExcludedRegions();
 		}
 
@@ -269,7 +293,7 @@ namespace ListenMoeClient
 			rightEdgeRect = new Rectangle(width - 2, 0, 2, height);
 			leftEdgeRect = new Rectangle(0, 0, 2, height);
 
-			var region = new Region(new Rectangle(0, 0, width, height));
+			Region region = new Region(new Rectangle(0, 0, width, height));
 			region.Exclude(path);
 			region.Exclude(rightEdgeRect);
 			region.Exclude(leftEdgeRect);
@@ -281,7 +305,7 @@ namespace ListenMoeClient
 		{
 			UpdatePanelExcludedRegions();
 			centerPanel.ReloadVisualiser();
-			this.Invalidate();
+			Invalidate();
 
 			//wow such performance
 			//TODO: don't make this write to disk on every resize event
@@ -299,7 +323,7 @@ namespace ListenMoeClient
 			else if (message == WM.NCHITTEST)
 			{
 				Point pos = new Point(m.LParam.ToInt32());
-				pos = this.PointToClient(pos);
+				pos = PointToClient(pos);
 				if (gripRect.Contains(pos))
 					m.Result = (IntPtr)17;
 				else if (rightEdgeRect.Contains(pos))
@@ -387,8 +411,8 @@ namespace ListenMoeClient
 				VirtualKeys.Left, VirtualKeys.Right,
 				VirtualKeys.B, VirtualKeys.A,
 				VirtualKeys.Return
-			}, () => LoadFavSprite(heartFav = !heartFav));
-			this.Invalidate();
+			}, async () => await LoadFavSprite(heartFav = !heartFav));
+			Invalidate();
 		}
 
 		public async Task ReloadStream()
@@ -411,7 +435,7 @@ namespace ListenMoeClient
 
 		private void LoadFonts()
 		{
-			var scaleFactor = Settings.Get<float>(Setting.Scale);
+			float scaleFactor = Settings.Get<float>(Setting.Scale);
 			titleFont = Meiryo.GetFont(13 * scaleFactor);
 			artistFont = Meiryo.GetFont(8 * scaleFactor);
 			volumeFont = Meiryo.GetFont(9 * scaleFactor);
@@ -423,7 +447,7 @@ namespace ListenMoeClient
 
 		private async void Connect()
 		{
-			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+			TaskScheduler scheduler = TaskScheduler.FromCurrentSynchronizationContext();
 			await LoadWebSocket(scheduler);
 		}
 
@@ -496,15 +520,9 @@ namespace ListenMoeClient
 			});
 		}
 
-		private void Wc_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-		{
-			centerPanel.SetUpdateState(UpdateState.Complete);
-		}
+		private void Wc_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e) => centerPanel.SetUpdateState(UpdateState.Complete);
 
-		private void Wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-		{
-			centerPanel.SetUpdatePercent(e.BytesReceived / (float)e.TotalBytesToReceive);
-		}
+		private void Wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) => centerPanel.SetUpdatePercent(e.BytesReceived / (float)e.TotalBytesToReceive);
 
 		private void Form1_MouseWheel(object sender, MouseEventArgs e)
 		{
@@ -541,10 +559,7 @@ namespace ListenMoeClient
 			lblVol.Text = newVol.ToString() + "%";
 		}
 
-		private async void playPause_Click(object sender, EventArgs e)
-		{
-			await TogglePlayback();
-		}
+		private async void playPause_Click(object sender, EventArgs e) => await TogglePlayback();
 
 		private void ReloadSprites()
 		{
@@ -592,7 +607,6 @@ namespace ListenMoeClient
 		{
 			if (player.IsPlaying())
 			{
-				Task stopTask = player.Stop();
 				ReloadSprites();
 				menuItemPlayPause.Text = "Play";
 				if (Settings.Get<bool>(Setting.ThumbnailButton) && !Settings.Get<bool>(Setting.HideFromAltTab))
@@ -602,7 +616,9 @@ namespace ListenMoeClient
 				}
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StopVisualiser(player);
-				await stopTask;
+				await player.Stop();
+
+				client.ClearPresence();
 			}
 			else
 			{
@@ -616,21 +632,25 @@ namespace ListenMoeClient
 				}
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StartVisualiser(player);
+
+				presence.Timestamps.Start = DateTime.UtcNow;
+				client.SetPresence(presence);
 			}
 		}
 
-		private void picClose_Click(object sender, EventArgs e)
+		private async void picClose_ClickAsync(object sender, EventArgs e)
 		{
 			if (Settings.Get<bool>(Setting.CloseToTray))
 			{
 				if (!Settings.Get<bool>(Setting.HideFromAltTab))
 					notifyIcon1.Visible = true;
 
-				this.Hide();
+				Hide();
 			}
 			else
 			{
-				this.Close();
+				Close();
+				await Exit();
 			}
 		}
 
@@ -651,16 +671,19 @@ namespace ListenMoeClient
 			}));
 			centerPanel.SetLabelText(songInfo.song.title, artists, sources, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
 
+			presence.Details = songInfo.song.title.Length >= 50 ? songInfo.song.title.Substring(0, 50) : songInfo.song.title;
+			presence.State = artists.Length >= 50 ? "by " + artists.Substring(0, 50) : "by " + artists;
+			client.SetPresence(presence);
+
+			client.Invoke();
+
 			if (User.LoggedIn)
 				SetFavouriteSprite(songInfo.song.favorite);
 			else
 				picFavourite.Visible = false;
 		}
 
-		private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			await Exit();
-		}
+		private async void Form1_FormClosing(object sender, FormClosingEventArgs e) => await Exit();
 
 		private async Task Exit()
 		{
@@ -669,28 +692,26 @@ namespace ListenMoeClient
 			{
 				SettingsForm.Close();
 			}
-			this.Hide();
+			Hide();
 			notifyIcon1.Visible = false;
 			await player.Dispose();
+			client.Dispose();
 			Environment.Exit(0);
 		}
 
-		private void panelPlayBtn_MouseEnter(object sender, EventArgs e)
-		{
-			SetPlayPauseSize(true);
-		}
+		private void panelPlayBtn_MouseEnter(object sender, EventArgs e) => SetPlayPauseSize(true);
 
 		private void panelPlayBtn_MouseLeave(object sender, EventArgs e)
 		{
-			if (panelPlayBtn.ClientRectangle.Contains(PointToClient(Control.MousePosition)))
+			if (panelPlayBtn.ClientRectangle.Contains(PointToClient(MousePosition)))
 				return;
 			SetPlayPauseSize(false);
 		}
 
 		private void SetPlayPauseSize(bool bigger)
 		{
-			var scale = Settings.Get<float>(Setting.Scale);
-			var ppSize = Settings.DEFAULT_PLAY_PAUSE_SIZE;
+			float scale = Settings.Get<float>(Setting.Scale);
+			int ppSize = Settings.DEFAULT_PLAY_PAUSE_SIZE;
 			int playPauseSize = bigger ? ppSize + 2 : ppSize;
 
 			picPlayPause.Size = new Size((int)(playPauseSize * scale), (int)(playPauseSize * scale));
@@ -716,8 +737,10 @@ namespace ListenMoeClient
 		{
 			if (SettingsForm == null)
 			{
-				SettingsForm = new FormSettings(this, player.BasePlayer);
-				SettingsForm.StartPosition = FormStartPosition.CenterScreen;
+				SettingsForm = new FormSettings(this, player.BasePlayer)
+				{
+					StartPosition = FormStartPosition.CenterScreen
+				};
 				SettingsForm.Show();
 			}
 			else
@@ -726,10 +749,7 @@ namespace ListenMoeClient
 			}
 		}
 
-		private async void menuItemExit_Click(object sender, EventArgs e)
-		{
-			await Exit();
-		}
+		private async void menuItemExit_Click(object sender, EventArgs e) => await Exit();
 
 		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
@@ -737,16 +757,13 @@ namespace ListenMoeClient
 				Restore();
 		}
 
-		private void menuItemShow_Click(object sender, EventArgs e)
-		{
-			Restore();
-		}
+		private void menuItemShow_Click(object sender, EventArgs e) => Restore();
 
 		private void Restore()
 		{
-			WindowState = FormWindowState.Normal;
-			this.Show();
-			this.Activate();
+			this.WindowState = FormWindowState.Normal;
+			Show();
+			Activate();
 
 			if (!Settings.Get<bool>(Setting.HideFromAltTab))
 				notifyIcon1.Visible = false;
@@ -757,10 +774,7 @@ namespace ListenMoeClient
 
 		object animationLock = new object();
 
-		private void panelPlayBtn_Resize(object sender, EventArgs e)
-		{
-			SetPlayPauseSize(false);
-		}
+		private void panelPlayBtn_Resize(object sender, EventArgs e) => SetPlayPauseSize(false);
 
 		private void centerPanel_Resize(object sender, EventArgs e)
 		{

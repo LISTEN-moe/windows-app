@@ -193,14 +193,11 @@ namespace ListenMoeClient
 			heartbeatThread.Start();
 		}
 
-		private string Clean(string input)
-		{
-			return input != null ? input.Trim().Replace('\n', ' ') : "";
-		}
+		private string Clean(string input) => input != null ? input.Trim().Replace('\n', ' ') : "";
 
 		private void ParseSongInfo(string data)
 		{
-			string noWhitespaceData = new string(data.Where(c => !Char.IsWhiteSpace(c)).ToArray());
+			string noWhitespaceData = new string(data.Where(c => !char.IsWhiteSpace(c)).ToArray());
 			if (noWhitespaceData.Contains("\"op\":0"))
 			{
 				//Identify/Welcome response
@@ -216,12 +213,12 @@ namespace ListenMoeClient
 
 				currentInfo = resp.d;
 				currentInfo.song.sources = currentInfo.song.sources ?? new Source[0];
-				foreach (var source in currentInfo.song.sources)
+				foreach (Source source in currentInfo.song.sources)
 				{
 					source.name = Clean(source.name);
 				}
 
-				foreach (var artist in currentInfo.song.artists)
+				foreach (Artist artist in currentInfo.song.artists)
 				{
 					artist.name = Clean(artist.name);
 				}

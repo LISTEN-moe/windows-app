@@ -168,7 +168,7 @@
 			this.picClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.picClose.TabIndex = 2;
 			this.picClose.TabStop = false;
-			this.picClose.Click += new System.EventHandler(this.picClose_Click);
+			this.picClose.Click += new System.EventHandler(this.picClose_ClickAsync);
 			//
 			// picSettings
 			//

@@ -15,7 +15,7 @@ namespace ListenMoeClient
 		static Meiryo()
 		{
 			byte[] fontData = Properties.Resources.Meiryo;
-			var handle = GCHandle.Alloc(fontData, GCHandleType.Pinned);
+			GCHandle handle = GCHandle.Alloc(fontData, GCHandleType.Pinned);
 			IntPtr pointer = handle.AddrOfPinnedObject();
 			try
 			{
@@ -32,14 +32,11 @@ namespace ListenMoeClient
 			if (fontCache.ContainsKey(size))
 				return fontCache[size];
 
-			var font = new Font(fonts.Families[0], size, GraphicsUnit.Point);
+			Font font = new Font(fonts.Families[0], size, GraphicsUnit.Point);
 			fontCache.Add(size, font);
 			return font;
 		}
 
-		public static FontFamily GetFontFamily()
-		{
-			return fonts.Families[0];
-		}
+		public static FontFamily GetFontFamily() => fonts.Families[0];
 	}
 }

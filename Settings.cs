@@ -62,11 +62,11 @@ namespace ListenMoeClient
 
 		private const string settingsFileLocation = "listenMoeSettings.ini";
 
-		static object settingsMutex = new object();
-		static object fileMutex = new object();
+		static readonly object settingsMutex = new object();
+		static readonly object fileMutex = new object();
 
 		static Dictionary<Type, object> typedSettings = new Dictionary<Type, object>();
-		static Dictionary<char, Type> typePrefixes = new Dictionary<char, Type>()
+		static readonly Dictionary<char, Type> typePrefixes = new Dictionary<char, Type>()
 		{
 			{ 'i', typeof(int) },
 			{ 'f', typeof(float) },
@@ -75,7 +75,7 @@ namespace ListenMoeClient
 			{ 'c', typeof(Color) },
 			{ 't', typeof(StreamType) }
 		};
-		static Dictionary<Type, char> reverseTypePrefixes = new Dictionary<Type, char>()
+		static readonly Dictionary<Type, char> reverseTypePrefixes = new Dictionary<Type, char>()
 		{
 			{ typeof(int), 'i'},
 			{ typeof(float), 'f'},
@@ -86,7 +86,7 @@ namespace ListenMoeClient
 		};
 
 		//Deserialisation
-		static Dictionary<Type, Func<string, (bool Success, object Result)>> parseActions = new Dictionary<Type, Func<string, (bool, object)>>()
+		static readonly Dictionary<Type, Func<string, (bool Success, object Result)>> parseActions = new Dictionary<Type, Func<string, (bool, object)>>()
 		{
 			{ typeof(int), s => {
 				bool success = int.TryParse(s, out int i);
@@ -119,7 +119,7 @@ namespace ListenMoeClient
 		};
 
 		//Serialisation
-		static Dictionary<Type, Func<dynamic, string>> saveActions = new Dictionary<Type, Func<dynamic, string>>()
+		static readonly Dictionary<Type, Func<dynamic, string>> saveActions = new Dictionary<Type, Func<dynamic, string>>()
 		{
 			{ typeof(int), i => i.ToString() },
 			{ typeof(float), f => f.ToString() },
@@ -129,10 +129,7 @@ namespace ListenMoeClient
 			{ typeof(StreamType), st => st == StreamType.Jpop ? "jpop" : "kpop" }
 		};
 
-		static Settings()
-		{
-			LoadDefaultSettings();
-		}
+		static Settings() => LoadDefaultSettings();
 
 		public static T Get<T>(Setting key)
 		{
@@ -208,7 +205,7 @@ namespace ListenMoeClient
 
 				char prefix = parts[0][0];
 				Type t = typePrefixes[prefix];
-				var parseAction = parseActions[t];
+				Func<string, (bool Success, object Result)> parseAction = parseActions[t];
 				(bool success, object o) = parseAction(parts[1]);
 				if (!success)
 					continue;
@@ -227,11 +224,11 @@ namespace ListenMoeClient
 			StringBuilder sb = new StringBuilder();
 			lock (settingsMutex)
 			{
-				foreach (var dict in typedSettings)
+				foreach (KeyValuePair<Type, object> dict in typedSettings)
 				{
 					Type t = dict.Key;
-					var typedDict = (System.Collections.IDictionary)dict.Value;
-					var saveAction = saveActions[t];
+					System.Collections.IDictionary typedDict = (System.Collections.IDictionary)dict.Value;
+					Func<dynamic, string> saveAction = saveActions[t];
 
 					foreach (dynamic setting in typedDict)
 					{
@@ -242,9 +239,9 @@ namespace ListenMoeClient
 
 			lock (fileMutex)
 			{
-				using (var fileStream = new FileStream(settingsFileLocation, FileMode.Create, FileAccess.Write))
+				using (FileStream fileStream = new FileStream(settingsFileLocation, FileMode.Create, FileAccess.Write))
 				{
-					using (var streamWriter = new StreamWriter(fileStream))
+					using (StreamWriter streamWriter = new StreamWriter(fileStream))
 						streamWriter.Write(sb.ToString());
 				}
 			}

@@ -7,14 +7,11 @@ namespace ListenMoeClient
 {
 	class User
 	{
-		static bool loggedIn = false;
+		private static bool loggedIn = false;
 		public static event Action OnLoginComplete;
 		public static event Action OnLogout;
 
-		public static bool LoggedIn
-		{
-			get { return loggedIn; }
-		}
+		public static bool LoggedIn => loggedIn;
 
 		/// <summary>
 		/// Attempts to login with the specified credentials. Returns an AuthenticateResponse, containing
@@ -25,14 +22,14 @@ namespace ListenMoeClient
 		/// <returns></returns>
 		public static async Task<AuthenticateResponse> Login(string username, string password)
 		{
-			var postData = new Dictionary<string, string>
+			Dictionary<string, string> postData = new Dictionary<string, string>
 			{
 				{ "username", username },
 				{ "password", password }
 			};
 
 			(bool success, string resp) = await WebHelper.Post("https://listen.moe/api/login", postData, true);
-			var response = JsonConvert.DeserializeObject<AuthenticateResponse>(resp);
+			AuthenticateResponse response = JsonConvert.DeserializeObject<AuthenticateResponse>(resp);
 			if (success)
 			{
 				loggedIn = true;
@@ -63,7 +60,7 @@ namespace ListenMoeClient
 		public static async Task<bool> Login(string token)
 		{
 			(bool success, string resp) = await WebHelper.Get("https://listen.moe/api/users/@me", token, true);
-			var response = JsonConvert.DeserializeObject<ListenMoeResponse>(resp);
+			ListenMoeResponse response = JsonConvert.DeserializeObject<ListenMoeResponse>(resp);
 			if (success)
 			{
 				loggedIn = true;
@@ -81,14 +78,14 @@ namespace ListenMoeClient
 
 		public static async Task<bool> LoginMfa(string mfaCode)
 		{
-			var postData = new Dictionary<string, string>
+			Dictionary<string, string> postData = new Dictionary<string, string>
 			{
 				{ "token", mfaCode }
 			};
 
-			var token = Settings.Get<string>(Setting.Token);
+			string token = Settings.Get<string>(Setting.Token);
 			(bool success, string resp) = await WebHelper.Post("https://listen.moe/api/login/mfa", token, postData, true);
-			var response = JsonConvert.DeserializeObject<AuthenticateResponse>(resp);
+			AuthenticateResponse response = JsonConvert.DeserializeObject<AuthenticateResponse>(resp);
 			if (success)
 			{
 				loggedIn = true;
@@ -102,7 +99,7 @@ namespace ListenMoeClient
 
 		public static async Task<bool> FavoriteSong(string id, bool favorite)
 		{
-			var token = Settings.Get<string>(Setting.Token);
+			string token = Settings.Get<string>(Setting.Token);
 			bool success = false;
 			string result = null;
 

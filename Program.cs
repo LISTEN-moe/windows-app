@@ -11,9 +11,9 @@ namespace ListenMoeClient
 		static Mutex mutex = new Mutex(true, "{6431a734-2693-40d4-8dff-ea662d8777d7}");
 
 		public const int HWND_BROADCAST = 0xffff;
-		public static readonly UInt32 WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+		public static readonly uint WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
 		[DllImport("user32")]
-		static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+		static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 		[DllImport("user32")]
 		static extern uint RegisterWindowMessage(string lpString);
 
