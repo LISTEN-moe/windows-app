@@ -17,8 +17,13 @@ namespace ListenMoeClient
 		SizeX,
 		SizeY,
 		FormOpacity,
-		BaseColor,
-		AccentColor,
+		CustomColors,
+		JPOPBaseColor,
+		JPOPAccentColor,
+		KPOPBaseColor,
+		KPOPAccentColor,
+		CustomBaseColor,
+		CustomAccentColor,
 		Scale,
 		CloseToTray,
 		HideFromAltTab,
@@ -29,10 +34,12 @@ namespace ListenMoeClient
 		VisualiserResolutionFactor,
 		FftSize,
 		VisualiserBarWidth,
-		VisualiserTransparency,
+		VisualiserOpacity,
 		VisualiserBars,
 		VisualiserFadeEdges,
-		VisualiserColor,
+		JPOPVisualiserColor,
+		KPOPVisualiserColor,
+		CustomVisualiserColor,
 
 		//Stream
 		StreamType,
@@ -164,7 +171,7 @@ namespace ListenMoeClient
 
 			Set(Setting.Volume, 0.3f);
 			Set(Setting.VisualiserBarWidth, 3.0f);
-			Set(Setting.VisualiserTransparency, 0.5f); //TODO: rename this to opacity
+			Set(Setting.VisualiserOpacity, 0.5f);
 			Set(Setting.FormOpacity, 1.0f);
 			Set(Setting.Scale, 1.0f);
 
@@ -181,9 +188,18 @@ namespace ListenMoeClient
 			Set(Setting.Username, "");
 			Set(Setting.OutputDeviceGuid, "");
 
-			Set(Setting.VisualiserColor, Color.FromArgb(255, 1, 91));
-			Set(Setting.BaseColor, Color.FromArgb(33, 35, 48));
-			Set(Setting.AccentColor, Color.FromArgb(255, 1, 91));
+			Set(Setting.JPOPVisualiserColor, Color.FromArgb(255, 1, 91));
+			Set(Setting.JPOPBaseColor, Color.FromArgb(33, 35, 48));
+			Set(Setting.JPOPAccentColor, Color.FromArgb(255, 1, 91));
+
+			Set(Setting.KPOPVisualiserColor, Color.FromArgb(48, 169, 237));
+			Set(Setting.KPOPBaseColor, Color.FromArgb(33, 35, 48));
+			Set(Setting.KPOPAccentColor, Color.FromArgb(48, 169, 237));
+
+			Set(Setting.CustomColors, false);
+			Set(Setting.CustomVisualiserColor, Color.FromArgb(255, 1, 91));
+			Set(Setting.CustomBaseColor, Color.FromArgb(33, 35, 48));
+			Set(Setting.CustomAccentColor, Color.FromArgb(255, 1, 91));
 
 			Set(Setting.StreamType, StreamType.Jpop);
 		}

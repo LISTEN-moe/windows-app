@@ -37,19 +37,22 @@ namespace ListenMoeClient
 		public void ReloadSettings()
 		{
 			bars = Settings.Get<bool>(Setting.VisualiserBars);
-			int opacity = (int)Math.Min(Math.Max(Settings.Get<float>(Setting.VisualiserTransparency) * 255, 0), 255);
-			visualiserColor = Color.FromArgb(opacity, Settings.Get<Color>(Setting.VisualiserColor));
+			int opacity = (int)Math.Min(Math.Max(Settings.Get<float>(Setting.VisualiserOpacity) * 255, 0), 255);
+			Color baseVisualiserColor = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? Settings.Get<Color>(Setting.JPOPVisualiserColor) : Settings.Get<Color>(Setting.KPOPVisualiserColor);
+			Color visualiserCol = Settings.Get<bool>(Setting.CustomColors) ? Settings.Get<Color>(Setting.CustomVisualiserColor) : baseVisualiserColor;
+			visualiserColor = Color.FromArgb(opacity, baseVisualiserColor);
 
 			if (Bounds.Width == 0 || Bounds.Height == 0)
 				return;
 
 			if (Settings.Get<bool>(Setting.VisualiserFadeEdges))
 			{
-				Color baseColor = Settings.Get<Color>(Setting.BaseColor);
-				barBrush = new LinearGradientBrush(new Rectangle(Point.Empty, Bounds.Size), baseColor, visualiserColor, LinearGradientMode.Horizontal);
+				Color baseColor = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? Settings.Get<Color>(Setting.JPOPBaseColor) : Settings.Get<Color>(Setting.KPOPBaseColor);
+				Color color = Settings.Get<bool>(Setting.CustomColors) ? Settings.Get<Color>(Setting.CustomBaseColor) : baseColor;
+				barBrush = new LinearGradientBrush(new Rectangle(Point.Empty, Bounds.Size), color, visualiserColor, LinearGradientMode.Horizontal);
 				ColorBlend blend = new ColorBlend
 				{
-					Colors = new Color[] { baseColor, baseColor, visualiserColor, visualiserColor, visualiserColor, baseColor, baseColor },
+					Colors = new Color[] { color, color, visualiserColor, visualiserColor, visualiserColor, color, color },
 					Positions = new float[] { 0.0f, 0.05f, 0.2f, 0.5f, 0.8f, 0.95f, 1.0f }
 				};
 				((LinearGradientBrush)barBrush).InterpolationColors = blend;

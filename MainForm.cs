@@ -32,10 +32,7 @@ namespace ListenMoeClient
 
 		//Screen edge snapping
 		private const int snapDistance = 10;
-		private bool CloseToEdge(int pos, int edge)
-		{
-			return Math.Abs(pos - edge) <= snapDistance;
-		}
+		private bool CloseToEdge(int pos, int edge) => Math.Abs(pos - edge) <= snapDistance;
 
 		private void Form1_MouseDown(object sender, MouseEventArgs e)
 		{
@@ -98,8 +95,8 @@ namespace ListenMoeClient
 			bool hSnapped, vSnapped;
 			if ((hSnapped = CloseToEdge(rect.Left, newLocation.X))) this.Left = rect.Left;
 			if ((vSnapped = CloseToEdge(rect.Top, newLocation.Y))) this.Top = rect.Top;
-			if (!hSnapped && (hSnapped = CloseToEdge(rect.Right, newLocation.X + Width))) this.Left = rect.Right - this.Width;
-			if (!vSnapped && (vSnapped = CloseToEdge(rect.Bottom, newLocation.Y + Height))) this.Top = rect.Bottom - this.Height;
+			if (!hSnapped && (hSnapped = CloseToEdge(rect.Right, newLocation.X + this.Width))) this.Left = rect.Right - this.Width;
+			if (!vSnapped && (vSnapped = CloseToEdge(rect.Bottom, newLocation.Y + this.Height))) this.Top = rect.Bottom - this.Height;
 
 			hSnappedRef |= hSnapped;
 			vSnappedRef |= vSnapped;
@@ -157,7 +154,7 @@ namespace ListenMoeClient
 			{
 				Assets = new Assets()
 				{
-					LargeImageKey = "jpop",
+					LargeImageKey = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? "jpop" : "kpop",
 					LargeImageText = "LISTEN.moe",
 					SmallImageKey = "play"
 				},
@@ -275,7 +272,9 @@ namespace ListenMoeClient
 			e.Graphics.DrawImage(spriteColorInverted ? Properties.Resources.gripper_inverted : Properties.Resources.gripper, gripRect);
 
 			//Expose 2px on the left for resizing, so we paint it the same colour so it's not noticeable
-			e.Graphics.FillRectangle(new SolidBrush(Settings.Get<Color>(Setting.AccentColor)), new Rectangle(0, 0, 2, this.ClientRectangle.Height));
+			Color baseAccentColor = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? Settings.Get<Color>(Setting.JPOPAccentColor) : Settings.Get<Color>(Setting.KPOPAccentColor);
+			Color accentColor = Settings.Get<bool>(Setting.CustomColors) ? Settings.Get<Color>(Setting.CustomAccentColor) : baseAccentColor;
+			e.Graphics.FillRectangle(new SolidBrush(accentColor), new Rectangle(0, 0, 2, this.ClientRectangle.Height));
 		}
 
 		private void UpdatePanelExcludedRegions()
@@ -310,8 +309,8 @@ namespace ListenMoeClient
 			//wow such performance
 			//TODO: don't make this write to disk on every resize event
 			//Settings buffering would be nice
-			Settings.Set(Setting.SizeX, Width);
-			Settings.Set(Setting.SizeY, Height);
+			Settings.Set(Setting.SizeX, this.Width);
+			Settings.Set(Setting.SizeY, this.Height);
 			Settings.WriteSettings();
 		}
 
@@ -371,14 +370,16 @@ namespace ListenMoeClient
 			centerPanel.ReloadVisualiser();
 
 			float vol = Settings.Get<float>(Setting.Volume);
-			Color accentColor = Settings.Get<Color>(Setting.AccentColor);
+			Color baseAccentColor = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? Settings.Get<Color>(Setting.JPOPAccentColor) : Settings.Get<Color>(Setting.KPOPAccentColor);
+			Color accentColor = Settings.Get<bool>(Setting.CustomColors) ? Settings.Get<Color>(Setting.CustomAccentColor) : baseAccentColor;
 			panelPlayBtn.BackColor = accentColor;
 			playPauseInverted = accentColor.R + accentColor.G + accentColor.B > 128 * 3;
 
-			Color baseColor = Settings.Get<Color>(Setting.BaseColor);
-			spriteColorInverted = baseColor.R + baseColor.G + baseColor.B > 128 * 3;
-			centerPanel.BackColor = baseColor;
-			panelRight.BackColor = baseColor.Scale(1.3f);
+			Color baseColor = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? Settings.Get<Color>(Setting.JPOPBaseColor) : Settings.Get<Color>(Setting.KPOPBaseColor);
+			Color color = Settings.Get<bool>(Setting.CustomColors) ? Settings.Get<Color>(Setting.CustomBaseColor) : baseColor;
+			spriteColorInverted = color.R + color.G + color.B > 128 * 3;
+			centerPanel.BackColor = color;
+			panelRight.BackColor = color.Scale(1.3f);
 
 			//Set form colour to panel right colour so the correct colour shines through during region exclusion
 			this.BackColor = panelRight.BackColor;
@@ -676,10 +677,10 @@ namespace ListenMoeClient
 			presence.State = artists.Length >= 50 ? "by " + artists.Substring(0, 50) : "by " + artists;
 			if (songInfo._event != null)
 			{
-				presence.Assets.LargeImageKey = songInfo._event.presence ?? "jpop";
+				presence.Assets.LargeImageKey = Convert.ToBoolean(songInfo._event.presence) ? songInfo._event.presence : Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? "jpop" : "kpop";
 			} else
 			{
-				presence.Assets.LargeImageKey = "jpop";
+				presence.Assets.LargeImageKey = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? "jpop" : "kpop";
 			}
 			client.SetPresence(presence);
 

@@ -29,9 +29,9 @@ namespace ListenMoeClient
 			LoadAndBindCheckboxSetting(cbVisualiserBars, "VisualiserBars");
 			LoadAndBindCheckboxSetting(cbVisualiserFadeEdges, "VisualiserFadeEdges");
 
-			LoadAndBindColorSetting(panelVisualiserColor, "VisualiserColor");
-			LoadAndBindColorSetting(panelBaseColor, "BaseColor");
-			LoadAndBindColorSetting(panelAccentColor, "AccentColor");
+			LoadAndBindColorSetting(panelVisualiserColor, "CustomVisualiserColor");
+			LoadAndBindColorSetting(panelBaseColor, "CustomBaseColor");
+			LoadAndBindColorSetting(panelAccentColor, "CustomAccentColor");
 
 			numericUpdateInterval.Value = Settings.Get<int>(Setting.UpdateInterval) / 60;
 			numericUpdateInterval.ValueChanged += NumericUpdateInterval_ValueChanged;
@@ -40,7 +40,7 @@ namespace ListenMoeClient
 			tbResolutionScale.Value = (int)(scale * 10);
 			lblResolutionScale.Text = scale.ToString("N1");
 
-			float visualiserOpacity = Settings.Get<float>(Setting.VisualiserTransparency);
+			float visualiserOpacity = Settings.Get<float>(Setting.VisualiserOpacity);
 			tbVisualiserOpacity.Value = (int)(visualiserOpacity * 255);
 			lblVisualiserOpacity.Text = visualiserOpacity.ToString("N1");
 
@@ -108,6 +108,7 @@ namespace ListenMoeClient
 					panel.BackColor = c;
 
 					Settings.Set(key, c);
+					Settings.Set(Setting.CustomColors, true);
 					Settings.WriteSettings();
 
 					mainForm.ReloadSettings();
@@ -127,16 +128,14 @@ namespace ListenMoeClient
 			mainForm.ReloadScale();
 		}
 
-		private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
-		{
+		private void FormSettings_FormClosing(object sender, FormClosingEventArgs e) =>
 			//Should probably use a mutex for this, but oh well
 			mainForm.SettingsForm = null;
-		}
 
 		private async void btnLogin_Click(object sender, EventArgs e)
 		{
 			btnLogin.Enabled = false;
-			var response = await User.Login(txtUsername.Text, txtPassword.Text);
+			AuthenticateResponse response = await User.Login(txtUsername.Text, txtPassword.Text);
 			btnLogin.Enabled = true;
 			if (response.mfa)
 			{
@@ -148,16 +147,13 @@ namespace ListenMoeClient
 			}
 		}
 
-		private void btnLogout_Click(object sender, EventArgs e)
-		{
-			User.Logout();
-		}
+		private void btnLogout_Click(object sender, EventArgs e) => User.Logout();
 
 		private void tbVisualiserOpacity_Scroll(object sender, EventArgs e)
 		{
 			float newVal = tbVisualiserOpacity.Value / 255f;
 			lblVisualiserOpacity.Text = newVal.ToString("N1");
-			Settings.Set(Setting.VisualiserTransparency, newVal);
+			Settings.Set(Setting.VisualiserOpacity, newVal);
 			Settings.WriteSettings();
 
 			mainForm.ReloadSettings();
@@ -185,10 +181,7 @@ namespace ListenMoeClient
 			audioPlayer.SetAudioOutputDevice(selected.DeviceInfo.Guid);
 		}
 
-		private void btnRefreshAudioDevices_Click(object sender, EventArgs e)
-		{
-			reloadAudioDevices();
-		}
+		private void btnRefreshAudioDevices_Click(object sender, EventArgs e) => reloadAudioDevices();
 
 		private void txtPassword_KeyPress(object sender, KeyPressEventArgs e)
 		{
@@ -232,18 +225,13 @@ namespace ListenMoeClient
 				Settings.Set(Setting.StreamType, next);
 				Settings.WriteSettings();
 
+				mainForm.ReloadSettings();
 				await mainForm.ReloadStream();
 			}
 		}
 
-		private async void rbKpop_CheckedChanged(object sender, EventArgs e)
-		{
-			await ReloadStreamType();
-		}
+		private async void rbKpop_CheckedChanged(object sender, EventArgs e) => await ReloadStreamType();
 
-		private async void rbJpop_CheckedChanged(object sender, EventArgs e)
-		{
-			await ReloadStreamType();
-		}
+		private async void rbJpop_CheckedChanged(object sender, EventArgs e) => await ReloadStreamType();
 	}
 }
