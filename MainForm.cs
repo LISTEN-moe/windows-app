@@ -149,6 +149,27 @@ namespace ListenMoeClient
 		public DiscordRpcClient client;
 		public RichPresence presence;
 
+		public void InitDiscordPresence()
+		{
+			client = new DiscordRpcClient("383375119827075072", false, -1);
+
+			presence = new RichPresence()
+			{
+				Assets = new Assets()
+				{
+					LargeImageKey = "large",
+					LargeImageText = "LISTEN.moe",
+					SmallImageKey = "play"
+				},
+				Timestamps = new Timestamps()
+				{
+					Start = DateTime.UtcNow
+				}
+			};
+
+			client.Initialize();
+		}
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -190,20 +211,7 @@ namespace ListenMoeClient
 				TaskbarManager.Instance.ThumbnailToolBars.AddButtons(this.Handle, button);
 			}
 
-			client = new DiscordRpcClient("383375119827075072", false, -1);
-
-			presence = new RichPresence()
-			{
-				Assets = new Assets()
-				{
-					LargeImageKey = "large",
-					SmallImageKey = "small"
-				},
-				Timestamps = new Timestamps()
-				{
-					Start = DateTime.UtcNow
-				}
-			};
+			InitDiscordPresence();
 
 			Connect();
 
@@ -225,8 +233,6 @@ namespace ListenMoeClient
 
 			SizeChanged += MainForm_SizeChanged;
 			UpdatePanelExcludedRegions();
-
-			client.Initialize();
 		}
 
 		private async Task LoadFavSprite(bool heart)
@@ -601,7 +607,6 @@ namespace ListenMoeClient
 		{
 			if (player.IsPlaying())
 			{
-				Task stopTask = player.Stop();
 				ReloadSprites();
 				menuItemPlayPause.Text = "Play";
 				if (Settings.Get<bool>(Setting.ThumbnailButton) && !Settings.Get<bool>(Setting.HideFromAltTab))
@@ -611,7 +616,9 @@ namespace ListenMoeClient
 				}
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StopVisualiser(player);
-				await stopTask;
+				await player.Stop();
+
+				client.ClearPresence();
 			}
 			else
 			{
@@ -625,6 +632,9 @@ namespace ListenMoeClient
 				}
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StartVisualiser(player);
+
+				presence.Timestamps.Start = DateTime.UtcNow;
+				client.SetPresence(presence);
 			}
 		}
 
