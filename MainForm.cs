@@ -1,4 +1,6 @@
-﻿using Microsoft.WindowsAPICodePack.Taskbar;
+﻿using DiscordRPC;
+using DiscordRPC.Logging;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -145,6 +147,9 @@ namespace ListenMoeClient
 		bool playPauseInverted = false;
 		bool currentlyFavoriting = false;
 
+		public DiscordRpcClient client;
+		public RichPresence presence;
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -186,6 +191,21 @@ namespace ListenMoeClient
 				TaskbarManager.Instance.ThumbnailToolBars.AddButtons(this.Handle, button);
 			}
 
+			client = new DiscordRpcClient("383375119827075072", false, -1);
+
+			presence = new RichPresence()
+			{
+				Assets = new Assets()
+				{
+					LargeImageKey = "large",
+					SmallImageKey = "small"
+				},
+				Timestamps = new Timestamps()
+				{
+					Start = DateTime.UtcNow
+				}
+			};
+
 			Connect();
 
 			string stream = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? JPOP_STREAM : KPOP_STREAM;
@@ -206,6 +226,8 @@ namespace ListenMoeClient
 
 			SizeChanged += MainForm_SizeChanged;
 			UpdatePanelExcludedRegions();
+
+			client.Initialize();
 		}
 
 		private async Task LoadFavSprite(bool heart)
@@ -640,16 +662,19 @@ namespace ListenMoeClient
 			}));
 			centerPanel.SetLabelText(songInfo.song.title, artists, sources, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
 
+			presence.Details = songInfo.song.title.Length >= 50 ? songInfo.song.title.Substring(0, 50) : songInfo.song.title;
+			presence.State = artists.Length >= 50 ? "by " + artists.Substring(0, 50) : "by " + artists;
+			client.SetPresence(presence);
+
+			client.Invoke();
+
 			if (User.LoggedIn)
 				SetFavouriteSprite(songInfo.song.favorite);
 			else
 				picFavourite.Visible = false;
 		}
 
-		private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			await Exit();
-		}
+		private async void Form1_FormClosing(object sender, FormClosingEventArgs e) => await Exit();
 
 		private async Task Exit()
 		{
@@ -661,6 +686,7 @@ namespace ListenMoeClient
 			Hide();
 			notifyIcon1.Visible = false;
 			await player.Dispose();
+			client.Dispose();
 			Environment.Exit(0);
 		}
 
@@ -714,10 +740,7 @@ namespace ListenMoeClient
 			}
 		}
 
-		private async void menuItemExit_Click(object sender, EventArgs e)
-		{
-			await Exit();
-		}
+		private async void menuItemExit_Click(object sender, EventArgs e) => await Exit();
 
 		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
