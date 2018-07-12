@@ -42,10 +42,20 @@ namespace ListenMoeClient
 	{
 		public Song song { get; set; }
 		public Requester requester { get; set; }
-		public string _event { get; set; }
+		[JsonProperty("event")]
+		public Event _event { get; set; }
 		public DateTime startTime { get; set; }
 		public Song[] lastPlayed { get; set; }
 		public int listeners { get; set; }
+	}
+
+	public class Event
+	{
+		public int id { get; set; }
+		public string name { get; set; }
+		public string slug { get; set; }
+		public string presence { get; set; }
+		public string image { get; set; }
 	}
 
 	public class Requester
@@ -89,8 +99,6 @@ namespace ListenMoeClient
 		public string nameRomaji { get; set; }
 		public string coverImage { get; set; }
 	}
-
-
 
 	public class SongInfoStream
 	{
@@ -231,7 +239,7 @@ namespace ListenMoeClient
 				}
 
 				if (currentInfo._event != null)
-					currentInfo._event = Clean(currentInfo._event);
+					currentInfo._event.name = Clean(currentInfo._event.name);
 
 				factory.StartNew(() =>
 				{

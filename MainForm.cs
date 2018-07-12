@@ -157,7 +157,7 @@ namespace ListenMoeClient
 			{
 				Assets = new Assets()
 				{
-					LargeImageKey = "large",
+					LargeImageKey = "jpop",
 					LargeImageText = "LISTEN.moe",
 					SmallImageKey = "play"
 				},
@@ -657,7 +657,7 @@ namespace ListenMoeClient
 
 		void ProcessSongInfo(SongInfoResponseData songInfo)
 		{
-			string eventInfo = songInfo.requester != null ? "Requested by " + songInfo.requester.displayName : songInfo._event ?? "";
+			string eventInfo = songInfo.requester != null ? "Requested by " + songInfo.requester.displayName : songInfo._event?.name ?? "";
 			string sources = string.Join(", ", songInfo.song.sources.Select(s =>
 			{
 				if (!string.IsNullOrWhiteSpace(s.nameRomaji))
@@ -674,6 +674,13 @@ namespace ListenMoeClient
 
 			presence.Details = songInfo.song.title.Length >= 50 ? songInfo.song.title.Substring(0, 50) : songInfo.song.title;
 			presence.State = artists.Length >= 50 ? "by " + artists.Substring(0, 50) : "by " + artists;
+			if (songInfo._event != null)
+			{
+				presence.Assets.LargeImageKey = songInfo._event.presence ?? "jpop";
+			} else
+			{
+				presence.Assets.LargeImageKey = "jpop";
+			}
 			client.SetPresence(presence);
 
 			client.Invoke();
