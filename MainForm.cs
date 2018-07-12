@@ -607,6 +607,7 @@ namespace ListenMoeClient
 		{
 			if (player.IsPlaying())
 			{
+				Task stopTask = player.Stop();
 				ReloadSprites();
 				menuItemPlayPause.Text = "Play";
 				if (Settings.Get<bool>(Setting.ThumbnailButton) && !Settings.Get<bool>(Setting.HideFromAltTab))
@@ -616,7 +617,7 @@ namespace ListenMoeClient
 				}
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StopVisualiser(player);
-				await player.Stop();
+				await stopTask;
 
 				client.ClearPresence();
 			}
