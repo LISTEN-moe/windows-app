@@ -122,7 +122,7 @@ namespace ListenMoeClient
 
 		public void Reconnect()
 		{
-			((IDisposable)socket)?.Dispose();
+			socket?.Close();
 			string address = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? JPOP_SOCKET_ADDR : KPOP_SOCKET_ADDR;
 			socket = new WebSocket(address);
 
