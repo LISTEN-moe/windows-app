@@ -25,5 +25,4 @@ If you find yourself unable to see the window (for example if you disconnect a m
 
 # Todo
  - Code cleanup (let's face it, this will never happen)
- - Taskbar media player controls, global media hotkey hooks
  - Network disconnect detection (and reconnection) -- right now you can just pause and hit play again to reconnect if your network disconnects. 
