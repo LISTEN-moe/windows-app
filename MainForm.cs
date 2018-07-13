@@ -673,18 +673,23 @@ namespace ListenMoeClient
 			}));
 			centerPanel.SetLabelText(songInfo.song.title, artists, sources, eventInfo, !string.IsNullOrWhiteSpace(eventInfo));
 
+			StreamType type = Settings.Get<StreamType>(Setting.StreamType);
 			presence.Details = songInfo.song.title.Length >= 50 ? songInfo.song.title.Substring(0, 50) : songInfo.song.title;
 			presence.State = artists.Length >= 50 ? "by " + artists.Substring(0, 50) : "by " + artists;
+			presence.Timestamps.End = songInfo.startTime.AddMilliseconds(songInfo.song.duration * 1000);
+			presence.Assets.LargeImageText = type == StreamType.Jpop ? "LISTEN.moe - JPOP" : "LISTEN.moe - KPOP";
 			if (songInfo._event != null)
 			{
-				presence.Assets.LargeImageKey = Convert.ToBoolean(songInfo._event.presence) ? songInfo._event.presence : Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? "jpop" : "kpop";
+				presence.Assets.LargeImageKey = Convert.ToBoolean(songInfo._event.presence) ? songInfo._event.presence : type == StreamType.Jpop ? "jpop" : "kpop";
 			} else
 			{
-				presence.Assets.LargeImageKey = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? "jpop" : "kpop";
+				presence.Assets.LargeImageKey = type == StreamType.Jpop ? "jpop" : "kpop";
 			}
-			client.SetPresence(presence);
-
-			client.Invoke();
+			if (player.IsPlaying())
+			{
+				client.SetPresence(presence);
+				client.Invoke();
+			}
 
 			if (User.LoggedIn)
 				SetFavouriteSprite(songInfo.song.favorite);
