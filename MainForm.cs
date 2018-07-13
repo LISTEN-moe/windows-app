@@ -156,7 +156,7 @@ namespace ListenMoeClient
 				{
 					LargeImageKey = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? "jpop" : "kpop",
 					LargeImageText = "LISTEN.moe",
-					SmallImageKey = "play"
+					SmallImageKey = "play",
 				},
 				Timestamps = new Timestamps()
 				{
@@ -675,6 +675,7 @@ namespace ListenMoeClient
 			StreamType type = Settings.Get<StreamType>(Setting.StreamType);
 			presence.Details = songInfo.song.title.Length >= 50 ? songInfo.song.title.Substring(0, 50) : songInfo.song.title;
 			presence.State = artists.Length >= 50 ? "by " + artists.Substring(0, 50) : "by " + artists;
+			presence.Timestamps.Start = DateTime.UtcNow;
 			presence.Timestamps.End = songInfo.startTime.AddMilliseconds(songInfo.song.duration * 1000);
 			presence.Assets.LargeImageText = type == StreamType.Jpop ? "LISTEN.moe - JPOP" : "LISTEN.moe - KPOP";
 			if (songInfo._event != null)

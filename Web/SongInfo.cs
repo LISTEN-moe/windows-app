@@ -122,12 +122,13 @@ namespace ListenMoeClient
 
 		public void Reconnect()
 		{
-			socket?.Close();
+			((IDisposable)socket)?.Dispose();
 			string address = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? JPOP_SOCKET_ADDR : KPOP_SOCKET_ADDR;
 			socket = new WebSocket(address);
 
 			socket.OnMessage += (sender, e) => ParseSongInfo(e.Data);
-			socket.OnError += (sender, e) => { throw e.Exception; };
+			socket.OnError += (sender, e) => throw e.Exception;
+			socket.OnClose += (sender, e) => Connect();
 
 			socket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
 			Connect();
@@ -138,7 +139,6 @@ namespace ListenMoeClient
 			try
 			{
 				socket.Connect();
-
 				Authenticate();
 			}
 			catch (Exception) { }
