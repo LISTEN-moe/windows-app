@@ -40,7 +40,7 @@ namespace ListenMoeClient
 			int opacity = (int)Math.Min(Math.Max(Settings.Get<float>(Setting.VisualiserOpacity) * 255, 0), 255);
 			Color baseVisualiserColor = Settings.Get<StreamType>(Setting.StreamType) == StreamType.Jpop ? Settings.Get<Color>(Setting.JPOPVisualiserColor) : Settings.Get<Color>(Setting.KPOPVisualiserColor);
 			Color visualiserCol = Settings.Get<bool>(Setting.CustomColors) ? Settings.Get<Color>(Setting.CustomVisualiserColor) : baseVisualiserColor;
-			visualiserColor = Color.FromArgb(opacity, baseVisualiserColor);
+			visualiserColor = Color.FromArgb(opacity, visualiserCol);
 
 			if (Bounds.Width == 0 || Bounds.Height == 0)
 				return;

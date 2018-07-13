@@ -531,7 +531,7 @@ namespace ListenMoeClient
 			{
 				if (RawInput.IsPressed(VirtualKeys.Control))
 				{
-					centerPanel.Visualiser.IncreaseBarWidth(0.5f * e.Delta / (float)SystemInformation.MouseWheelScrollDelta);
+					centerPanel.Visualiser.IncreaseBarWidth(0.5f * e.Delta / SystemInformation.MouseWheelScrollDelta);
 				}
 				else if (RawInput.IsPressed(VirtualKeys.Menu))
 				{
@@ -635,7 +635,6 @@ namespace ListenMoeClient
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StartVisualiser(player);
 
-				presence.Timestamps.Start = DateTime.UtcNow;
 				client.SetPresence(presence);
 			}
 		}
@@ -685,16 +684,20 @@ namespace ListenMoeClient
 			{
 				presence.Assets.LargeImageKey = type == StreamType.Jpop ? "jpop" : "kpop";
 			}
-			if (player.IsPlaying())
-			{
-				client.SetPresence(presence);
-				client.Invoke();
-			}
+
+			//client.SetPresence(presence);
 
 			if (User.LoggedIn)
 				SetFavouriteSprite(songInfo.song.favorite);
 			else
 				picFavourite.Visible = false;
+
+			if (player.IsPlaying())
+			{
+				client.SetPresence(presence);
+			}
+
+			client.Invoke();
 		}
 
 		private async void Form1_FormClosing(object sender, FormClosingEventArgs e) => await Exit();
