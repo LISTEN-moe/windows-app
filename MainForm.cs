@@ -619,8 +619,6 @@ namespace ListenMoeClient
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StopVisualiser(player);
 				await stopTask;
-
-				client.ClearPresence();
 			}
 			else
 			{
@@ -634,8 +632,6 @@ namespace ListenMoeClient
 				}
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StartVisualiser(player);
-
-				client.SetPresence(presence);
 			}
 		}
 
@@ -686,18 +682,12 @@ namespace ListenMoeClient
 				presence.Assets.LargeImageKey = type == StreamType.Jpop ? "jpop" : "kpop";
 			}
 
-			//client.SetPresence(presence);
-
 			if (User.LoggedIn)
 				SetFavouriteSprite(songInfo.song.favorite);
 			else
 				picFavourite.Visible = false;
 
-			if (player.IsPlaying())
-			{
-				client.SetPresence(presence);
-			}
-
+			client.SetPresence(presence);
 			client.Invoke();
 		}
 
