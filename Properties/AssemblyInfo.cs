@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Listen.moe Client")]
 [assembly: AssemblyProduct("Listen.moe Client")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCopyright("Copyright 2017 Listen.moe. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright 2017-2018 Listen.moe. All rights reserved.")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

@@ -208,7 +208,8 @@ namespace ListenMoeClient
 				TaskbarManager.Instance.ThumbnailToolBars.AddButtons(this.Handle, button);
 			}
 
-			InitDiscordPresence();
+			if (Settings.Get<bool>(Setting.DiscordPresence))
+				InitDiscordPresence();
 
 			Connect();
 
@@ -687,8 +688,11 @@ namespace ListenMoeClient
 			else
 				picFavourite.Visible = false;
 
-			client.SetPresence(presence);
-			client.Invoke();
+			if (Settings.Get<bool>(Setting.DiscordPresence))
+			{
+				client.SetPresence(presence);
+				client.Invoke();
+			}
 		}
 
 		private async void Form1_FormClosing(object sender, FormClosingEventArgs e) => await Exit();

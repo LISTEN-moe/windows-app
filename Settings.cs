@@ -50,7 +50,8 @@ namespace ListenMoeClient
 		Volume,
 		OutputDeviceGuid,
 		Token,
-		Username
+		Username,
+		DiscordPresence
 	}
 
 	enum StreamType
@@ -202,6 +203,7 @@ namespace ListenMoeClient
 			Set(Setting.CustomAccentColor, Color.FromArgb(255, 1, 91));
 
 			Set(Setting.StreamType, StreamType.Jpop);
+			Set(Setting.DiscordPresence, true);
 		}
 
 		public static void LoadSettings()
