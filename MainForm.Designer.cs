@@ -166,9 +166,9 @@
 			this.lblVol.BackColor = System.Drawing.Color.Transparent;
 			this.lblVol.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
 			this.lblVol.ForeColor = System.Drawing.Color.White;
-			this.lblVol.Location = new System.Drawing.Point(3, 16);
+			this.lblVol.Location = new System.Drawing.Point(8, 16);
 			this.lblVol.Name = "lblVol";
-			this.lblVol.Size = new System.Drawing.Size(58, 32);
+			this.lblVol.Size = new System.Drawing.Size(46, 32);
 			this.lblVol.TabIndex = 4;
 			this.lblVol.Text = "100%";
 			this.lblVol.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
