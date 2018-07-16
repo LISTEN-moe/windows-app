@@ -823,6 +823,8 @@ namespace ListenMoeClient
 			}
 		}
 
+		private async void menuItemClose2_Click(object sender, EventArgs e) => await Exit();
+
 		private async void SetFavouriteSprite(bool favourited)
 		{
 			await Task.Run(() =>

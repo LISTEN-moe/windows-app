@@ -38,6 +38,7 @@
 			this.menuItemPlayPause = new System.Windows.Forms.MenuItem();
 			this.menuItemShow = new System.Windows.Forms.MenuItem();
 			this.menuItemResetLocation = new System.Windows.Forms.MenuItem();
+			this.menuItemClose2 = new System.Windows.Forms.MenuItem();
 			this.gridPanel = new CsGrid.GridPanel();
 			this.panelPlayBtn = new System.Windows.Forms.Panel();
 			this.picPlayPause = new ListenMoeClient.BetterPictureBox();
@@ -91,7 +92,8 @@
 			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItemPlayPause,
             this.menuItemShow,
-            this.menuItemResetLocation});
+            this.menuItemResetLocation,
+            this.menuItemClose2});
 			//
 			// menuItemPlayPause
 			//
@@ -110,6 +112,12 @@
 			this.menuItemResetLocation.Index = 2;
 			this.menuItemResetLocation.Text = "Reset location";
 			this.menuItemResetLocation.Click += new System.EventHandler(this.menuItemResetLocation_Click);
+			//
+			// menuItemClose2
+			//
+			this.menuItemClose2.Index = 3;
+			this.menuItemClose2.Text = "Close";
+			this.menuItemClose2.Click += new System.EventHandler(this.menuItemClose2_Click);
 			//
 			// gridPanel
 			//
@@ -188,7 +196,7 @@
 			//
 			this.coverImage.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.coverImage.BackColor = System.Drawing.Color.Transparent;
-			this.coverImage.Cursor = System.Windows.Forms.Cursors.Default;
+			this.coverImage.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.coverImage.Location = new System.Drawing.Point(312, -11);
 			this.coverImage.Name = "coverImage";
 			this.coverImage.Size = new System.Drawing.Size(64, 64);
@@ -255,6 +263,7 @@
 		private BetterPictureBox coverImage;
 		private System.Windows.Forms.MenuItem menuItemOptions;
 		private System.Windows.Forms.MenuItem menuItem_Close;
+		private System.Windows.Forms.MenuItem menuItemClose2;
 	}
 }
 
