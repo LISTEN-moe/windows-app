@@ -238,28 +238,24 @@ namespace ListenMoeClient
 
 		private async Task LoadFavSprite(bool heart)
 		{
-			if (heart)
-				await Task.Run(() =>
-				{
-					Bitmap spritesheet = Properties.Resources.heart_sprite;
-					int frameSize = 400;
-					lightFavSprite = SpriteLoader.LoadFavSprite(spritesheet, frameSize);
-					fadedFavSprite = SpriteLoader.LoadFadedFavSprite(spritesheet, frameSize);
-					darkFavSprite = SpriteLoader.LoadDarkFavSprite(spritesheet, frameSize);
-					favSprite = lightFavSprite;
-				});
+			await Task.Run(() =>
+			{
+				Bitmap spritesheet = heart ? Properties.Resources.heart_sprite : Properties.Resources.fav_sprite;
+				int frameSize = heart ? 400 : 256;
+				lightFavSprite = SpriteLoader.LoadFavSprite(spritesheet, frameSize);
+				fadedFavSprite = SpriteLoader.LoadFadedFavSprite(spritesheet, frameSize);
+				darkFavSprite = SpriteLoader.LoadDarkFavSprite(spritesheet, frameSize);
+				favSprite = lightFavSprite;
+			});
 
 			picFavourite.ResetScale();
 			if (heart)
 				picFavourite.Size = new Size(48, 48);
 			else
-				picFavourite.Size = new Size(24, 24);
+				picFavourite.Size = new Size(48, 48);
 
 			bool favourite = songInfoStream?.currentInfo?.song.favorite ?? false;
-			if (heart)
-				picFavourite.Image = favourite ? favSprite.Frames[favSprite.Frames.Length - 1] : favSprite.Frames[0];
-			else
-				picFavourite.Image = favourite ? Properties.Resources.star_on : Properties.Resources.star_off;
+			picFavourite.Image = favourite ? favSprite.Frames[favSprite.Frames.Length - 1] : favSprite.Frames[0];
 
 			ReloadScale();
 		}
@@ -595,15 +591,9 @@ namespace ListenMoeClient
 			}
 
 			if (songInfoStream?.currentInfo?.song.favorite ?? false)
-				if (heartFav)
-					picFavourite.Image = favSprite?.Frames[favSprite.Frames.Length - 1];
-				else
-					picFavourite.Image = Properties.Resources.star_on;
+				picFavourite.Image = favSprite?.Frames[favSprite.Frames.Length - 1];
 			else
-				if (heartFav)
-					picFavourite.Image = favSprite?.Frames[0];
-				else
-				picFavourite.Image = Properties.Resources.star_off;
+				picFavourite.Image = favSprite?.Frames[0];
 		}
 
 		private async Task TogglePlayback()
@@ -680,8 +670,7 @@ namespace ListenMoeClient
 
 			if (User.LoggedIn)
 			{
-				if (heartFav)
-					SetFavouriteSprite(songInfo.song.favorite);
+				SetFavouriteSprite(songInfo.song.favorite);
 				centerPanel_Resize(null, null);
 			}
 			else
@@ -743,7 +732,13 @@ namespace ListenMoeClient
 					if (!string.IsNullOrWhiteSpace(a.nameRomaji))
 						return a.nameRomaji;
 					return a.name;
-				})) + " - " + info.song.title + (info.song.sources.Length != 0 ? " [" + info.song.sources[0].name != null ? info.song.sources[0].name : info.song.sources[0].nameRomaji + "]" : ""));
+				})) + " - " + info.song.title + (info.song.sources.Length != 0 ? " [" + string.Join(", ", info.song.sources.Select(s =>
+				{
+					if (!string.IsNullOrWhiteSpace(s.nameRomaji))
+						return s.nameRomaji;
+					return s.name;
+				}))
+				+ "]" : ""));
 				Clipboard.SetText(sb.ToString());
 			}
 		}
@@ -793,9 +788,9 @@ namespace ListenMoeClient
 		{
 			float scale = Settings.Get<float>(Setting.Scale);
 			if (!coverImage.Visible)
-				picFavourite.Location = new Point(centerPanel.Width - (picFavourite.Width + 10), (centerPanel.Height / 2) - (picFavourite.Height / 2));
+				picFavourite.Location = new Point(centerPanel.Width - (picFavourite.Width), (centerPanel.Height / 2) - (picFavourite.Height / 2));
 			else
-				picFavourite.Location = new Point(centerPanel.Width - (picFavourite.Width + coverImage.Width + 10), (centerPanel.Height / 2) - (picFavourite.Height / 2));
+				picFavourite.Location = new Point(centerPanel.Width - (picFavourite.Width + coverImage.Width), (centerPanel.Height / 2) - (picFavourite.Height / 2));
 			coverImage.Location = new Point(centerPanel.Width - coverImage.Width, (centerPanel.Height / 2) - (coverImage.Height / 2));
 		}
 
@@ -876,8 +871,7 @@ namespace ListenMoeClient
 			bool currentStatus = songInfoStream.currentInfo.song.favorite;
 			bool newStatus = !currentStatus;
 
-			if (heartFav)
-				SetFavouriteSprite(newStatus);
+			SetFavouriteSprite(newStatus);
 
 			if (currentlyFavoriting)
 				return;
@@ -889,11 +883,8 @@ namespace ListenMoeClient
 			bool success = await User.FavoriteSong(id, newStatus);
 			bool finalState = success ? newStatus : currentStatus;
 
-			if (heartFav)
-				picFavourite.Image = finalState ? favSprite.Frames[favSprite.Frames.Length - 1] :
-					spriteColorInverted ? darkFavSprite.Frames[0] : favSprite.Frames[0];
-			else
-				picFavourite.Image = finalState ? Properties.Resources.star_on : Properties.Resources.star_off;
+			picFavourite.Image = finalState ? favSprite.Frames[favSprite.Frames.Length - 1] :
+				spriteColorInverted ? darkFavSprite.Frames[0] : favSprite.Frames[0];
 			songInfoStream.currentInfo.song.favorite = finalState;
 
 			currentlyFavoriting = false;
