@@ -219,6 +219,8 @@
   <ItemGroup>
     <Content Include="ILMergeOrder.txt" />
     <Content Include="Resources\DiscordRPC.dll" />
+    <None Include="Resources\star_off.png" />
+    <None Include="Resources\star_on.png" />
     <None Include="Resources\heart_sprite.png" />
     <None Include="Resources\gripper-inverted.png" />
     <None Include="Resources\gripper.png" />

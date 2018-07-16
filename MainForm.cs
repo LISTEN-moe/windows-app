@@ -115,6 +115,9 @@ namespace ListenMoeClient
 
 		const string JPOP_STREAM = "https://listen.moe/opus";
 		const string KPOP_STREAM = "https://listen.moe/kpop/opus";
+		const string DISCORD_PRESENCE_CLIENT_ID = "383375119827075072";
+		const string CDN_COVER = "https://cdn.listen.moe/covers/";
+		const string MUSIC_LINK = "https://listen.moe/music/albums/";
 
 		Font titleFont;
 		Font artistFont;
@@ -148,7 +151,7 @@ namespace ListenMoeClient
 
 		public void InitDiscordPresence()
 		{
-			client = new DiscordRpcClient("383375119827075072", false, -1);
+			client = new DiscordRpcClient(DISCORD_PRESENCE_CLIENT_ID, false, -1);
 
 			presence = new RichPresence()
 			{
@@ -235,33 +238,30 @@ namespace ListenMoeClient
 
 		private async Task LoadFavSprite(bool heart)
 		{
-			await Task.Run(() =>
-			{
-				Bitmap spritesheet = heart ? Properties.Resources.heart_sprite : Properties.Resources.fav_sprite;
-				int frameSize = heart ? 400 : 256;
-				lightFavSprite = SpriteLoader.LoadFavSprite(spritesheet, frameSize);
-				fadedFavSprite = SpriteLoader.LoadFadedFavSprite(spritesheet, frameSize);
-				darkFavSprite = SpriteLoader.LoadDarkFavSprite(spritesheet, frameSize);
-				favSprite = lightFavSprite;
-			});
+			if (heart)
+				await Task.Run(() =>
+				{
+					Bitmap spritesheet = Properties.Resources.heart_sprite;
+					int frameSize = 400;
+					lightFavSprite = SpriteLoader.LoadFavSprite(spritesheet, frameSize);
+					fadedFavSprite = SpriteLoader.LoadFadedFavSprite(spritesheet, frameSize);
+					darkFavSprite = SpriteLoader.LoadDarkFavSprite(spritesheet, frameSize);
+					favSprite = lightFavSprite;
+				});
 
 			picFavourite.ResetScale();
 			if (heart)
 				picFavourite.Size = new Size(48, 48);
 			else
-				picFavourite.Size = new Size(32, 32);
-
-			picFavourite.SizeChanged += PicFavourite_SizeChanged;
+				picFavourite.Size = new Size(24, 24);
 
 			bool favourite = songInfoStream?.currentInfo?.song.favorite ?? false;
-			picFavourite.Image = favourite ? favSprite.Frames[favSprite.Frames.Length - 1] : favSprite.Frames[0];
+			if (heart)
+				picFavourite.Image = favourite ? favSprite.Frames[favSprite.Frames.Length - 1] : favSprite.Frames[0];
+			else
+				picFavourite.Image = favourite ? Properties.Resources.star_on : Properties.Resources.star_off;
 
 			ReloadScale();
-		}
-
-		private void PicFavourite_SizeChanged(object sender, EventArgs e)
-		{
-
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -440,7 +440,7 @@ namespace ListenMoeClient
 			float scaleFactor = Settings.Get<float>(Setting.Scale);
 			titleFont = Meiryo.GetFont(13 * scaleFactor);
 			artistFont = Meiryo.GetFont(8 * scaleFactor);
-			volumeFont = Meiryo.GetFont(9 * scaleFactor);
+			volumeFont = Meiryo.GetFont(10 * scaleFactor);
 
 			lblVol.Font = volumeFont;
 
@@ -567,8 +567,6 @@ namespace ListenMoeClient
 		{
 			if (spriteColorInverted)
 			{
-				picSettings.Image = Properties.Resources.cog_inverted;
-				picClose.Image = Properties.Resources.close_inverted;
 				centerPanel.SetLabelBrush(Brushes.Black);
 				lblVol.ForeColor = Color.Black;
 
@@ -576,9 +574,6 @@ namespace ListenMoeClient
 			}
 			else
 			{
-
-				picSettings.Image = Properties.Resources.cog;
-				picClose.Image = Properties.Resources.close;
 				centerPanel.SetLabelBrush(Brushes.White);
 				lblVol.ForeColor = Color.White;
 				favSprite = lightFavSprite;
@@ -600,9 +595,15 @@ namespace ListenMoeClient
 			}
 
 			if (songInfoStream?.currentInfo?.song.favorite ?? false)
-				picFavourite.Image = favSprite?.Frames[favSprite.Frames.Length - 1];
+				if (heartFav)
+					picFavourite.Image = favSprite?.Frames[favSprite.Frames.Length - 1];
+				else
+					picFavourite.Image = Properties.Resources.star_on;
 			else
-				picFavourite.Image = favSprite?.Frames[0];
+				if (heartFav)
+					picFavourite.Image = favSprite?.Frames[0];
+				else
+				picFavourite.Image = Properties.Resources.star_off;
 		}
 
 		private async Task TogglePlayback()
@@ -633,22 +634,6 @@ namespace ListenMoeClient
 				}
 				if (Settings.Get<bool>(Setting.EnableVisualiser))
 					centerPanel.StartVisualiser(player);
-			}
-		}
-
-		private async void picClose_ClickAsync(object sender, EventArgs e)
-		{
-			if (Settings.Get<bool>(Setting.CloseToTray))
-			{
-				if (!Settings.Get<bool>(Setting.HideFromAltTab))
-					notifyIcon1.Visible = true;
-
-				Hide();
-			}
-			else
-			{
-				Close();
-				await Exit();
 			}
 		}
 
@@ -684,9 +669,25 @@ namespace ListenMoeClient
 			}
 
 			if (User.LoggedIn)
-				SetFavouriteSprite(songInfo.song.favorite);
+			{
+				if (heartFav)
+					SetFavouriteSprite(songInfo.song.favorite);
+				centerPanel_Resize(null, null);
+			}
 			else
+			{
 				picFavourite.Visible = false;
+			}
+
+			if (songInfo.song.albums.Length != 0 && songInfo.song.albums[0].image != null)
+			{
+				coverImage.Load(CDN_COVER + songInfo.song.albums[0].image);
+				coverImage.Visible = true;
+			}
+			else
+			{
+				coverImage.Visible = false;
+			}
 
 			if (Settings.Get<bool>(Setting.DiscordPresence))
 			{
@@ -738,30 +739,30 @@ namespace ListenMoeClient
 			if (info != null)
 			{
 				StringBuilder sb = new StringBuilder();
-				sb.AppendLine(info.song.title);
-				sb.AppendLine(string.Join(", ", info.song.artists.Select(a => a.name)));
-				sb.AppendLine(string.Join(", ", info.song.sources.Select(s => s.name)));
+				sb.AppendLine(string.Join(", ", info.song.artists.Select(a => {
+					if (!string.IsNullOrWhiteSpace(a.nameRomaji))
+						return a.nameRomaji;
+					return a.name;
+				})) + " - " + info.song.title + (info.song.sources.Length != 0 ? " [" + info.song.sources[0].name != null ? info.song.sources[0].name : info.song.sources[0].nameRomaji + "]" : ""));
 				Clipboard.SetText(sb.ToString());
 			}
 		}
 
-		private void picSettings_Click(object sender, EventArgs e)
+		private async void menuItemClose_Click(object sender, EventArgs e)
 		{
-			if (SettingsForm == null)
+			if (Settings.Get<bool>(Setting.CloseToTray))
 			{
-				SettingsForm = new FormSettings(this, player.BasePlayer)
-				{
-					StartPosition = FormStartPosition.CenterScreen
-				};
-				SettingsForm.Show();
+				if (!Settings.Get<bool>(Setting.HideFromAltTab))
+					notifyIcon1.Visible = true;
+
+				Hide();
 			}
 			else
 			{
-				SettingsForm.Activate();
+				Close();
+				await Exit();
 			}
 		}
-
-		private async void menuItemExit_Click(object sender, EventArgs e) => await Exit();
 
 		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
@@ -791,7 +792,35 @@ namespace ListenMoeClient
 		private void centerPanel_Resize(object sender, EventArgs e)
 		{
 			float scale = Settings.Get<float>(Setting.Scale);
-			picFavourite.Location = new Point((int)(centerPanel.Width - picFavourite.Width), (centerPanel.Height / 2) - (picFavourite.Height / 2));
+			if (!coverImage.Visible)
+				picFavourite.Location = new Point(centerPanel.Width - (picFavourite.Width + 10), (centerPanel.Height / 2) - (picFavourite.Height / 2));
+			else
+				picFavourite.Location = new Point(centerPanel.Width - (picFavourite.Width + coverImage.Width + 10), (centerPanel.Height / 2) - (picFavourite.Height / 2));
+			coverImage.Location = new Point(centerPanel.Width - coverImage.Width, (centerPanel.Height / 2) - (coverImage.Height / 2));
+		}
+
+		private void coverImage_Click(object sender, EventArgs e)
+		{
+			SongInfoResponseData info = songInfoStream.currentInfo;
+			if (info != null)
+				if (info.song.albums[0].image != null)
+					Process.Start(MUSIC_LINK + songInfoStream.currentInfo.song.albums[0].id);
+		}
+
+		private void menuItemOptions_Click(object sender, EventArgs e)
+		{
+			if (SettingsForm == null)
+			{
+				SettingsForm = new FormSettings(this, player.BasePlayer)
+				{
+					StartPosition = FormStartPosition.CenterScreen
+				};
+				SettingsForm.Show();
+			}
+			else
+			{
+				SettingsForm.Activate();
+			}
 		}
 
 		private async void SetFavouriteSprite(bool favourited)
@@ -845,7 +874,8 @@ namespace ListenMoeClient
 			bool currentStatus = songInfoStream.currentInfo.song.favorite;
 			bool newStatus = !currentStatus;
 
-			SetFavouriteSprite(newStatus);
+			if (heartFav)
+				SetFavouriteSprite(newStatus);
 
 			if (currentlyFavoriting)
 				return;
@@ -857,8 +887,11 @@ namespace ListenMoeClient
 			bool success = await User.FavoriteSong(id, newStatus);
 			bool finalState = success ? newStatus : currentStatus;
 
-			picFavourite.Image = finalState ? favSprite.Frames[favSprite.Frames.Length - 1] :
-				spriteColorInverted ? darkFavSprite.Frames[0] : favSprite.Frames[0];
+			if (heartFav)
+				picFavourite.Image = finalState ? favSprite.Frames[favSprite.Frames.Length - 1] :
+					spriteColorInverted ? darkFavSprite.Frames[0] : favSprite.Frames[0];
+			else
+				picFavourite.Image = finalState ? Properties.Resources.star_on : Properties.Resources.star_off;
 			songInfoStream.currentInfo.song.favorite = finalState;
 
 			currentlyFavoriting = false;

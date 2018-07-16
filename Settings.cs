@@ -64,9 +64,9 @@ namespace ListenMoeClient
 	static class Settings
 	{
 		public const int DEFAULT_WIDTH = 512;
-		public const int DEFAULT_HEIGHT = 58;
-		public const int DEFAULT_RIGHT_PANEL_WIDTH = 56;
-		public const int DEFAULT_PLAY_PAUSE_SIZE = 18;
+		public const int DEFAULT_HEIGHT = 64;
+		public const int DEFAULT_RIGHT_PANEL_WIDTH = 64;
+		public const int DEFAULT_PLAY_PAUSE_SIZE = 24;
 
 		private const string settingsFileLocation = "listenMoeSettings.ini";
 

@@ -31,41 +31,54 @@
 			this.components = new System.ComponentModel.Container();
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuItemCopySongInfo = new System.Windows.Forms.MenuItem();
+			this.menuItemOptions = new System.Windows.Forms.MenuItem();
+			this.menuItem_Close = new System.Windows.Forms.MenuItem();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
 			this.menuItemPlayPause = new System.Windows.Forms.MenuItem();
 			this.menuItemShow = new System.Windows.Forms.MenuItem();
 			this.menuItemResetLocation = new System.Windows.Forms.MenuItem();
-			this.menuItemExit = new System.Windows.Forms.MenuItem();
 			this.gridPanel = new CsGrid.GridPanel();
 			this.panelPlayBtn = new System.Windows.Forms.Panel();
 			this.picPlayPause = new ListenMoeClient.BetterPictureBox();
 			this.panelRight = new System.Windows.Forms.Panel();
-			this.picClose = new ListenMoeClient.BetterPictureBox();
-			this.picSettings = new ListenMoeClient.BetterPictureBox();
 			this.lblVol = new System.Windows.Forms.Label();
 			this.centerPanel = new ListenMoeClient.CenterPanel();
+			this.coverImage = new ListenMoeClient.BetterPictureBox();
 			this.picFavourite = new ListenMoeClient.BetterPictureBox();
 			this.gridPanel.SuspendLayout();
 			this.panelPlayBtn.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).BeginInit();
 			this.panelRight.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picSettings)).BeginInit();
 			this.centerPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.coverImage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picFavourite)).BeginInit();
 			this.SuspendLayout();
 			//
 			// contextMenu1
 			//
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItemCopySongInfo});
+            this.menuItemCopySongInfo,
+            this.menuItemOptions,
+            this.menuItem_Close});
 			//
 			// menuItemCopySongInfo
 			//
 			this.menuItemCopySongInfo.Index = 0;
 			this.menuItemCopySongInfo.Text = "Copy song info";
 			this.menuItemCopySongInfo.Click += new System.EventHandler(this.menuItemCopySongInfo_Click);
+			//
+			// menuItemOptions
+			//
+			this.menuItemOptions.Index = 1;
+			this.menuItemOptions.Text = "Options";
+			this.menuItemOptions.Click += new System.EventHandler(this.menuItemOptions_Click);
+			//
+			// menuItem_Close
+			//
+			this.menuItem_Close.Index = 2;
+			this.menuItem_Close.Text = "Close";
+			this.menuItem_Close.Click += new System.EventHandler(this.menuItemClose_Click);
 			//
 			// notifyIcon1
 			//
@@ -78,8 +91,7 @@
 			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItemPlayPause,
             this.menuItemShow,
-            this.menuItemResetLocation,
-            this.menuItemExit});
+            this.menuItemResetLocation});
 			//
 			// menuItemPlayPause
 			//
@@ -98,12 +110,6 @@
 			this.menuItemResetLocation.Index = 2;
 			this.menuItemResetLocation.Text = "Reset location";
 			this.menuItemResetLocation.Click += new System.EventHandler(this.menuItemResetLocation_Click);
-			//
-			// menuItemExit
-			//
-			this.menuItemExit.Index = 3;
-			this.menuItemExit.Text = "Exit";
-			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 			//
 			// gridPanel
 			//
@@ -148,56 +154,28 @@
 			// panelRight
 			//
 			this.panelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
-			this.panelRight.Controls.Add(this.picClose);
-			this.panelRight.Controls.Add(this.picSettings);
 			this.panelRight.Controls.Add(this.lblVol);
 			this.panelRight.Location = new System.Drawing.Point(507, 78);
 			this.panelRight.Name = "panelRight";
-			this.panelRight.Size = new System.Drawing.Size(56, 64);
+			this.panelRight.Size = new System.Drawing.Size(64, 64);
 			this.panelRight.TabIndex = 8;
 			this.panelRight.Tag = "rightPanel";
 			//
-			// picClose
-			//
-			this.picClose.BackColor = System.Drawing.Color.Transparent;
-			this.picClose.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picClose.Image = global::ListenMoeClient.Properties.Resources.close;
-			this.picClose.Location = new System.Drawing.Point(37, 7);
-			this.picClose.Name = "picClose";
-			this.picClose.Size = new System.Drawing.Size(12, 12);
-			this.picClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.picClose.TabIndex = 2;
-			this.picClose.TabStop = false;
-			this.picClose.Click += new System.EventHandler(this.picClose_ClickAsync);
-			//
-			// picSettings
-			//
-			this.picSettings.BackColor = System.Drawing.Color.Transparent;
-			this.picSettings.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picSettings.Image = global::ListenMoeClient.Properties.Resources.cog;
-			this.picSettings.Location = new System.Drawing.Point(14, 7);
-			this.picSettings.Name = "picSettings";
-			this.picSettings.Size = new System.Drawing.Size(12, 12);
-			this.picSettings.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.picSettings.TabIndex = 6;
-			this.picSettings.TabStop = false;
-			this.picSettings.Click += new System.EventHandler(this.picSettings_Click);
-			//
 			// lblVol
 			//
-			this.lblVol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblVol.BackColor = System.Drawing.Color.Transparent;
-			this.lblVol.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+			this.lblVol.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
 			this.lblVol.ForeColor = System.Drawing.Color.White;
-			this.lblVol.Location = new System.Drawing.Point(-8, 47);
+			this.lblVol.Location = new System.Drawing.Point(3, 16);
 			this.lblVol.Name = "lblVol";
-			this.lblVol.Size = new System.Drawing.Size(48, 16);
+			this.lblVol.Size = new System.Drawing.Size(58, 32);
 			this.lblVol.TabIndex = 4;
 			this.lblVol.Text = "100%";
 			this.lblVol.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			//
 			// centerPanel
 			//
+			this.centerPanel.Controls.Add(this.coverImage);
 			this.centerPanel.Controls.Add(this.picFavourite);
 			this.centerPanel.Location = new System.Drawing.Point(97, 90);
 			this.centerPanel.Name = "centerPanel";
@@ -206,14 +184,26 @@
 			this.centerPanel.Tag = "centerPanel";
 			this.centerPanel.Resize += new System.EventHandler(this.centerPanel_Resize);
 			//
+			// coverImage
+			//
+			this.coverImage.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this.coverImage.BackColor = System.Drawing.Color.Transparent;
+			this.coverImage.Cursor = System.Windows.Forms.Cursors.Default;
+			this.coverImage.Location = new System.Drawing.Point(312, -11);
+			this.coverImage.Name = "coverImage";
+			this.coverImage.Size = new System.Drawing.Size(64, 64);
+			this.coverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.coverImage.TabIndex = 8;
+			this.coverImage.TabStop = false;
+			this.coverImage.Click += new System.EventHandler(this.coverImage_Click);
+			//
 			// picFavourite
 			//
-			this.picFavourite.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.picFavourite.BackColor = System.Drawing.Color.Transparent;
 			this.picFavourite.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picFavourite.Location = new System.Drawing.Point(319, 8);
+			this.picFavourite.Location = new System.Drawing.Point(149, 0);
 			this.picFavourite.Name = "picFavourite";
-			this.picFavourite.Size = new System.Drawing.Size(32, 32);
+			this.picFavourite.Size = new System.Drawing.Size(48, 48);
 			this.picFavourite.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.picFavourite.TabIndex = 7;
 			this.picFavourite.TabStop = false;
@@ -239,9 +229,8 @@
 			this.panelPlayBtn.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.picPlayPause)).EndInit();
 			this.panelRight.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picSettings)).EndInit();
 			this.centerPanel.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.coverImage)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picFavourite)).EndInit();
 			this.ResumeLayout(false);
 
@@ -250,22 +239,22 @@
 		#endregion
 
 		private BetterPictureBox picPlayPause;
-		private BetterPictureBox picClose;
 		private System.Windows.Forms.Label lblVol;
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.Panel panelPlayBtn;
 		private System.Windows.Forms.MenuItem menuItemCopySongInfo;
-		private BetterPictureBox picSettings;
 		private BetterPictureBox picFavourite;
 		private System.Windows.Forms.Panel panelRight;
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu2;
-		private System.Windows.Forms.MenuItem menuItemExit;
 		private System.Windows.Forms.MenuItem menuItemShow;
 		private System.Windows.Forms.MenuItem menuItemPlayPause;
 		private System.Windows.Forms.MenuItem menuItemResetLocation;
 		private CenterPanel centerPanel;
 		private CsGrid.GridPanel gridPanel;
+		private BetterPictureBox coverImage;
+		private System.Windows.Forms.MenuItem menuItemOptions;
+		private System.Windows.Forms.MenuItem menuItem_Close;
 	}
 }
 

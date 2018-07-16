@@ -81,7 +81,7 @@ namespace ListenMoeClient
 		public int id { get; set; }
 		public string name { get; set; }
 		public string nameRomaji { get; set; }
-		public object artistImage { get; set; }
+		public object image { get; set; }
 	}
 
 	public class Artist
@@ -89,7 +89,7 @@ namespace ListenMoeClient
 		public int id { get; set; }
 		public string name { get; set; }
 		public string nameRomaji { get; set; }
-		public object artistImage { get; set; }
+		public object image { get; set; }
 	}
 
 	public class Album
@@ -97,7 +97,7 @@ namespace ListenMoeClient
 		public int id { get; set; }
 		public string name { get; set; }
 		public string nameRomaji { get; set; }
-		public string coverImage { get; set; }
+		public string image { get; set; }
 	}
 
 	public class SongInfoStream
