@@ -105,7 +105,7 @@ namespace ListenMoeClient
 		private WebSocket socket;
 		private TaskFactory factory;
 		public delegate void StatsReceived(SongInfoResponseData info);
-		public event StatsReceived OnSongInfoReceived = (info) => { };
+		public event StatsReceived OnSongInfoReceived;
 		public SongInfoResponseData currentInfo;
 
 		private const string JPOP_SOCKET_ADDR = "wss://listen.moe/gateway";
@@ -141,7 +141,7 @@ namespace ListenMoeClient
 				socket.Connect();
 				Authenticate();
 			}
-			catch (Exception) { }
+			catch (Exception) {}
 		}
 
 		public void Authenticate()
@@ -156,7 +156,7 @@ namespace ListenMoeClient
 
 				socket.Send("{ \"op\": 0, \"d\": { \"auth\": \"" + token + "\" } }");
 			}
-			catch (Exception) { }
+			catch (Exception) {}
 		}
 
 		private void SendHeartbeat()
