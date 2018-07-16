@@ -440,7 +440,7 @@ namespace ListenMoeClient
 			float scaleFactor = Settings.Get<float>(Setting.Scale);
 			titleFont = Meiryo.GetFont(13 * scaleFactor);
 			artistFont = Meiryo.GetFont(8 * scaleFactor);
-			volumeFont = Meiryo.GetFont(10 * scaleFactor);
+			volumeFont = Meiryo.GetFont(8 * scaleFactor);
 
 			lblVol.Font = volumeFont;
 
