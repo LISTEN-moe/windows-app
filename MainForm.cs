@@ -668,6 +668,16 @@ namespace ListenMoeClient
 				presence.Assets.LargeImageKey = type == StreamType.Jpop ? "jpop" : "kpop";
 			}
 
+			if (songInfo.song.albums.Length != 0 && songInfo.song.albums[0].image != null)
+			{
+				coverImage.Load(CDN_COVER + songInfo.song.albums[0].image);
+				coverImage.Visible = true;
+			}
+			else
+			{
+				coverImage.Visible = false;
+			}
+
 			if (User.LoggedIn)
 			{
 				if (heartFav)
@@ -677,16 +687,6 @@ namespace ListenMoeClient
 			else
 			{
 				picFavourite.Visible = false;
-			}
-
-			if (songInfo.song.albums.Length != 0 && songInfo.song.albums[0].image != null)
-			{
-				coverImage.Load(CDN_COVER + songInfo.song.albums[0].image);
-				coverImage.Visible = true;
-			}
-			else
-			{
-				coverImage.Visible = false;
 			}
 
 			if (Settings.Get<bool>(Setting.DiscordPresence))
