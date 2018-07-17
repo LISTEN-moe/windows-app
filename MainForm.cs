@@ -252,7 +252,7 @@ namespace ListenMoeClient
 			if (heart)
 				picFavourite.Size = new Size(48, 48);
 			else
-				picFavourite.Size = new Size(48, 48);
+				picFavourite.Size = new Size(32, 32);
 
 			bool favourite = songInfoStream?.currentInfo?.song.favorite ?? false;
 			picFavourite.Image = favourite ? favSprite.Frames[favSprite.Frames.Length - 1] : favSprite.Frames[0];
