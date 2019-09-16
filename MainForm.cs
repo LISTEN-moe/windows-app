@@ -356,8 +356,9 @@ namespace ListenMoeClient
 		public void ReloadSettings()
 		{
 			this.TopMost = Settings.Get<bool>(Setting.TopMost);
+            menuItemTopMost.Checked = Settings.Get<bool>(Setting.TopMost);
 
-			this.Location = new Point(Settings.Get<int>(Setting.LocationX), Settings.Get<int>(Setting.LocationY));
+            this.Location = new Point(Settings.Get<int>(Setting.LocationX), Settings.Get<int>(Setting.LocationY));
 			this.Size = new Size(Settings.Get<int>(Setting.SizeX), Settings.Get<int>(Setting.SizeY));
 
 			if (Settings.Get<bool>(Setting.EnableVisualiser))
@@ -722,7 +723,15 @@ namespace ListenMoeClient
 			picPlayPause.Location = new Point(x, y);
 		}
 
-		private void menuItemCopySongInfo_Click(object sender, EventArgs e)
+        private void menuItemTopMost_Click(object sender, EventArgs e)
+        {
+            TopMost = !TopMost;
+            Settings.Set(Setting.TopMost, TopMost);
+            Settings.WriteSettings();
+            menuItemTopMost.Checked = TopMost;
+        }
+
+        private void menuItemCopySongInfo_Click(object sender, EventArgs e)
 		{
 			SongInfoResponseData info = songInfoStream.currentInfo;
 			if (info != null)
@@ -820,7 +829,7 @@ namespace ListenMoeClient
 
 		private async void menuItemClose2_Click(object sender, EventArgs e) => await Exit();
 
-		private async void SetFavouriteSprite(bool favourited)
+        private async void SetFavouriteSprite(bool favourited)
 		{
 			await Task.Run(() =>
 			{
