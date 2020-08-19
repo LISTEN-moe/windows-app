@@ -108,8 +108,8 @@ namespace ListenMoeClient
 		public event StatsReceived OnSongInfoReceived;
 		public SongInfoResponseData currentInfo;
 
-		private const string JPOP_SOCKET_ADDR = "wss://listen.moe/gateway";
-		private const string KPOP_SOCKET_ADDR = "wss://listen.moe/kpop/gateway";
+		private const string JPOP_SOCKET_ADDR = "wss://listen.moe/gateway_v2";
+		private const string KPOP_SOCKET_ADDR = "wss://listen.moe/kpop/gateway_v2";
 
 		private Thread heartbeatThread;
 		private CancellationTokenSource cts;
