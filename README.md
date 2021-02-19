@@ -1,3 +1,5 @@
+Deprecated. Please use https://github.com/LISTEN-moe/desktop-app
+
 <div align="center">
 	<img src="https://lolisafe.moe/DJwzPbWD.png" />
 </div>
