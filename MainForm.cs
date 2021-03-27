@@ -117,7 +117,8 @@ namespace ListenMoeClient
 		const string KPOP_STREAM = "https://listen.moe/kpop/opus";
 		const string DISCORD_PRESENCE_CLIENT_ID = "383375119827075072";
 		const string CDN_COVER = "https://cdn.listen.moe/covers/";
-		const string MUSIC_LINK = "https://listen.moe/music/albums/";
+		const string CDN_COVER_NULL = "https://listen.moe/_nuxt/img/cd1c044.png";
+		const string MUSIC_LINK = "https://listen.moe/albums/";
 
 		Font titleFont;
 		Font artistFont;
@@ -356,6 +357,7 @@ namespace ListenMoeClient
 		public void ReloadSettings()
 		{
 			this.TopMost = Settings.Get<bool>(Setting.TopMost);
+			menuItemTopMost.Checked = Settings.Get<bool>(Setting.TopMost);
 
 			this.Location = new Point(Settings.Get<int>(Setting.LocationX), Settings.Get<int>(Setting.LocationY));
 			this.Size = new Size(Settings.Get<int>(Setting.SizeX), Settings.Get<int>(Setting.SizeY));
@@ -663,6 +665,11 @@ namespace ListenMoeClient
 				coverImage.Load(CDN_COVER + songInfo.song.albums[0].image);
 				coverImage.Visible = true;
 			}
+			else if (songInfo.song.albums.Length != 0)
+			{
+				coverImage.Load(CDN_COVER_NULL);
+				coverImage.Visible = true;
+			}
 			else
 			{
 				coverImage.Visible = false;
@@ -720,6 +727,14 @@ namespace ListenMoeClient
 			int y = (panelPlayBtn.Height / 2) - (picPlayPause.Height / 2);
 			int x = (panelPlayBtn.Width / 2) - (picPlayPause.Width / 2);
 			picPlayPause.Location = new Point(x, y);
+		}
+
+		private void menuItemTopMost_Click(object sender, EventArgs e)
+		{
+			TopMost = !TopMost;
+			Settings.Set(Setting.TopMost, TopMost);
+			Settings.WriteSettings();
+			menuItemTopMost.Checked = TopMost;
 		}
 
 		private void menuItemCopySongInfo_Click(object sender, EventArgs e)
@@ -798,7 +813,7 @@ namespace ListenMoeClient
 		{
 			SongInfoResponseData info = songInfoStream.currentInfo;
 			if (info != null)
-				if (info.song.albums[0].image != null)
+				if (info.song.albums.Length != 0)
 					Process.Start(MUSIC_LINK + songInfoStream.currentInfo.song.albums[0].id);
 		}
 

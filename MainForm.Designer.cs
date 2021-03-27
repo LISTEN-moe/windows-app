@@ -30,6 +30,7 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+			this.menuItemTopMost = new System.Windows.Forms.MenuItem();
 			this.menuItemCopySongInfo = new System.Windows.Forms.MenuItem();
 			this.menuItemOptions = new System.Windows.Forms.MenuItem();
 			this.menuItem_Close = new System.Windows.Forms.MenuItem();
@@ -59,25 +60,32 @@
 			// contextMenu1
 			//
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItemCopySongInfo,
-            this.menuItemOptions,
-            this.menuItem_Close});
+			this.menuItemTopMost,
+			this.menuItemCopySongInfo,
+			this.menuItemOptions,
+			this.menuItem_Close});
+			//
+			// menuItemTopMost
+			//
+			this.menuItemTopMost.Index = 0;
+			this.menuItemTopMost.Text = "Keep form top most";
+			this.menuItemTopMost.Click += new System.EventHandler(this.menuItemTopMost_Click);
 			//
 			// menuItemCopySongInfo
 			//
-			this.menuItemCopySongInfo.Index = 0;
+			this.menuItemCopySongInfo.Index = 1;
 			this.menuItemCopySongInfo.Text = "Copy song info";
 			this.menuItemCopySongInfo.Click += new System.EventHandler(this.menuItemCopySongInfo_Click);
 			//
 			// menuItemOptions
 			//
-			this.menuItemOptions.Index = 1;
+			this.menuItemOptions.Index = 2;
 			this.menuItemOptions.Text = "Options";
 			this.menuItemOptions.Click += new System.EventHandler(this.menuItemOptions_Click);
 			//
 			// menuItem_Close
 			//
-			this.menuItem_Close.Index = 2;
+			this.menuItem_Close.Index = 3;
 			this.menuItem_Close.Text = "Close";
 			this.menuItem_Close.Click += new System.EventHandler(this.menuItemClose_Click);
 			//
@@ -90,10 +98,10 @@
 			// contextMenu2
 			//
 			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItemPlayPause,
-            this.menuItemShow,
-            this.menuItemResetLocation,
-            this.menuItemClose2});
+			this.menuItemPlayPause,
+			this.menuItemShow,
+			this.menuItemResetLocation,
+			this.menuItemClose2});
 			//
 			// menuItemPlayPause
 			//
@@ -250,6 +258,7 @@
 		private System.Windows.Forms.Label lblVol;
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.Panel panelPlayBtn;
+		private System.Windows.Forms.MenuItem menuItemTopMost;
 		private System.Windows.Forms.MenuItem menuItemCopySongInfo;
 		private BetterPictureBox picFavourite;
 		private System.Windows.Forms.Panel panelRight;

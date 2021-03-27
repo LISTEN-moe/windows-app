@@ -67,7 +67,7 @@ namespace ListenMoeClient
 									if (visualiser != null)
 										visualiser.AddSamples(rawBuffer);
 								}
-								catch (Concentus.OpusException)
+								catch (Exception)
 								{
 									//Skip this frame
 								}
